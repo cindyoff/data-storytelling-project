@@ -1,6 +1,15 @@
 # data-storytelling-project
 Final project in the course "Data Storytelling"
 
+1 - nettoyage bases de données
+- Bordeaux : Habib
+- Lyon + Pays-Basque : Cindy
+- Paris : Ouma
+
+2 - poser la structure du HTML
+
+3 - réfléchir quels graphiques faire + division éventuelle en pages
+
 Authors : 
 - Habib Daniel Karamoko (hdkaramoko)
 - Oumalheir Souley Na Lado ()
