@@ -2,7 +2,7 @@
 Final project in the course "Data Storytelling"
 
 Authors : 
-- Habib Daniel Karamoko ()
+- Habib Daniel Karamoko (hdkaramoko)
 - Oumalheir Souley Na Lado ()
 - Cindy Tran (cindyoff)
 
