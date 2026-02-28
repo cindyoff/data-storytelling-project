@@ -15,13 +15,13 @@ def load_paysbasque(path="data/listings-paysbasque.csv"):
 
 def load_paris(path="data/listings-paris.csv"):
     df = pd.read_csv(path, sep=",")
-    # TODO
+    df = clean_paris(df)
     df["city"] = "Paris"
     return df
 
 def load_bordeaux(path="data/listings-bordeaux.csv"):
     df = pd.read_csv(path, sep=",")
-    # TODO
+    df = clean_bordeaux(df)
     df["city"] = "Bordeaux"
     return df
 
@@ -42,13 +42,16 @@ def clean_paysbasque(df):
     df["price"] = df["price"].interpolate(method="linear")
     return df
 
-def clean_paris():
-    # TODO
-    return
+def clean_paris(df): # ATTENTION : Paris a 0 prix !!!!! A VOIR !!!!!!
+    df = df.drop(columns = ["id", "license", "neighbourhood_group"])
+    # df["price"] = df["price"].interpolate(method = "linear")
+    return df
 
-def clean_bordeaux():
-    # TODO
-    return 
+def clean_bordeaux(df):
+    df = df.drop(columns = ["id", "license", "neighbourhood"])
+    df = df.rename(columns = {"neighbourhood_group": "neighbourhood"})
+    df["price"] = df["price"].interpolate(method = "linear")
+    return df 
 
 # concat all datasets ---------
 def load_all(data_dir="data/"):

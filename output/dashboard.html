@@ -673,7 +673,436 @@
 // ══════════════════════════════════════════
 //  DATA (injectée par Python via build_dashboard.py)
 // ══════════════════════════════════════════
-const DATA = {{ CHART_DATA_JSON }};
+const DATA = {
+  "stats": {
+    "avg_price": 189.46,
+    "med_price": 90.45,
+    "avg_avail": 131.57,
+    "total_listings": 115597,
+    "nb_hosts": 85227,
+    "ratio": 1.36,
+    "med_minnights": 3,
+    "avg_reviews_month": 1.08
+  },
+  "prix_par_ville": {
+    "labels": [
+      "Bordeaux",
+      "Lyon",
+      "Paris",
+      "Pays Basque"
+    ],
+    "values": [
+      128.46,
+      102.97,
+      NaN,
+      322.99
+    ]
+  },
+  "room_type": {
+    "labels": [
+      "Entire home/apt",
+      "Private room",
+      "Hotel room",
+      "Shared room"
+    ],
+    "values": [
+      99964,
+      14659,
+      710,
+      264
+    ]
+  },
+  "dispo_par_ville": {
+    "labels": [
+      "Bordeaux",
+      "Lyon",
+      "Paris",
+      "Pays Basque"
+    ],
+    "values": [
+      141.2,
+      114.0,
+      127.3,
+      165.7
+    ]
+  },
+  "listings_par_ville": {
+    "labels": [
+      "Paris",
+      "Bordeaux",
+      "Pays Basque",
+      "Lyon"
+    ],
+    "values": [
+      81853,
+      12252,
+      11845,
+      9647
+    ]
+  },
+  "top_hosts": {
+    "labels": [
+      "Blueground (#314994947)",
+      "Matthew (#33889201)",
+      "FlexLiving (#460047164)",
+      "Joffrey (#577507547)",
+      "Ludovic (#7642792)",
+      "Romain (#50502817)",
+      "Joffrey Sally (#541345424)",
+      "Michael (#335998296)",
+      "David Et Warren (#436103373)",
+      "Joffrey Sally (#524851930)"
+    ],
+    "values": [
+      816,
+      370,
+      325,
+      238,
+      216,
+      213,
+      210,
+      204,
+      191,
+      184
+    ]
+  },
+  "min_nights": {
+    "labels": [
+      "1 n",
+      "2 n",
+      "3 n",
+      "4-7 n",
+      "8-14 n",
+      "15-30 n",
+      "31-90 n",
+      "91-365 n",
+      "365+ n"
+    ],
+    "values": [
+      25460,
+      26890,
+      19178,
+      20731,
+      1322,
+      8195,
+      1866,
+      11918,
+      37
+    ]
+  },
+  "reviews_par_ville": {
+    "labels": [
+      "Bordeaux",
+      "Lyon",
+      "Paris",
+      "Pays Basque"
+    ],
+    "values": [
+      1.24,
+      1.32,
+      1.03,
+      1.0
+    ]
+  },
+  "cities": {
+    "Lyon": {
+      "avg_price": 102.97,
+      "med_price": 81.0,
+      "avg_avail": 114.04,
+      "count": 9647,
+      "nb_hosts": 7279,
+      "ratio": 1.33,
+      "med_minnights": 2,
+      "avg_reviews_month": 1.32,
+      "room_type": {
+        "labels": [
+          "Entire home/apt",
+          "Private room",
+          "Shared room",
+          "Hotel room"
+        ],
+        "values": [
+          7648,
+          1968,
+          20,
+          11
+        ]
+      },
+      "top_hosts": {
+        "labels": [
+          "Damien (#316423644)",
+          "Mathilde (#226216922)",
+          "Lina (#532176426)",
+          "2beapart (#5931758)",
+          "Bastien (#291015206)",
+          "Jessica (#176904029)",
+          "Calvin (#26481589)",
+          "Agence Cocoonr Lyon (#314170574)",
+          "WeHost (#369826491)",
+          "Guillaume (#458222405)"
+        ],
+        "values": [
+          103,
+          82,
+          80,
+          70,
+          61,
+          52,
+          43,
+          42,
+          38,
+          30
+        ]
+      },
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          2985,
+          2936,
+          719,
+          550,
+          73,
+          489,
+          54,
+          1837,
+          4
+        ]
+      }
+    },
+    "Paris": {
+      "avg_price": NaN,
+      "med_price": NaN,
+      "avg_avail": 127.25,
+      "count": 81853,
+      "nb_hosts": 59587,
+      "ratio": 1.37,
+      "med_minnights": 3,
+      "avg_reviews_month": 1.03,
+      "room_type": {
+        "labels": [
+          "Entire home/apt",
+          "Private room",
+          "Hotel room",
+          "Shared room"
+        ],
+        "values": [
+          72297,
+          8727,
+          664,
+          165
+        ]
+      },
+      "top_hosts": {
+        "labels": [
+          "Blueground (#314994947)",
+          "Matthew (#33889201)",
+          "FlexLiving (#460047164)",
+          "Joffrey (#577507547)",
+          "Ludovic (#7642792)",
+          "Romain (#50502817)",
+          "Joffrey Sally (#541345424)",
+          "Michael (#335998296)",
+          "David Et Warren (#436103373)",
+          "Joffrey Sally (#524851930)"
+        ],
+        "values": [
+          816,
+          370,
+          325,
+          238,
+          216,
+          213,
+          210,
+          204,
+          191,
+          184
+        ]
+      },
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          16941,
+          17449,
+          15188,
+          13822,
+          1007,
+          7077,
+          1664,
+          8680,
+          25
+        ]
+      }
+    },
+    "Bordeaux": {
+      "avg_price": 128.46,
+      "med_price": 82.0,
+      "avg_avail": 141.19,
+      "count": 12252,
+      "nb_hosts": 9517,
+      "ratio": 1.29,
+      "med_minnights": 2,
+      "avg_reviews_month": 1.24,
+      "room_type": {
+        "labels": [
+          "Entire home/apt",
+          "Private room",
+          "Shared room",
+          "Hotel room"
+        ],
+        "values": [
+          9489,
+          2701,
+          46,
+          16
+        ]
+      },
+      "top_hosts": {
+        "labels": [
+          "Agence Cocoonr Bordeaux (#164626639)",
+          "Arnaud (#72691486)",
+          "Alfred (#414256747)",
+          "Kareen (#9382960)",
+          "Sophie (#117238503)",
+          "Emilie (#131423031)",
+          "Céline&Thomas (#37314741)",
+          "Julie (#18796190)",
+          "Nicolas (#47630405)",
+          "Guillaume (#224295815)"
+        ],
+        "values": [
+          84,
+          82,
+          55,
+          46,
+          42,
+          41,
+          34,
+          31,
+          29,
+          28
+        ]
+      },
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          3372,
+          3736,
+          1426,
+          1806,
+          121,
+          486,
+          136,
+          1162,
+          7
+        ]
+      }
+    },
+    "Pays Basque": {
+      "avg_price": 322.99,
+      "med_price": 111.0,
+      "avg_avail": 165.73,
+      "count": 11845,
+      "nb_hosts": 9071,
+      "ratio": 1.31,
+      "med_minnights": 3,
+      "avg_reviews_month": 1.0,
+      "room_type": {
+        "labels": [
+          "Entire home/apt",
+          "Private room",
+          "Shared room",
+          "Hotel room"
+        ],
+        "values": [
+          10530,
+          1263,
+          33,
+          19
+        ]
+      },
+      "top_hosts": {
+        "labels": [
+          "Welkeys (#184945495)",
+          "Agence Poplidays 5 (#133059316)",
+          "Oriane - Interhome Group (#113038136)",
+          "Thomas (#113029032)",
+          "Maeva (#153086583)",
+          "Leavetown (#218765540)",
+          "Philippe (#378829038)",
+          "Nicolas (#3419305)",
+          "Oihan (#157391208)",
+          "Guillaume (#387114605)"
+        ],
+        "values": [
+          65,
+          49,
+          46,
+          44,
+          41,
+          40,
+          38,
+          36,
+          33,
+          31
+        ]
+      },
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          2162,
+          2769,
+          1845,
+          4553,
+          121,
+          143,
+          12,
+          239,
+          1
+        ]
+      }
+    }
+  }
+};
 
 // ══════════════════════════════════════════
 //  NAVIGATION
