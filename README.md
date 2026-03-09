@@ -13,8 +13,7 @@ Final project in the course "Data Storytelling"
 
 # À faire ensuite
 - Revoir le nettoyage de Paris car aucun prix disponibles dans la base de données
-- Revoir les différents volets d'analyse , en dehors de la page d'accueil, et les alimenter
-- Revoir les différents volets par ville sur la page d'accueil et les alimenter
+    - Ajouter des données fictives ? Importer des données d'autres sources ?
 
 Authors : 
 - Habib Daniel Karamoko (hdkaramoko)
