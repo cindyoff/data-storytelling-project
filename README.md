@@ -1,19 +1,19 @@
 # data-storytelling-project
 Final project in the course "Data Storytelling"
 
-# Tâches à réaliser
-1 - nettoyage bases de données
-- Bordeaux : Habib
-- Lyon + Pays-Basque : Cindy - OK
-- Paris : Ouma
-
-2 - poser la structure du HTML
-
-3 - réfléchir quels graphiques faire + division éventuelle en pages
-
 # À faire ensuite
 - Revoir le nettoyage de Paris car aucun prix disponibles dans la base de données
-    - Ajouter des données fictives ? Importer des données d'autres sources ?
+    - Ajouter des données fictives - attente approbation professeurs
+- Uniformiser et rétablir le nom des régions (```neighbourhood```) de Bordeaux
+    - Bgles -> Begles
+    - Saint-Mdard-en-Jalles -> Saint-Medard-en-Jalles
+    - Le Taillan-Mdoc -> Le Taillan-Medoc
+    - Saint-Aubin-de-Mdoc -> Saint-Aubin-de-Medoc
+    - Artigues-Prs-Bordeaux -> Artigues-Pres-Bordeaux
+    - Ambs -> Ambes
+- Ajouter une barre de recherche pour chercher un logement en particulier
+    - Éventuellement, ajouter des filtres de recherche par ville, une barre glissante pour les prix et des par hôte (host)
+- Enlever les guillemets dans tous les noms de logements pour toutes les villes pour plus de clarté et pour que ce soit uniforme
 
 Authors : 
 - Habib Daniel Karamoko (hdkaramoko)
