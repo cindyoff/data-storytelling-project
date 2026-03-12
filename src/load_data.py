@@ -27,30 +27,64 @@ def load_bordeaux(path="data/listings-bordeaux.csv"):
 
 # nettoyage --------
 def clean_lyon(df):
-    # Suppression des colonnes inutiles
+    # suppression variables
     df = df.drop(columns=["id", "license", "neighbourhood_group"])
-    # Interpolation linéaire sur les prix manquants
+
+    # interpolation linéaire des prix
     df["price"] = df["price"].interpolate(method="linear")
+
+    # suppression guillemets dans noms
+    df["name"] = df["name"].str.replace('""', '', regex = False)
     return df
 
 def clean_paysbasque(df):
-    # Suppression des colonnes inutiles
+    # suppression variables
     df = df.drop(columns=["id", "license", "neighbourhood"])
-    # Renommage pour harmoniser avec les autres bases
+    
+    # renommer variables
     df = df.rename(columns = {"neighbourhood_group": "neighbourhood"})
-    # Interpolation linéaire sur les prix manquants
+    
+    # interpolation linéaire des prix
     df["price"] = df["price"].interpolate(method="linear")
+
+    # suppression guillemets
+    df["name"] = df["name"].str.replace('""', '', regex = False)
     return df
 
 def clean_paris(df): # ATTENTION : Paris a 0 prix !!!!! A VOIR !!!!!!
+    # suppression variables
     df = df.drop(columns = ["id", "license", "neighbourhood_group"])
+
+    # suppression guillemets
+    df["name"] = df["name"].str.replace('""', '', regex = False)
+
     # df["price"] = df["price"].interpolate(method = "linear")
     return df
 
 def clean_bordeaux(df):
+    # suppression variables
     df = df.drop(columns = ["id", "license", "neighbourhood"])
+
+    # renommer variables
     df = df.rename(columns = {"neighbourhood_group": "neighbourhood"})
+
+    # interpolation linéaire
     df["price"] = df["price"].interpolate(method = "linear")
+
+    # suppression guillemets
+    df["name"] = df["name"].str.replace('""', '', regex = False)
+
+    # formater noms de région
+    df["neighbourhood"] = df["neighbourhood"].replace("Bgles", "Begles")
+    df["neighbourhood"] = df["neighbourhood"].replace("Saint-Mdard-en-Jalles", "Saint-Medard-en-Jalles")
+    df["neighbourhood"] = df["neighbourhood"].replace("Le Taillan-Mdoc", "Le Taillan-Medoc")
+    df["neighbourhood"] = df["neighbourhood"].replace("Saint-Aubin-de-Mdoc", "Saint-Aubin-de-Medoc")
+    df["neighbourhood"] = df["neighbourhood"].replace("Artigues-Prs-Bordeaux", "Artigues-Pres-Bordeaux")
+    df["neighbourhood"] = df["neighbourhood"].replace("Ambs", "Ambes")
+    df["neighbourhood"] = df["neighbourhood"].replace("Bordeaux", "Centre")
+
+    # ajout attribut "Bordeaux" devant chaque région
+    df["neighbourhood"] = "Bordeaux - " + df["neighborhood"]
     return df 
 
 # concat all datasets ---------
