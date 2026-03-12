@@ -18,7 +18,7 @@ Final project in the course "Data Storytelling"
 
 Authors : 
 - Habib Daniel Karamoko (hdkaramoko)
-- Oumalheir Souley Na Lado ()
+- Oumalheir Souley Na Lado (Ouma-Souley)
 - Cindy Tran (cindyoff)
 
 ENSAE - MS Data Science - 2026
