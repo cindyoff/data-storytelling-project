@@ -84,7 +84,7 @@ def clean_bordeaux(df):
     df["neighbourhood"] = df["neighbourhood"].replace("Bordeaux", "Centre")
 
     # ajout attribut "Bordeaux" devant chaque région
-    df["neighbourhood"] = "Bordeaux - " + df["neighborhood"]
+    # df["neighbourhood"] = "Bordeaux - " + df["neighborhood"]
     return df 
 
 # concat all datasets ---------
