@@ -16,6 +16,7 @@ Final project in the course "Data Storytelling"
 - Ajouter une barre de recherche pour chercher un logement en particulier
     - Éventuellement, ajouter des filtres de recherche par ville, une barre glissante pour les prix et des par hôte (host)
 - ~~Enlever les guillemets dans tous les noms de logements pour toutes les villes pour plus de clarté et pour que ce soit uniforme~~
+- Ajouter des visualisations se concentrant sur les régions/voisinages (```neighbourhood```) de chaque ville
 
 Authors : 
 - Habib Daniel Karamoko (hdkaramoko)
