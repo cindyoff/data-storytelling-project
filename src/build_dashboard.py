@@ -14,7 +14,7 @@ def build(chart_json: str,
         template   : chemin vers le fichier template
         output     : chemin du fichier HTML généré
     """
-    # ── Lecture du template ────────────────────────────────────────
+    # lecture template
     with open(template, "r", encoding="utf-8") as f:
         html = f.read()
 
