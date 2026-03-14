@@ -6,6 +6,7 @@ Final project in the course "Data Storytelling"
     - 2 solutions proposées par le professeur : 
         - faire un modèle de machine learning permettant d'avoir les prix pour Paris
         - relever à la main quelques prix pour Paris et inférer pour le reste des prix
+    - Alternative : fusion avec une autre base de données Airbnb listings pour obtenir les prix de Paris
 - ~~Uniformiser et rétablir le nom des régions (```neighbourhood```) de Bordeaux~~
     - ~~Bgles -> Begles OK~~
     - ~~Saint-Mdard-en-Jalles -> Saint-Medard-en-Jalles OK~~
