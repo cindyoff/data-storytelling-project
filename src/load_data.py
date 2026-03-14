@@ -13,16 +13,30 @@ def load_paysbasque(path="data/listings-paysbasque.csv"):
     df["city"] = "Pays Basque"
     return df
 
-def load_paris(path="data/listings-paris.csv"):
-    df = pd.read_csv(path, sep=",")
-    df = clean_paris(df)
-    df["city"] = "Paris"
-    return df
-
 def load_bordeaux(path="data/listings-bordeaux.csv"):
     df = pd.read_csv(path, sep=",")
     df = clean_bordeaux(df)
     df["city"] = "Bordeaux"
+    return df
+
+def load_prix_paris(path = "data/prix-paris.csv"):
+    df = pd.read_csv(path, sep = ",", encoding = "latin-1")
+    df = clean_prix_paris(df)
+    return df 
+
+def load_paris(path="data/listings-paris.csv", prix_path = "data/prix-paris.csv"):
+    # import des deux bases de données
+    df = pd.read_csv(path, sep = ",")
+    df_prix = load_prix_paris(prix_path)
+
+    # supprimer la colonne vide "price" dans listings-paris.csv
+    del df["price"]
+
+    # inner join sur id
+    df = df.merge(df_prix, on = "id", how = "inner")
+    
+    # attribut de la ville
+    df["city"] = "Paris"
     return df
 
 # nettoyage --------
@@ -51,14 +65,24 @@ def clean_paysbasque(df):
     df["name"] = df["name"].str.replace('""', '', regex = False)
     return df
 
-def clean_paris(df): # ATTENTION : Paris a 0 prix !!!!! A VOIR !!!!!!
+def clean_paris(df):
     # suppression variables
     df = df.drop(columns = ["id", "license", "neighbourhood_group"])
 
     # suppression guillemets
     df["name"] = df["name"].str.replace('""', '', regex = False)
 
-    # df["price"] = df["price"].interpolate(method = "linear")
+    return df
+
+def clean_prix_paris(df):
+    # garder seulement la clé de jointure et les prix
+    df = df[["listing_id", "price"]]
+
+    # renommer "listing_id" en "id"
+    df = df.rename(columns = {
+        "listing_id": "id"
+    })
+
     return df
 
 def clean_bordeaux(df):
