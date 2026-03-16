@@ -40,6 +40,24 @@ def load_paris(path="data/listings-paris.csv", prix_path = "data/prix-paris.csv"
     return df
 
 # nettoyage --------
+
+# Rajout de l'attribut "ville principale" devant chaque neighbour
+def centre_peripherie(dataframe: pd.DataFrame, ville: str, variable_voisinage: str):
+    dict_map = {}
+    unique_voisinage = dataframe[variable_voisinage].unique()
+    check = False
+    for elem in unique_voisinage:
+        if elem == ville:
+            check = True
+    if check:
+        for elem in unique_voisinage:
+            if elem == ville:
+                dict_map[elem]= f"{ville}-Centre"
+            else:
+                dict_map[elem] = f"{ville}-{elem}"
+    return dict_map
+
+
 def clean_lyon(df):
     # suppression variables
     df = df.drop(columns=["id", "license", "neighbourhood_group"])
@@ -105,10 +123,11 @@ def clean_bordeaux(df):
     df["neighbourhood"] = df["neighbourhood"].replace("Saint-Aubin-de-Mdoc", "Saint-Aubin-de-Medoc")
     df["neighbourhood"] = df["neighbourhood"].replace("Artigues-Prs-Bordeaux", "Artigues-Pres-Bordeaux")
     df["neighbourhood"] = df["neighbourhood"].replace("Ambs", "Ambes")
-    df["neighbourhood"] = df["neighbourhood"].replace("Bordeaux", "Centre")
+    #df["neighbourhood"] = df["neighbourhood"].replace("Bordeaux", "Centre")
 
     # ajout attribut "Bordeaux" devant chaque région
-    # df["neighbourhood"] = "Bordeaux - " + df["neighborhood"]
+    df["neighbourhood"] = df["neighbourhood"].map(centre_peripherie(df, "Bordeaux", "neighbourhood"))
+
     return df 
 
 # concat all datasets ---------
