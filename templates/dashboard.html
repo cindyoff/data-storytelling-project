@@ -479,6 +479,12 @@
       Analyse des hôtes
       <span class="nav-badge">P3</span>
     </button>
+
+    <button class="nav-btn" onclick="showPage('p4', this)" id="btn-p4">
+      <span class="nav-icon">📈</span>
+      Vision 360
+      <span class="nav-badge">P4</span>
+    </button>
   </nav>
 
   <div class="sidebar-footer">
@@ -667,6 +673,63 @@
     </div>
   </section>
 
+
+
+  <!-- ═══ PAGE 4 : Graphiques particuliers ═══ -->
+  <section class="page" id="p4">
+    <div class="page-header">
+      <h2>Graphiques particuliers</h2>
+      <p id="p4-subtitle">Vision 360 des locations Airbnb</p>
+    </div>
+
+    <div class="charts-grid-3">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Attractivité des villes </div>
+            <div class="chart-card-sub">Statistiques catégorielles</div>
+          </div>
+          <span class="chart-card-badge">Spider chart</span>
+        </div>
+        <canvas id="spider-chart-attractivite"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Top 10 hôtes</div>
+            <div class="chart-card-sub">Par nombre de listings</div>
+          </div>
+          <span class="chart-card-badge">Horizontal bar</span>
+        </div>
+        <canvas id="chart-top-hosts"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Distribution minimum nights</div>
+            <div class="chart-card-sub">Politique de durée de séjour</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-min-nights"></canvas>
+      </div>
+<!--
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Reviews par mois</div>
+            <div class="chart-card-sub">Activité par ville</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-reviews-ville"></canvas>
+      </div>
+-->
+    </div>
+  </section>
+
 </div><!-- /#main -->
 
 <script>
@@ -682,6 +745,7 @@ const pagesMeta = {
   p1: { title: 'Carte géographique',   sub: 'Vue d\'ensemble des 4 zones' },
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
+  p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
 };
 
 function showPage(id, btn) {

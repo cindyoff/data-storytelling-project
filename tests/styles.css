@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f8fc;
+  color: #1f2937;
+}
+
+.wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 8px;
+}
+
+p {
+  margin-top: 0;
+  color: #6b7280;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20px 0 30px;
+}
+
+select {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+}
+
+#chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.axis-label {
+  font-size: 13px;
+  fill: #374151;
+  font-weight: 600;
+}
+
+.grid-label {
+  font-size: 11px;
+  fill: #9ca3af;
+}
+
+.grid-circle,
+.grid-line {
+  fill: none;
+  stroke: #d1d5db;
+}
+
+.axis-line {
+  stroke: #9ca3af;
+  stroke-width: 1.2;
+}
+
+.radar-area {
+  fill-opacity: 0.25;
+  stroke-width: 2.5;
+}
+
+.radar-point {
+  stroke: white;
+  stroke-width: 2;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(17, 24, 39, 0.92);
+  color: white;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
