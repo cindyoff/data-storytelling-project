@@ -382,6 +382,25 @@
       margin-top: 4px;
     }
 
+    /* Page 4 - taille des canvas*/
+
+  #p4 .charts-grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #p4 .chart-card:first-child {
+    grid-column: span 2;
+    height: 420px; /* spider chart plus grand */
+  }
+
+  #p4 .chart-card:not(:first-child) {
+    height: 300px;
+  }
+
+  #p4 canvas {
+    height: 100% !important;
+}
+
     /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -478,6 +497,12 @@
       <span class="nav-icon">📈</span>
       Analyse des hôtes
       <span class="nav-badge">P3</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('p4', this)" id="btn-p4">
+      <span class="nav-icon">📈</span>
+      Vision 360
+      <span class="nav-badge">P4</span>
     </button>
   </nav>
 
@@ -667,6 +692,63 @@
     </div>
   </section>
 
+
+
+  <!-- ═══ PAGE 4 : Graphiques particuliers ═══ -->
+  <section class="page" id="p4">
+    <div class="page-header">
+      <h2>Graphiques particuliers</h2>
+      <p id="p4-subtitle">Vision 360 des locations Airbnb</p>
+    </div>
+
+    <div class="charts-grid-3">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Attractivité des villes </div>
+            <div class="chart-card-sub">Statistiques catégorielles</div>
+          </div>
+          <span class="chart-card-badge">Spider chart</span>
+        </div>
+        <canvas id="spider-chart-attractivite"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Annonces par localisation</div>
+            <div class="chart-card-sub">Densité des annonces</div>
+          </div>
+          <span class="chart-card-badge">Horizontal bar</span>
+        </div>
+        <canvas id="chart-annonces-localisation"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Top 3</div>
+            <div class="chart-card-sub">Meilleurs hôtes</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-top3-hosts"></canvas>
+      </div>
+<!--
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Reviews par mois</div>
+            <div class="chart-card-sub">Activité par ville</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-reviews-ville"></canvas>
+      </div>
+-->
+    </div>
+  </section>
+
 </div><!-- /#main -->
 
 <script>
@@ -745,13 +827,13 @@ const DATA = {
       "Ludovic (#7642792)",
       "Damien (#316423644)",
       "Agence Cocoonr Bordeaux (#164626639)",
-      "Mathilde (#226216922)",
       "Arnaud (#72691486)",
+      "Mathilde (#226216922)",
       "Lina (#532176426)",
       "Welkeys (#184945495)",
       "2beapart (#5931758)",
       "Les Patios Du Marais (#147018685)",
-      "Matthew (#33889201)"
+      "Bastien (#291015206)"
     ],
     "values": [
       123,
@@ -802,6 +884,117 @@ const DATA = {
       1.32,
       0.62,
       1.0
+    ]
+  },
+  "spider_attractivite": {
+    "labels": [
+      "Prix moyen",
+      "Disponibilité",
+      "Reviews 12m",
+      "Min nights",
+      "Nb annonces"
+    ],
+    "datasets": [
+      {
+        "label": "Lyon",
+        "data": [
+          0.0,
+          38.5,
+          100.0,
+          0.0,
+          0.0
+        ],
+        "rawValues": {
+          "Prix moyen": 102.97,
+          "Disponibilité": 114.04,
+          "Reviews 12m": 9.12,
+          "Min nights": 2,
+          "Nb annonces": 9647
+        },
+        "borderColor": "#00e5b0",
+        "backgroundColor": "#00e5b022",
+        "pointBackgroundColor": "#00e5b0",
+        "pointBorderColor": "#00e5b0",
+        "pointRadius": 3,
+        "borderWidth": 2,
+        "fill": true,
+        "tension": 0.25
+      },
+      {
+        "label": "Paris",
+        "data": [
+          5.8,
+          0.0,
+          0.0,
+          100.0,
+          100.0
+        ],
+        "rawValues": {
+          "Prix moyen": 115.64,
+          "Disponibilité": 81.71,
+          "Reviews 12m": 4.75,
+          "Min nights": 4,
+          "Nb annonces": 24908
+        },
+        "borderColor": "#ff5f6d",
+        "backgroundColor": "#ff5f6d22",
+        "pointBackgroundColor": "#ff5f6d",
+        "pointBorderColor": "#ff5f6d",
+        "pointRadius": 3,
+        "borderWidth": 2,
+        "fill": true,
+        "tension": 0.25
+      },
+      {
+        "label": "Bordeaux",
+        "data": [
+          11.6,
+          70.8,
+          78.5,
+          0.0,
+          17.1
+        ],
+        "rawValues": {
+          "Prix moyen": 128.46,
+          "Disponibilité": 141.19,
+          "Reviews 12m": 8.18,
+          "Min nights": 2,
+          "Nb annonces": 12252
+        },
+        "borderColor": "#ffc857",
+        "backgroundColor": "#ffc85722",
+        "pointBackgroundColor": "#ffc857",
+        "pointBorderColor": "#ffc857",
+        "pointRadius": 3,
+        "borderWidth": 2,
+        "fill": true,
+        "tension": 0.25
+      },
+      {
+        "label": "Pays Basque",
+        "data": [
+          100.0,
+          100.0,
+          51.0,
+          50.0,
+          14.4
+        ],
+        "rawValues": {
+          "Prix moyen": 322.99,
+          "Disponibilité": 165.73,
+          "Reviews 12m": 6.98,
+          "Min nights": 3,
+          "Nb annonces": 11845
+        },
+        "borderColor": "#7b8cde",
+        "backgroundColor": "#7b8cde22",
+        "pointBackgroundColor": "#7b8cde",
+        "pointBorderColor": "#7b8cde",
+        "pointRadius": 3,
+        "borderWidth": 2,
+        "fill": true,
+        "tension": 0.25
+      }
     ]
   },
   "cities": {
@@ -877,6 +1070,13 @@ const DATA = {
           1837,
           4
         ]
+      },
+      "spider_raw": {
+        "Prix moyen": 102.97,
+        "Disponibilité": 114.04,
+        "Reviews 12m": 9.12,
+        "Min nights": 2,
+        "Nb annonces": 9647
       }
     },
     "Paris": {
@@ -951,6 +1151,13 @@ const DATA = {
           8246,
           19
         ]
+      },
+      "spider_raw": {
+        "Prix moyen": 115.64,
+        "Disponibilité": 81.71,
+        "Reviews 12m": 4.75,
+        "Min nights": 4,
+        "Nb annonces": 24908
       }
     },
     "Bordeaux": {
@@ -1025,6 +1232,13 @@ const DATA = {
           1162,
           7
         ]
+      },
+      "spider_raw": {
+        "Prix moyen": 128.46,
+        "Disponibilité": 141.19,
+        "Reviews 12m": 8.18,
+        "Min nights": 2,
+        "Nb annonces": 12252
       }
     },
     "Pays Basque": {
@@ -1099,6 +1313,13 @@ const DATA = {
           239,
           1
         ]
+      },
+      "spider_raw": {
+        "Prix moyen": 322.99,
+        "Disponibilité": 165.73,
+        "Reviews 12m": 6.98,
+        "Min nights": 3,
+        "Nb annonces": 11845
       }
     }
   }
@@ -1111,6 +1332,7 @@ const pagesMeta = {
   p1: { title: 'Carte géographique',   sub: 'Vue d\'ensemble des 4 zones' },
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
+  p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
 };
 
 function showPage(id, btn) {
@@ -1155,6 +1377,10 @@ function buildFilteredData(city) {
     room_type:          c.room_type,
     top_hosts:          c.top_hosts,
     min_nights:         c.min_nights,
+    spider_attractivite: {
+      labels: DATA.spider_attractivite.labels,
+      datasets: DATA.spider_attractivite.datasets.filter(ds => ds.label === city)
+    },
     stats:              { avg_price: c.avg_price, med_price: c.med_price, avg_avail: c.avg_avail,
                           total_listings: c.count, nb_hosts: c.nb_hosts,
                           ratio: c.ratio, med_minnights: c.med_minnights,
@@ -1447,6 +1673,83 @@ function renderReviewsVille(d) {
   });
 }
 
+// ── PAGE 4 ── Spider
+
+function renderSpiderAttractivite(d) {
+  destroyChart('spiderAttractivite');
+
+  const canvas = document.getElementById('spider-chart-attractivite');
+  if (!canvas || !d || !d.labels || !d.datasets) return;
+
+  const ctx = canvas.getContext('2d');
+
+  charts['spiderAttractivite'] = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: d.labels,
+      datasets: d.datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#5a6a82',
+            padding: 12,
+            font: { size: 11 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const dataset = context.dataset;
+              const metric = context.label;
+              const score = context.raw;
+              const raw = dataset.rawValues ? dataset.rawValues[metric] : null;
+
+              let suffix = '';
+              if (metric === 'Prix moyen') suffix = ' €';
+              if (metric === 'Disponibilité') suffix = ' j';
+              if (metric === 'Min nights') suffix = ' n';
+
+              if (raw !== null && raw !== undefined) {
+                return `${dataset.label} · score ${score}/100 · brut : ${raw}${suffix}`;
+              }
+              return `${dataset.label} : ${score}/100`;
+            }
+          }
+        }
+      },
+      scales: {
+        r: {
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 20,
+            color: '#5a6a82',
+            backdropColor: 'transparent'
+          },
+          grid: {
+            color: '#1e2d45'
+          },
+          angleLines: {
+            color: '#1e2d45'
+          },
+          pointLabels: {
+            color: '#e8edf5',
+            font: {
+              family: "'Outfit', sans-serif",
+              size: 11
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 // ══════════════════════════════════════════
 //  STATS KPI
 // ══════════════════════════════════════════
@@ -1475,6 +1778,7 @@ function updateAllCharts() {
   renderTopHosts(d.top_hosts);
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
+  renderSpiderAttractivite(d.spider_attractivite);
 }
 
 // ══════════════════════════════════════════

@@ -90,11 +90,80 @@ def compute_reviews_par_ville(df):
     }
 
 
+def compute_spider_raw_metrics(df):
+    """
+    Métriques brutes du spider chart par ville.
+    On utilise :
+    - prix moyen
+    - disponibilité moyenne
+    - nb de reviews sur les 12 derniers mois
+    - minimum nights médian
+    - nb total d'annonces
+    """
+    rows = []
+
+    for city in CITIES:
+        sub = df[df["city"] == city]
+        if sub.empty:
+            continue
+
+        rows.append({
+            "city": city,
+            "Prix moyen": round(float(sub["price"].mean()), 2),
+            "Disponibilité": round(float(sub["availability_365"].mean()), 2),
+            "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
+            "Min nights": int(sub["minimum_nights"].median()),
+            "Nb annonces": int(len(sub)),
+        })
+
+    return rows
+
+
+def normalize_spider_metrics(spider_rows):
+    """
+    Normalise chaque métrique sur une échelle 0-100 pour affichage radar.
+    Conserve aussi les valeurs brutes pour les tooltips.
+    """
+    metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Min nights", "Nb annonces"]
+
+    normalized_rows = []
+    for row in spider_rows:
+        normalized_rows.append({
+            "city": row["city"],
+            "raw": {k: row[k] for k in metric_labels},
+            "normalized": {}
+        })
+
+    for metric in metric_labels:
+        values = [row[metric] for row in spider_rows]
+        vmin = min(values)
+        vmax = max(values)
+
+        if vmax == vmin:
+            norm_values = [100.0] * len(values)
+        else:
+            norm_values = [round((v - vmin) / (vmax - vmin) * 100, 1) for v in values]
+
+        for i, norm_v in enumerate(norm_values):
+            normalized_rows[i]["normalized"][metric] = norm_v
+
+    return {
+        "labels": metric_labels,
+        "cities": normalized_rows
+    }
+
 def compute_city_detail(df, city):
     """Stats détaillées pour une seule ville (utilisé par le filtre JS)."""
     sub = df[df["city"] == city]
     if sub.empty:
         return {}
+    spider_raw = {
+        "Prix moyen": round(float(sub["price"].mean()), 2),
+        "Disponibilité": round(float(sub["availability_365"].mean()), 2),
+        "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
+        "Min nights": int(sub["minimum_nights"].median()),
+        "Nb annonces": int(len(sub)),
+    }
     return {
         "avg_price":         round(float(sub["price"].mean()), 2),
         "med_price":         round(float(sub["price"].median()), 2),
@@ -107,11 +176,14 @@ def compute_city_detail(df, city):
         "room_type":         compute_room_type(sub),
         "top_hosts":         compute_top_hosts(sub),
         "min_nights":        compute_min_nights(sub),
+        "spider_raw":        spider_raw,
     }
 
 
 def compute_all_stats(df):
     """Point d'entrée : renvoie un dict complet prêt pour generate_charts.py."""
+    spider_rows = compute_spider_raw_metrics(df)
+    spider_chart = normalize_spider_metrics(spider_rows)
     return {
         "stats":              compute_global_stats(df),
         "prix_par_ville":     compute_prix_par_ville(df),
@@ -121,6 +193,7 @@ def compute_all_stats(df):
         "top_hosts":          compute_top_hosts(df),
         "min_nights":         compute_min_nights(df),
         "reviews_par_ville":  compute_reviews_par_ville(df),
+        "spider_chart":       spider_chart,
         "cities": {
             city: compute_city_detail(df, city)
             for city in CITIES
