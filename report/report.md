@@ -7,8 +7,11 @@ Ce projet s'inscrit dans la finalité du cours "Data Storytelling", donné par P
 ```
 data-storytelling-project/
 ├── main.py
-├── report.md
 │
+├── report/
+│   ├── report.md
+│   ├── habib.jpg
+│   └── cindy.jpg
 ├── data/
 │   ├── listings-bordeaux.csv
 │   ├── listings-lyon.csv
