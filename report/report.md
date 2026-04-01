@@ -12,6 +12,7 @@ data-storytelling-project/
 │   ├── report.md
 │   ├── habib.jpg
 │   └── cindy.jpeg
+│
 ├── data/
 │   ├── listings-bordeaux.csv
 │   ├── listings-lyon.csv
@@ -38,6 +39,13 @@ data-storytelling-project/
 ```
 
 # Données
+Ce projet mobilise des données provenant de deux sources différentes. Tout d'abord, les bases de données sous format CSV (comma-separated values) commençant par "listings-" proviennent du site web [Inside Airbnb](https://insideairbnb.com/fr/get-the-data/), qui répertorie l'ensemble des données par ville de chaque pays disponible. Nous avons décidé de choisir la France comme pays d'étude pour ce projet. Par conséquent, nous obtenons les villes suivantes : 
+- Bordeaux (`listings-bordeaux.csv`)
+- Lyon (`listings-lyon.csv`)
+- Paris (`listings-paris.csv`)
+- Villes de la région Pays Basque (`listings-paysbasque.csv`)
+
+En plus de cela, une dernière base de données est ajoutée pour remédier à un problème critique de valeurs manquantes au niveau des prix pour la ville de Paris. En effet, tous les prix de Paris étant manquant, une jointure est effectuée entre `listings-paris.csv` et `prix-paris.csv`, sur la clé primaire `id` du logement, correspondant à un identifiant unique pour chaque logement listé. Cela permettra donc d'apporter une solution au problème de valeurs manquantes. À présent, `listings-paris.csv` ne présente aucune valeur manquante. 
 
 # Processus de réflexion
 +++ mentionner les graphiques
