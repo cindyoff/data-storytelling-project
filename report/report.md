@@ -39,7 +39,8 @@ data-storytelling-project/
 
 # Données
 
-# 
+# Processus de réflexion
++++ mentionner les graphiques
 
 Authors : 
 - Habib Karamoko (hdkaramoko)
