@@ -11,7 +11,7 @@ data-storytelling-project/
 ├── report/
 │   ├── report.md
 │   ├── habib.jpg
-│   └── cindy.jpg
+│   └── cindy.jpeg
 ├── data/
 │   ├── listings-bordeaux.csv
 │   ├── listings-lyon.csv
