@@ -1,7 +1,42 @@
 # Data storytelling - Final project
 
 # Introduction
-+++
+Ce projet s'inscrit dans la finalité du cours "Data Storytelling", donné par Pr. Pietriga et Pr. Prouzeau. Le but du projet est de créer un support, en l'occurrence un dashboard, pour exposer les différentes visualisations permettant de mieux comprendre les données à disposition. 
+
+# Structure du projet
+```
+data-storytelling-project/
+├── main.py
+├── report.md
+│
+├── data/
+│   ├── listings-bordeaux.csv
+│   ├── listings-lyon.csv
+│   ├── listings-paris.csv
+│   ├── listings-paysbasque.csv
+│   └── prix-paris.csv
+│
+├── output/
+│   └── dashboard.html
+│
+├── templates/
+│   └── dashboard.html
+│
+├── src/
+│   ├── build_dashboard.py
+│   ├── compute_stats.py
+│   ├── generate_charts.py
+│   └── load_data.py
+│
+└── tests/
+    ├── index.html
+    ├── script.js
+    └── styles.css
+```
+
+# Données
+
+# 
 
 Authors : 
 - Habib Karamoko (hdkaramoko)
