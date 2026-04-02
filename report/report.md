@@ -1,5 +1,14 @@
 # Data storytelling - Final project
 
+# Auteurs
+- Habib Karamoko - @hdkaramoko
+- Oumalheir Souley Na Lado - @Ouma-Souley
+- Cindy Tran - @cindyoff
+
+ENSAE - MS Data Science - 2026
+
+---
+
 # Sommaire
 1. [Introduction](#introduction)
 2. [Structure du projet](#structure-du-projet)
@@ -129,10 +138,3 @@ Enfin, les limites identifiées ouvrent des perspectives d'amélioration, notamm
 - Base de données des [prix de Paris](https://www.kaggle.com/datasets/abaghyangor/airbnb-paris?resource=download&select=Listings.csv)
 - Polices utilisés provenant de [Google Fonts](https://fonts.google.com/share?selection.family=Syne:wght@400;600;700;800|Outfit:wght@300;400;500;600|JetBrains+Mono:wght@400;500)
 - Graphiques sous JavaScript [D3](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable)
-
-# Auteurs
-- Habib Karamoko (hdkaramoko)
-- Oumalheir Souley Na Lado (Ouma-Souley)
-- Cindy Tran (cindyoff)
-
-ENSAE - MS Data Science - 2026
