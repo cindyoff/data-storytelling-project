@@ -111,17 +111,59 @@ Le projet repose sur une architecture de **génération de site statique** : Pyt
 Les croquis dans le dossier ```report/``` du projet montrent le processus de création d'une poignée de graphiques présents dans le dashboard final. En plus de cela, le dahsboard présente une combinaison de graphiques crées sous Python et JavaScript avec le package D3. Cela inclut le spider chart, présent en page 4 du dashboard, ainsi que le classement des hôtes en fonction des filtres temporels. Ces croquis ont été réalisés dans le cadre du quatrième cours "data storytelling" dispensé par Pr. Prouzeau. 
 
 # Visualisations
-+++ expliquer chaque visualisation et leur but
+## Page 1 (P1) : carte géographique
+- Carte géographique : carte du monde, présentée grâce à Leaflet.js chargé via CDN
+    - Une bulle par région contenant les informations suivantes : 
+        - Nom de la ville
+        - Prix moyen par nuit
+        - Disponibilité en nombre de jours par année
+        - Un premier bouton permettant d'accéder à la page 2 (P2), concentrée sur l'analyse des prix
+        - Un second bouton permettant d'accéder à la page 3 (P3) montrant une analyse des hôtes
+
+## Page 2 (P2) : analyse des prix
+Un filtre par ville est disponible dans le coin droit supérieur de la page. Une fois le filtre choisi, les graphiques réagiront à cette sélection. 
+
+- Trois graphiques :
+    - Gauche (histogramme) : prix moyen en euro (€)
+    - Droite (histogramme) : disponibilité moyenne en nombre de jours par année
+    - Milieu (graphique en anneau) : proportion de chaque type de logement 
+- Quatre volets numériques : 
+    - Gauche : prix moyen par nuit en euro (€)
+    - Milieu gauche : médiane des prix en euro (€)
+    - Milieu droit : disponibilité moyenne des logements en nombre de jours par année
+    - Droite : nombre total de logements Airbnb
+
+## Page 3 (P3) : analyse des hôtes
+Le filtre par ville dans le coin droit supérieur est applicable sur cette page également. 
+
+- Quatre volets numériques : 
+    - Gauche : nombre d'hôtes uniques
+    - Milieu gauche : nombre moyen de logements Airbnb par hôte
+    - Milieu droit : nombre de nuits médian
+    - Droit : nombre moyen de "reviews" (commentaires) par mois
+- Quatre graphiques : 
+    - Gauche supérieur (histogramme) : nombre de logements Airbnb par région
+    - Droit supérieur (histogramme) : classement des top 10 hôtes par nombre de logements
+    - Gauche inférieur (histogramme) : distribution de la politique de séjour des logements Airbnb à disposition, en nombre de nuits
+    - Droit inférieur (histogramme) : nombre de "reviews" par mois pour chaque ville
+
+## Page 4 (P4) : vision 360
+Le filtre par ville dans le coin droit supérieur est applicable sur cette page également. 
+
+- Trois graphiques : 
+    - Supérieur (spider/radar chart) : 
+    - Gauche inférieur (+++++) : 
+    - Droit inférieur (++++) : 
 
 # Limites du projet
 ## Limites liées aux données
-- **Couverture géographique restreinte** : seules quatre villes/régions françaises sont couvertes (Paris, Lyon, Bordeaux, Pays Basque), ce qui ne permet pas de généraliser les conclusions à l'ensemble du territoire national
-- **Données statiques** : les fichiers CSV constituent des instantanés à une date précise, donc le dashboard ne reflète pas l'évolution en temps réel du marché Airbnb
+- Couverture géographique restreinte : seules quatre villes/régions françaises sont couvertes (Paris, Lyon, Bordeaux, Pays Basque), ce qui ne permet pas de généraliser les conclusions à l'ensemble du territoire national
+- Données statiques : les fichiers CSV constituent des instantanés à une date précise, donc le dashboard ne reflète pas l'évolution en temps réel du marché Airbnb
 
 ## Limites techniques
-- **Dashboard statique sans backend** : l'architecture de génération de site statique implique que toute mise à jour des données nécessite de relancer le pipeline Python et de régénérer le fichier HTML manuellement
-- **Dépendances internet** : le dashboard requiert une connexion internet pour charger Chart.js, Leaflet.js et les polices Google Fonts ; il ne fonctionne pas hors ligne
-- **Toutes les données contenues dans un seul fichier HTML** : le JSON injecté dans `output/dashboard.html` grossit proportionnellement au volume de données, ce qui peut dégrader les performances à plus grande échelle
+- Dashboard statique sans backend : l'architecture de génération de site statique implique que toute mise à jour des données nécessite de relancer le pipeline Python et de régénérer le fichier HTML manuellement
+- Dépendances internet : le dashboard requiert une connexion internet pour charger Chart.js, Leaflet.js et les polices Google Fonts ; il ne fonctionne pas hors ligne
+- Intégralité des données contenue dans un seul fichier HTML : le JSON injecté dans `output/dashboard.html` grossit proportionnellement au volume de données, ce qui peut dégrader les performances à plus grande échelle
 
 # Conclusion
 Ce projet a permis de concevoir et de déployer un dashboard interactif dédié à l'analyse du marché Airbnb dans quatre villes et régions françaises : Paris, Lyon, Bordeaux et le Pays Basque. En combinant un pipeline de traitement de données en Python et un frontend entièrement rendu en HTML/CSS/JavaScript, nous avons pu proposer un outil de visualisation autonome, sans serveur, accessible directement depuis un navigateur.
@@ -136,4 +178,4 @@ Enfin, les limites identifiées ouvrent des perspectives d'amélioration, notamm
 - Bases de données source [Airbnb](https://insideairbnb.com/fr/get-the-data/)
 - Base de données des [prix de Paris](https://www.kaggle.com/datasets/abaghyangor/airbnb-paris?resource=download&select=Listings.csv)
 - Polices utilisés provenant de [Google Fonts](https://fonts.google.com/share?selection.family=Syne:wght@400;600;700;800|Outfit:wght@300;400;500;600|JetBrains+Mono:wght@400;500)
-- Graphiques sous JavaScript [D3](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable)
+- Graphiques sous JavaScript [D3](https://observablehq.com/@d3/gallery?utm_source=d3js-org&utm_medium=hero&utm_campaign=try-observable)f
