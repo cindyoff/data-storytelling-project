@@ -21,7 +21,6 @@ ENSAE - MS Data Science - 2026
 9. [Limites du projet](#limites-du-projet)
 10. [Conclusion](#conclusion)
 11. [Références](#références)
-12. [Auteurs](#auteurs)
 
 # Introduction
 Ce projet s'inscrit dans le cadre du cours "Data Storytelling", donné par Pr. Pietriga et Pr. Prouzeau à l'ENSAE Paris. Il porte sur l'analyse des données de la plateforme Airbnb en France, un marché particulièrement dynamique : la France figure en effet parmi les destinations les plus prisées au monde, et Airbnb y joue un rôle croissant dans l'offre d'hébergement touristique et de courte durée.
