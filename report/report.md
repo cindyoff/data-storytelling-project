@@ -45,12 +45,12 @@ Ce projet mobilise des données provenant de deux sources différentes. Tout d'a
 - Paris (`listings-paris.csv`)
 - Villes de la région Pays Basque (`listings-paysbasque.csv`)
 
-En plus de cela, une dernière base de données est ajoutée pour remédier à un problème critique de valeurs manquantes au niveau des prix pour la ville de Paris. En effet, tous les prix de Paris étant manquant, une jointure est effectuée entre `listings-paris.csv` et `prix-paris.csv`, sur la clé primaire `id` du logement, correspondant à un identifiant unique pour chaque logement listé. Cela permettra donc d'apporter une solution au problème de valeurs manquantes. À présent, `listings-paris.csv` ne présente aucune valeur manquante. 
+En plus de cela, une dernière base de données est ajoutée pour remédier à un problème critique de valeurs manquantes au niveau des prix pour la ville de Paris. En effet, tous les prix de Paris étant manquant, une jointure est effectuée entre `listings-paris.csv` et `prix-paris.csv`, sur la clé primaire `id` du logement, correspondant à un identifiant unique pour chaque logement listé. Cela permettra donc d'apporter une solution au problème de valeurs manquantes. Le jeu de données `prix-paris.csv`, quant à lui, provient de l'assemblement de données sous [Kaggle](https://www.kaggle.com/datasets/abaghyangor/airbnb-paris?resource=download&select=Listings.csv). À présent, `listings-paris.csv` ne présente aucune valeur manquante. 
 
 # Processus de réflexion
-+++ mentionner les graphiques
+Les graphiques dans le dossier ```report/``` du projet montrent le processus de création d'une poignée de graphiques présents dans le dashboard final. En plus de cela, le dahsboard présente une combinaison de graphiques crées sous Python et JavaScript avec le package D3. 
 
-Authors : 
+Auteurs : 
 - Habib Karamoko (hdkaramoko)
 - Oumalheir Souley Na Lado (Ouma-Souley)
 - Cindy Tran (cindyoff)
