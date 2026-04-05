@@ -135,7 +135,10 @@ def load_all(data_dir="data/"):
     dfs = [
         load_lyon(f"{data_dir}listings-lyon.csv"),
         load_paysbasque(f"{data_dir}listings-paysbasque.csv"),
-        load_paris(f"{data_dir}listings-paris.csv"),
+        load_paris(
+            f"{data_dir}listings-paris.csv",
+            prix_path=f"{data_dir}prix-paris.csv"   # 🔥 FIX ICI
+        ),
         load_bordeaux(f"{data_dir}listings-bordeaux.csv"),
     ]
     df = pd.concat(dfs, ignore_index=True)

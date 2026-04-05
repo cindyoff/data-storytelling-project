@@ -42,7 +42,6 @@
       overflow: hidden;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
       width: var(--sidebar-w);
       min-width: var(--sidebar-w);
@@ -58,6 +57,7 @@
       padding: 28px 22px 20px;
       border-bottom: 1px solid var(--border);
     }
+
     .sidebar-logo .logo-tag {
       font-family: 'Syne', sans-serif;
       font-size: 11px;
@@ -67,6 +67,7 @@
       color: var(--accent);
       margin-bottom: 4px;
     }
+
     .sidebar-logo h1 {
       font-family: 'Syne', sans-serif;
       font-size: 18px;
@@ -109,21 +110,25 @@
       transition: all 0.2s ease;
       width: 100%;
     }
+
     .nav-btn:hover {
       background: var(--panel);
       color: var(--text);
     }
+
     .nav-btn.active {
       background: rgba(0,229,176,0.08);
       color: var(--accent);
       border: 1px solid rgba(0,229,176,0.18);
     }
+
     .nav-btn .nav-icon {
       font-size: 16px;
       width: 20px;
       text-align: center;
       flex-shrink: 0;
     }
+
     .nav-btn .nav-badge {
       margin-left: auto;
       font-family: 'JetBrains Mono', monospace;
@@ -133,6 +138,7 @@
       border-radius: 20px;
       color: var(--muted);
     }
+
     .nav-btn.active .nav-badge {
       background: rgba(0,229,176,0.15);
       color: var(--accent);
@@ -145,12 +151,12 @@
       color: var(--muted);
       line-height: 1.6;
     }
+
     .sidebar-footer strong {
       color: var(--accent);
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* ── MAIN AREA ── */
     #main {
       flex: 1;
       display: flex;
@@ -168,22 +174,26 @@
       padding: 0 28px;
       gap: 16px;
     }
+
     .topbar-title {
       font-family: 'Syne', sans-serif;
       font-size: 15px;
       font-weight: 700;
       color: var(--text);
     }
+
     .topbar-breadcrumb {
       font-size: 13px;
       color: var(--muted);
       margin-left: 4px;
     }
+
     .city-filter {
       margin-left: auto;
       display: flex;
       gap: 8px;
     }
+
     .city-chip {
       padding: 5px 14px;
       border-radius: 20px;
@@ -196,25 +206,30 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+
     .city-chip:hover, .city-chip.active {
       color: var(--text);
     }
+
     .city-chip[data-city="Lyon"].active       { border-color: var(--accent);  background: rgba(0,229,176,0.1);  color: var(--accent); }
     .city-chip[data-city="Paris"].active      { border-color: var(--accent2); background: rgba(255,95,109,0.1); color: var(--accent2); }
     .city-chip[data-city="Bordeaux"].active   { border-color: var(--accent3); background: rgba(255,200,87,0.1); color: var(--accent3); }
-    .city-chip[data-city="Pays Basque"].active{ border-color: var(--accent4); background: rgba(123,140,222,0.1);color: var(--accent4); }
+    .city-chip[data-city="Pays Basque"].active{ border-color: var(--accent4); background: rgba(123,140,222,0.1); color: var(--accent4); }
     .city-chip[data-city="Toutes"].active     { border-color: var(--text);    background: rgba(255,255,255,0.05); color: var(--text); }
 
-    /* ── PAGES ── */
     .page {
       flex: 1;
       overflow-y: auto;
       display: none;
       padding: 28px;
     }
-    .page.active { display: flex; flex-direction: column; gap: 20px; }
 
-    /* ── PAGE 1 : MAP ── */
+    .page.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
     .map-header {
       display: flex;
       align-items: flex-start;
@@ -222,21 +237,25 @@
       flex-wrap: wrap;
       gap: 16px;
     }
+
     .map-header h2 {
       font-family: 'Syne', sans-serif;
       font-size: 22px;
       font-weight: 800;
     }
+
     .map-header p {
       font-size: 13px;
       color: var(--muted);
       margin-top: 4px;
     }
+
     .map-legend {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
+
     .legend-item {
       display: flex;
       align-items: center;
@@ -248,8 +267,10 @@
       padding: 6px 12px;
       border-radius: 8px;
     }
+
     .legend-dot {
-      width: 10px; height: 10px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -263,7 +284,11 @@
       min-height: 400px;
       position: relative;
     }
-    #map { height: 100%; width: 100%; }
+
+    #map {
+      height: 100%;
+      width: 100%;
+    }
 
     .map-hint {
       position: absolute;
@@ -282,24 +307,29 @@
       white-space: nowrap;
     }
 
-    /* ── CHARTS GRID ── */
     .page-header {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
+
     .page-header h2 {
       font-family: 'Syne', sans-serif;
       font-size: 22px;
       font-weight: 800;
     }
-    .page-header p { font-size: 13px; color: var(--muted); }
+
+    .page-header p {
+      font-size: 13px;
+      color: var(--muted);
+    }
 
     .charts-grid-3 {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 20px;
     }
+
     .charts-grid-4 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -316,24 +346,30 @@
       gap: 16px;
       transition: border-color 0.2s;
     }
-    .chart-card:hover { border-color: rgba(0,229,176,0.25); }
+
+    .chart-card:hover {
+      border-color: rgba(0,229,176,0.25);
+    }
 
     .chart-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
+
     .chart-card-title {
       font-family: 'Syne', sans-serif;
       font-size: 14px;
       font-weight: 700;
       color: var(--text);
     }
+
     .chart-card-sub {
       font-size: 11px;
       color: var(--muted);
       margin-top: 3px;
     }
+
     .chart-card-badge {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
@@ -343,22 +379,24 @@
       color: var(--muted);
       white-space: nowrap;
     }
+
     .chart-card canvas {
       max-height: 230px;
     }
 
-    /* ── STAT STRIP (page 2 + 3) ── */
     .stat-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
     }
+
     .stat-card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 18px 20px;
     }
+
     .stat-label {
       font-size: 11px;
       color: var(--muted);
@@ -367,48 +405,56 @@
       font-weight: 600;
       margin-bottom: 8px;
     }
+
     .stat-value {
       font-family: 'JetBrains Mono', monospace;
       font-size: 26px;
       font-weight: 500;
       color: var(--accent);
     }
+
     .stat-value.v2 { color: var(--accent2); }
     .stat-value.v3 { color: var(--accent3); }
     .stat-value.v4 { color: var(--accent4); }
+
     .stat-delta {
       font-size: 11px;
       color: var(--muted);
       margin-top: 4px;
     }
 
-    /* Page 4 - taille des canvas*/
+    #p4 .charts-grid-3 {
+      grid-template-columns: 1fr 1fr;
+    }
 
-  #p4 .charts-grid-3 {
-    grid-template-columns: 1fr 1fr;
-  }
+    #p4 .chart-card:first-child {
+      grid-column: span 2;
+      height: 420px;
+    }
 
-  #p4 .chart-card:first-child {
-    grid-column: span 2;
-    height: 420px; /* spider chart plus grand */
-  }
+    #p4 .chart-card:not(:first-child) {
+      height: 300px;
+    }
 
-  #p4 .chart-card:not(:first-child) {
-    height: 300px;
-  }
+    #p4 canvas {
+      height: 100% !important;
+    }
 
-  #p4 canvas {
-    height: 100% !important;
-}
+    #p5 .chart-card {
+      min-height: 320px;
+    }
 
-    /* ── SCROLLBAR ── */
+    #p5 canvas {
+      height: 220px !important;
+    }
+
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-    /* ── LEAFLET CUSTOM ── */
     .leaflet-container { background: #080c12 !important; }
     .leaflet-tile { filter: brightness(0.3) saturate(0.6) hue-rotate(180deg); }
+
     .custom-popup .leaflet-popup-content-wrapper {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -416,17 +462,23 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       color: var(--text);
     }
+
     .custom-popup .leaflet-popup-tip { background: var(--panel); }
+
     .popup-inner { padding: 4px 2px; }
+
     .popup-city {
       font-family: 'Syne', sans-serif;
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 6px;
     }
+
     .popup-stat { font-size: 12px; color: var(--muted); margin: 2px 0; }
     .popup-stat span { color: var(--text); font-weight: 600; }
+
     .popup-btns { display: flex; gap: 8px; margin-top: 10px; }
+
     .popup-btn {
       flex: 1;
       padding: 6px;
@@ -438,20 +490,22 @@
       cursor: pointer;
       text-align: center;
     }
+
     .popup-btn.p2 { background: rgba(0,229,176,0.15); color: var(--accent); }
     .popup-btn.p3 { background: rgba(123,140,222,0.15); color: var(--accent4); }
+
     .popup-btn:hover { opacity: 0.8; }
 
     @media (max-width: 1100px) {
       .charts-grid-3 { grid-template-columns: 1fr 1fr; }
       .stat-strip { grid-template-columns: 1fr 1fr; }
     }
+
     @media (max-width: 750px) {
       .charts-grid-3, .charts-grid-4 { grid-template-columns: 1fr; }
       .stat-strip { grid-template-columns: 1fr 1fr; }
     }
 
-    /* ── TULIP TRAIL ── */
     .tulip {
       position: fixed;
       pointer-events: none;
@@ -463,15 +517,14 @@
     }
 
     @keyframes tulip-fade {
-      0%   { opacity: 1;   transform: translate(-50%, -50%)  rotate(0deg)   scale(1);   }
-      40%  { opacity: 0.8; transform: translate(-50%, -80%)  rotate(15deg)  scale(1.1); }
+      0%   { opacity: 1;   transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+      40%  { opacity: 0.8; transform: translate(-50%, -80%) rotate(15deg) scale(1.1); }
       100% { opacity: 0;   transform: translate(-50%, -130%) rotate(-10deg) scale(0.4); }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════ SIDEBAR ══════════════ -->
 <aside id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-tag">Analytics</div>
@@ -500,9 +553,15 @@
     </button>
 
     <button class="nav-btn" onclick="showPage('p4', this)" id="btn-p4">
-      <span class="nav-icon">📈</span>
+      <span class="nav-icon">🧭</span>
       Vision 360
       <span class="nav-badge">P4</span>
+    </button>
+
+    <button class="nav-btn" onclick="showPage('p5', this)" id="btn-p5">
+      <span class="nav-icon">💼</span>
+      Investissement
+      <span class="nav-badge">P5</span>
     </button>
   </nav>
 
@@ -512,10 +571,7 @@
   </div>
 </aside>
 
-<!-- ══════════════ MAIN ══════════════ -->
 <div id="main">
-
-  <!-- TOPBAR -->
   <div class="topbar">
     <span class="topbar-title" id="topbar-title">Carte géographique</span>
     <span class="topbar-breadcrumb" id="topbar-sub">Vue d'ensemble des 4 zones</span>
@@ -528,7 +584,6 @@
     </div>
   </div>
 
-  <!-- ═══ PAGE 1 : MAP ═══ -->
   <section class="page active" id="p1">
     <div class="map-header">
       <div>
@@ -549,7 +604,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 2 : ANALYSE DES PRIX ═══ -->
   <section class="page" id="p2">
     <div class="page-header">
       <h2>Analyse des prix</h2>
@@ -615,7 +669,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 3 : ANALYSE DES HÔTES ═══ -->
   <section class="page" id="p3">
     <div class="page-header">
       <h2>Analyse des hôtes &amp; offre</h2>
@@ -692,9 +745,6 @@
     </div>
   </section>
 
-
-
-  <!-- ═══ PAGE 4 : Graphiques particuliers ═══ -->
   <section class="page" id="p4">
     <div class="page-header">
       <h2>Graphiques particuliers</h2>
@@ -705,7 +755,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Attractivité des villes </div>
+            <div class="chart-card-title">Attractivité des villes</div>
             <div class="chart-card-sub">Statistiques catégorielles</div>
           </div>
           <span class="chart-card-badge">Spider chart</span>
@@ -734,96 +784,121 @@
         </div>
         <canvas id="chart-top3-hosts"></canvas>
       </div>
-<!--
-      <div class="chart-card">
-        <div class="chart-card-header">
-          <div>
-            <div class="chart-card-title">Reviews par mois</div>
-            <div class="chart-card-sub">Activité par ville</div>
-          </div>
-          <span class="chart-card-badge">Bar chart</span>
-        </div>
-        <canvas id="chart-reviews-ville"></canvas>
-      </div>
--->
     </div>
   </section>
 
-</div><!-- /#main -->
+  <section class="page" id="p5">
+    <div class="page-header">
+      <h2>Analyse d’investissement</h2>
+      <p id="p5-subtitle">Rentabilité, demande et évolution du marché</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-label">Ville la plus rentable</div>
+        <div class="stat-value" id="stat-best-city">—</div>
+        <div class="stat-delta">Selon revenu estimé</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenu estimé max</div>
+        <div class="stat-value v2" id="stat-best-revenue">—</div>
+        <div class="stat-delta">Moyenne par ville</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ville la plus demandée</div>
+        <div class="stat-value v3" id="stat-best-demand-city">—</div>
+        <div class="stat-delta">Selon reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Prix moyen 2024</div>
+        <div class="stat-value v4" id="stat-price-2024">—</div>
+        <div class="stat-delta">Proxy marché</div>
+      </div>
+    </div>
+
+    <div class="charts-grid-4">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Revenu estimé par ville</div>
+            <div class="chart-card-sub">Prix × jours réservés estimés</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-invest-revenue"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Répartition de la demande</div>
+            <div class="chart-card-sub">Part relative des reviews moyennes</div>
+          </div>
+          <span class="chart-card-badge">Doughnut</span>
+        </div>
+        <canvas id="chart-invest-demand"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Évolution du prix</div>
+            <div class="chart-card-sub">Année de last_review comme proxy</div>
+          </div>
+          <span class="chart-card-badge">Line chart</span>
+        </div>
+        <canvas id="chart-invest-trend"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Risque vs opportunité</div>
+            <div class="chart-card-sub">Revenu estimé vs demande</div>
+          </div>
+          <span class="chart-card-badge">Scatter</span>
+        </div>
+        <canvas id="chart-invest-scatter"></canvas>
+      </div>
+    </div>
+  </section>
+</div>
 
 <script>
-// ══════════════════════════════════════════
-//  DATA (injectée par Python via build_dashboard.py)
-// ══════════════════════════════════════════
 const DATA = {
-  "stats": {
-    "avg_price": 158.11,
-    "med_price": 89.0,
-    "avg_avail": 116.42,
-    "total_listings": 58652,
-    "nb_hosts": 47011,
-    "ratio": 1.25,
-    "med_minnights": 3,
-    "avg_reviews_month": 0.95
+  stats: {
+    avg_price: 158.11,
+    med_price: 89.0,
+    avg_avail: 116.42,
+    total_listings: 58652,
+    nb_hosts: 47011,
+    ratio: 1.25,
+    med_minnights: 3,
+    avg_reviews_month: 0.95
   },
-  "prix_par_ville": {
-    "labels": [
-      "Bordeaux",
-      "Lyon",
-      "Paris",
-      "Pays Basque"
-    ],
-    "values": [
-      128.46,
-      102.97,
-      115.64,
-      322.99
-    ]
+
+  prix_par_ville: {
+    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
+    values: [128.46, 102.97, 115.64, 322.99]
   },
-  "room_type": {
-    "labels": [
-      "Entire home/apt",
-      "Private room",
-      "Hotel room",
-      "Shared room"
-    ],
-    "values": [
-      48386,
-      9463,
-      669,
-      134
-    ]
+
+  room_type: {
+    labels: ["Entire home/apt", "Private room", "Hotel room", "Shared room"],
+    values: [48386, 9463, 669, 134]
   },
-  "dispo_par_ville": {
-    "labels": [
-      "Bordeaux",
-      "Lyon",
-      "Paris",
-      "Pays Basque"
-    ],
-    "values": [
-      141.2,
-      114.0,
-      81.7,
-      165.7
-    ]
+
+  dispo_par_ville: {
+    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
+    values: [141.2, 114.0, 81.7, 165.7]
   },
-  "listings_par_ville": {
-    "labels": [
-      "Paris",
-      "Bordeaux",
-      "Pays Basque",
-      "Lyon"
-    ],
-    "values": [
-      24908,
-      12252,
-      11845,
-      9647
-    ]
+
+  listings_par_ville: {
+    labels: ["Paris", "Bordeaux", "Pays Basque", "Lyon"],
+    values: [24908, 12252, 11845, 9647]
   },
-  "top_hosts": {
-    "labels": [
+
+  top_hosts: {
+    labels: [
       "Ludovic (#7642792)",
       "Damien (#316423644)",
       "Agence Cocoonr Bordeaux (#164626639)",
@@ -835,194 +910,141 @@ const DATA = {
       "Les Patios Du Marais (#147018685)",
       "Matthew (#33889201)"
     ],
-    "values": [
-      123,
-      103,
-      84,
-      82,
-      82,
-      80,
-      73,
-      70,
-      67,
-      61
-    ]
+    values: [123, 103, 84, 82, 82, 80, 73, 70, 67, 61]
   },
-  "min_nights": {
-    "labels": [
-      "1 n",
-      "2 n",
-      "3 n",
-      "4-7 n",
-      "8-14 n",
-      "15-30 n",
-      "31-90 n",
-      "91-365 n",
-      "365+ n"
-    ],
-    "values": [
-      12035,
-      13094,
-      7501,
-      11204,
-      689,
-      2251,
-      363,
-      11484,
-      31
-    ]
+
+  min_nights: {
+    labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
+    values: [12035, 13094, 7501, 11204, 689, 2251, 363, 11484, 31]
   },
-  "reviews_par_ville": {
-    "labels": [
-      "Bordeaux",
-      "Lyon",
-      "Paris",
-      "Pays Basque"
-    ],
-    "values": [
-      1.24,
-      1.32,
-      0.62,
-      1.0
-    ]
+
+  reviews_par_ville: {
+    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
+    values: [1.24, 1.32, 0.62, 1.0]
   },
-  "spider_attractivite": {
-    "labels": [
-      "Prix moyen",
-      "Disponibilité",
-      "Reviews 12m",
-      "Min nights",
-      "Nb annonces"
-    ],
-    "datasets": [
+
+  spider_attractivite: {
+    labels: ["Prix moyen", "Disponibilité", "Reviews 12m", "Min nights", "Nb annonces"],
+    datasets: [
       {
-        "label": "Lyon",
-        "data": [
-          0.0,
-          38.5,
-          100.0,
-          0.0,
-          0.0
-        ],
-        "rawValues": {
+        label: "Lyon",
+        data: [0.0, 38.5, 100.0, 0.0, 0.0],
+        rawValues: {
           "Prix moyen": 102.97,
           "Disponibilité": 114.04,
           "Reviews 12m": 9.12,
           "Min nights": 2,
           "Nb annonces": 9647
         },
-        "borderColor": "#00e5b0",
-        "backgroundColor": "#00e5b022",
-        "pointBackgroundColor": "#00e5b0",
-        "pointBorderColor": "#00e5b0",
-        "pointRadius": 3,
-        "borderWidth": 2,
-        "fill": true,
-        "tension": 0.25
+        borderColor: "#00e5b0",
+        backgroundColor: "#00e5b022",
+        pointBackgroundColor: "#00e5b0",
+        pointBorderColor: "#00e5b0",
+        pointRadius: 3,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.25
       },
       {
-        "label": "Paris",
-        "data": [
-          5.8,
-          0.0,
-          0.0,
-          100.0,
-          100.0
-        ],
-        "rawValues": {
+        label: "Paris",
+        data: [5.8, 0.0, 0.0, 100.0, 100.0],
+        rawValues: {
           "Prix moyen": 115.64,
           "Disponibilité": 81.71,
           "Reviews 12m": 4.75,
           "Min nights": 4,
           "Nb annonces": 24908
         },
-        "borderColor": "#ff5f6d",
-        "backgroundColor": "#ff5f6d22",
-        "pointBackgroundColor": "#ff5f6d",
-        "pointBorderColor": "#ff5f6d",
-        "pointRadius": 3,
-        "borderWidth": 2,
-        "fill": true,
-        "tension": 0.25
+        borderColor: "#ff5f6d",
+        backgroundColor: "#ff5f6d22",
+        pointBackgroundColor: "#ff5f6d",
+        pointBorderColor: "#ff5f6d",
+        pointRadius: 3,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.25
       },
       {
-        "label": "Bordeaux",
-        "data": [
-          11.6,
-          70.8,
-          78.5,
-          0.0,
-          17.1
-        ],
-        "rawValues": {
+        label: "Bordeaux",
+        data: [11.6, 70.8, 78.5, 0.0, 17.1],
+        rawValues: {
           "Prix moyen": 128.46,
           "Disponibilité": 141.19,
           "Reviews 12m": 8.18,
           "Min nights": 2,
           "Nb annonces": 12252
         },
-        "borderColor": "#ffc857",
-        "backgroundColor": "#ffc85722",
-        "pointBackgroundColor": "#ffc857",
-        "pointBorderColor": "#ffc857",
-        "pointRadius": 3,
-        "borderWidth": 2,
-        "fill": true,
-        "tension": 0.25
+        borderColor: "#ffc857",
+        backgroundColor: "#ffc85722",
+        pointBackgroundColor: "#ffc857",
+        pointBorderColor: "#ffc857",
+        pointRadius: 3,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.25
       },
       {
-        "label": "Pays Basque",
-        "data": [
-          100.0,
-          100.0,
-          51.0,
-          50.0,
-          14.4
-        ],
-        "rawValues": {
+        label: "Pays Basque",
+        data: [100.0, 100.0, 51.0, 50.0, 14.4],
+        rawValues: {
           "Prix moyen": 322.99,
           "Disponibilité": 165.73,
           "Reviews 12m": 6.98,
           "Min nights": 3,
           "Nb annonces": 11845
         },
-        "borderColor": "#7b8cde",
-        "backgroundColor": "#7b8cde22",
-        "pointBackgroundColor": "#7b8cde",
-        "pointBorderColor": "#7b8cde",
-        "pointRadius": 3,
-        "borderWidth": 2,
-        "fill": true,
-        "tension": 0.25
+        borderColor: "#7b8cde",
+        backgroundColor: "#7b8cde22",
+        pointBackgroundColor: "#7b8cde",
+        pointBorderColor: "#7b8cde",
+        pointRadius: 3,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.25
       }
     ]
   },
-  "cities": {
-    "Lyon": {
-      "avg_price": 102.97,
-      "med_price": 81.0,
-      "avg_avail": 114.04,
-      "count": 9647,
-      "nb_hosts": 7279,
-      "ratio": 1.33,
-      "med_minnights": 2,
-      "avg_reviews_month": 1.32,
-      "room_type": {
-        "labels": [
-          "Entire home/apt",
-          "Private room",
-          "Shared room",
-          "Hotel room"
-        ],
-        "values": [
-          7648,
-          1968,
-          20,
-          11
-        ]
+
+  investment_revenue: {
+    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
+    values: [28013.44, 25126.09, 28981.96, 39537.59]
+  },
+
+  investment_demand: {
+    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
+    values: [38.30, 44.40, 47.63, 34.83]
+  },
+
+  investment_trend: {
+    labels: ["2010", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+    values: [60.00, 99.00, 102.88, 82.89, 84.73, 87.48, 107.65, 95.35, 103.13, 117.54, 129.66, 148.69, 158.01, 169.46, 146.02]
+  },
+
+  investment_scatter: {
+    points: [
+      { x: 38.30, y: 28013.44, label: "Bordeaux" },
+      { x: 44.40, y: 25126.09, label: "Lyon" },
+      { x: 47.63, y: 28981.96, label: "Paris" },
+      { x: 34.83, y: 39537.59, label: "Pays Basque" }
+    ]
+  },
+
+  cities: {
+    Lyon: {
+      avg_price: 102.97,
+      med_price: 81.0,
+      avg_avail: 114.04,
+      count: 9647,
+      nb_hosts: 7279,
+      ratio: 1.33,
+      med_minnights: 2,
+      avg_reviews_month: 1.32,
+      room_type: {
+        labels: ["Entire home/apt", "Private room", "Shared room", "Hotel room"],
+        values: [7648, 1968, 20, 11]
       },
-      "top_hosts": {
-        "labels": [
+      top_hosts: {
+        labels: [
           "Damien (#316423644)",
           "Mathilde (#226216922)",
           "Lina (#532176426)",
@@ -1034,76 +1056,37 @@ const DATA = {
           "WeHost (#369826491)",
           "Guillaume (#458222405)"
         ],
-        "values": [
-          103,
-          82,
-          80,
-          70,
-          61,
-          52,
-          43,
-          42,
-          38,
-          30
-        ]
+        values: [103, 82, 80, 70, 61, 52, 43, 42, 38, 30]
       },
-      "min_nights": {
-        "labels": [
-          "1 n",
-          "2 n",
-          "3 n",
-          "4-7 n",
-          "8-14 n",
-          "15-30 n",
-          "31-90 n",
-          "91-365 n",
-          "365+ n"
-        ],
-        "values": [
-          2985,
-          2936,
-          719,
-          550,
-          73,
-          489,
-          54,
-          1837,
-          4
-        ]
+      min_nights: {
+        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
+        values: [2985, 2936, 719, 550, 73, 489, 54, 1837, 4]
       },
-      "spider_raw": {
-        "Prix moyen": 102.97,
-        "Disponibilité": 114.04,
-        "Reviews 12m": 9.12,
-        "Min nights": 2,
-        "Nb annonces": 9647
+      investment: {
+        revenue: 25126.09,
+        demand: 44.40
+      },
+      investment_trend: {
+        labels: ["2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+        values: [126.33, 80.42, 127.60, 101.04, 103.38, 96.88, 95.88, 98.51, 102.22, 101.10, 117.64, 102.58, 99.93]
       }
     },
-    "Paris": {
-      "avg_price": 115.64,
-      "med_price": 85.0,
-      "avg_avail": 81.71,
-      "count": 24908,
-      "nb_hosts": 21252,
-      "ratio": 1.17,
-      "med_minnights": 4,
-      "avg_reviews_month": 0.62,
-      "room_type": {
-        "labels": [
-          "Entire home/apt",
-          "Private room",
-          "Hotel room",
-          "Shared room"
-        ],
-        "values": [
-          20719,
-          3531,
-          623,
-          35
-        ]
+
+    Paris: {
+      avg_price: 115.64,
+      med_price: 85.0,
+      avg_avail: 81.71,
+      count: 24908,
+      nb_hosts: 21252,
+      ratio: 1.17,
+      med_minnights: 4,
+      avg_reviews_month: 0.62,
+      room_type: {
+        labels: ["Entire home/apt", "Private room", "Hotel room", "Shared room"],
+        values: [20719, 3531, 623, 35]
       },
-      "top_hosts": {
-        "labels": [
+      top_hosts: {
+        labels: [
           "Ludovic (#7642792)",
           "Les Patios Du Marais (#147018685)",
           "Matthew (#33889201)",
@@ -1115,76 +1098,37 @@ const DATA = {
           "Alexis (#7608379)",
           "Giacomo (#24495283)"
         ],
-        "values": [
-          123,
-          67,
-          61,
-          56,
-          49,
-          45,
-          41,
-          33,
-          33,
-          30
-        ]
+        values: [123, 67, 61, 56, 49, 45, 41, 33, 33, 30]
       },
-      "min_nights": {
-        "labels": [
-          "1 n",
-          "2 n",
-          "3 n",
-          "4-7 n",
-          "8-14 n",
-          "15-30 n",
-          "31-90 n",
-          "91-365 n",
-          "365+ n"
-        ],
-        "values": [
-          3516,
-          3653,
-          3511,
-          4295,
-          374,
-          1133,
-          161,
-          8246,
-          19
-        ]
+      min_nights: {
+        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
+        values: [3516, 3653, 3511, 4295, 374, 1133, 161, 8246, 19]
       },
-      "spider_raw": {
-        "Prix moyen": 115.64,
-        "Disponibilité": 81.71,
-        "Reviews 12m": 4.75,
-        "Min nights": 4,
-        "Nb annonces": 24908
+      investment: {
+        revenue: 28981.96,
+        demand: 47.63
+      },
+      investment_trend: {
+        labels: ["2010", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+        values: [60.00, 99.00, 97.67, 83.97, 77.33, 78.92, 96.39, 87.90, 99.14, 96.51, 101.65, 137.31, 130.82, 131.24, 132.55]
       }
     },
-    "Bordeaux": {
-      "avg_price": 128.46,
-      "med_price": 82.0,
-      "avg_avail": 141.19,
-      "count": 12252,
-      "nb_hosts": 9517,
-      "ratio": 1.29,
-      "med_minnights": 2,
-      "avg_reviews_month": 1.24,
-      "room_type": {
-        "labels": [
-          "Entire home/apt",
-          "Private room",
-          "Shared room",
-          "Hotel room"
-        ],
-        "values": [
-          9489,
-          2701,
-          46,
-          16
-        ]
+
+    Bordeaux: {
+      avg_price: 128.46,
+      med_price: 82.0,
+      avg_avail: 141.19,
+      count: 12252,
+      nb_hosts: 9517,
+      ratio: 1.29,
+      med_minnights: 2,
+      avg_reviews_month: 1.24,
+      room_type: {
+        labels: ["Entire home/apt", "Private room", "Shared room", "Hotel room"],
+        values: [9489, 2701, 46, 16]
       },
-      "top_hosts": {
-        "labels": [
+      top_hosts: {
+        labels: [
           "Agence Cocoonr Bordeaux (#164626639)",
           "Arnaud (#72691486)",
           "Alfred (#414256747)",
@@ -1196,76 +1140,37 @@ const DATA = {
           "Nicolas (#47630405)",
           "Guillaume (#224295815)"
         ],
-        "values": [
-          84,
-          82,
-          55,
-          46,
-          42,
-          41,
-          34,
-          31,
-          29,
-          28
-        ]
+        values: [84, 82, 55, 46, 42, 41, 34, 31, 29, 28]
       },
-      "min_nights": {
-        "labels": [
-          "1 n",
-          "2 n",
-          "3 n",
-          "4-7 n",
-          "8-14 n",
-          "15-30 n",
-          "31-90 n",
-          "91-365 n",
-          "365+ n"
-        ],
-        "values": [
-          3372,
-          3736,
-          1426,
-          1806,
-          121,
-          486,
-          136,
-          1162,
-          7
-        ]
+      min_nights: {
+        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
+        values: [3372, 3736, 1426, 1806, 121, 486, 136, 1162, 7]
       },
-      "spider_raw": {
-        "Prix moyen": 128.46,
-        "Disponibilité": 141.19,
-        "Reviews 12m": 8.18,
-        "Min nights": 2,
-        "Nb annonces": 12252
+      investment: {
+        revenue: 28013.44,
+        demand: 38.30
+      },
+      investment_trend: {
+        labels: ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+        values: [84.75, 111.48, 119.64, 171.88, 120.03, 124.36, 137.63, 116.32, 120.18, 155.44, 153.04, 120.25]
       }
     },
+
     "Pays Basque": {
-      "avg_price": 322.99,
-      "med_price": 111.0,
-      "avg_avail": 165.73,
-      "count": 11845,
-      "nb_hosts": 9071,
-      "ratio": 1.31,
-      "med_minnights": 3,
-      "avg_reviews_month": 1.0,
-      "room_type": {
-        "labels": [
-          "Entire home/apt",
-          "Private room",
-          "Shared room",
-          "Hotel room"
-        ],
-        "values": [
-          10530,
-          1263,
-          33,
-          19
-        ]
+      avg_price: 322.99,
+      med_price: 111.0,
+      avg_avail: 165.73,
+      count: 11845,
+      nb_hosts: 9071,
+      ratio: 1.31,
+      med_minnights: 3,
+      avg_reviews_month: 1.0,
+      room_type: {
+        labels: ["Entire home/apt", "Private room", "Shared room", "Hotel room"],
+        values: [10530, 1263, 33, 19]
       },
-      "top_hosts": {
-        "labels": [
+      top_hosts: {
+        labels: [
           "Welkeys (#184945495)",
           "Agence Poplidays 5 (#133059316)",
           "Oriane - Interhome Group (#113038136)",
@@ -1277,62 +1182,30 @@ const DATA = {
           "Oihan (#157391208)",
           "Guillaume (#387114605)"
         ],
-        "values": [
-          65,
-          49,
-          46,
-          44,
-          41,
-          40,
-          38,
-          36,
-          33,
-          31
-        ]
+        values: [65, 49, 46, 44, 41, 40, 38, 36, 33, 31]
       },
-      "min_nights": {
-        "labels": [
-          "1 n",
-          "2 n",
-          "3 n",
-          "4-7 n",
-          "8-14 n",
-          "15-30 n",
-          "31-90 n",
-          "91-365 n",
-          "365+ n"
-        ],
-        "values": [
-          2162,
-          2769,
-          1845,
-          4553,
-          121,
-          143,
-          12,
-          239,
-          1
-        ]
+      min_nights: {
+        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
+        values: [2162, 2769, 1845, 4553, 121, 143, 12, 239, 1]
       },
-      "spider_raw": {
-        "Prix moyen": 322.99,
-        "Disponibilité": 165.73,
-        "Reviews 12m": 6.98,
-        "Min nights": 3,
-        "Nb annonces": 11845
+      investment: {
+        revenue: 39537.59,
+        demand: 34.83
+      },
+      investment_trend: {
+        labels: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
+        values: [261.00, 131.64, 195.42, 257.84, 218.41, 770.04, 293.29, 297.74, 273.43, 278.28, 201.63]
       }
     }
   }
 };
 
-// ══════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════
 const pagesMeta = {
-  p1: { title: 'Carte géographique',   sub: 'Vue d\'ensemble des 4 zones' },
-  p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
-  p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
-  p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
+  p1: { title: 'Carte géographique', sub: 'Vue d\'ensemble des 4 zones' },
+  p2: { title: 'Analyse des prix', sub: 'Prix et disponibilité' },
+  p3: { title: 'Analyse des hôtes', sub: 'Distribution des listings' },
+  p4: { title: 'Vision 360', sub: 'Performance par catégorie' },
+  p5: { title: 'Investissement', sub: 'Rentabilité et demande' }
 };
 
 function showPage(id, btn) {
@@ -1342,13 +1215,10 @@ function showPage(id, btn) {
   if (btn) btn.classList.add('active');
   else document.getElementById('btn-' + id).classList.add('active');
   document.getElementById('topbar-title').textContent = pagesMeta[id].title;
-  document.getElementById('topbar-sub').textContent   = pagesMeta[id].sub;
+  document.getElementById('topbar-sub').textContent = pagesMeta[id].sub;
   if (id === 'p1' && !mapInitialized) initMap();
 }
 
-// ══════════════════════════════════════════
-//  CITY FILTER
-// ══════════════════════════════════════════
 let activeCity = 'Toutes';
 
 function filterCity(city, btn) {
@@ -1357,6 +1227,7 @@ function filterCity(city, btn) {
   btn.classList.add('active');
   updateAllCharts();
   updateStats();
+  updateInvestmentStats();
 }
 
 function getCityData() {
@@ -1370,43 +1241,92 @@ function buildFilteredData(city) {
   const c = DATA.cities[city];
   return {
     ...DATA,
-    prix_par_ville:     { labels: [city], values: [c.avg_price] },
-    dispo_par_ville:    { labels: [city], values: [c.avg_avail] },
+    prix_par_ville: { labels: [city], values: [c.avg_price] },
+    dispo_par_ville: { labels: [city], values: [c.avg_avail] },
     listings_par_ville: { labels: [city], values: [c.count] },
-    reviews_par_ville:  { labels: [city], values: [c.avg_reviews_month] },
-    room_type:          c.room_type,
-    top_hosts:          c.top_hosts,
-    min_nights:         c.min_nights,
+    reviews_par_ville: { labels: [city], values: [c.avg_reviews_month] },
+    room_type: c.room_type,
+    top_hosts: c.top_hosts,
+    min_nights: c.min_nights,
     spider_attractivite: {
       labels: DATA.spider_attractivite.labels,
       datasets: DATA.spider_attractivite.datasets.filter(ds => ds.label === city)
     },
-    stats:              { avg_price: c.avg_price, med_price: c.med_price, avg_avail: c.avg_avail,
-                          total_listings: c.count, nb_hosts: c.nb_hosts,
-                          ratio: c.ratio, med_minnights: c.med_minnights,
-                          avg_reviews_month: c.avg_reviews_month }
+    stats: {
+      avg_price: c.avg_price,
+      med_price: c.med_price,
+      avg_avail: c.avg_avail,
+      total_listings: c.count,
+      nb_hosts: c.nb_hosts,
+      ratio: c.ratio,
+      med_minnights: c.med_minnights,
+      avg_reviews_month: c.avg_reviews_month
+    }
   };
 }
 
-// ══════════════════════════════════════════
-//  LEAFLET MAP
-// ══════════════════════════════════════════
+function getInvestmentData() {
+  if (activeCity === 'Toutes') {
+    return {
+      revenue: DATA.investment_revenue,
+      demand: DATA.investment_demand,
+      trend: DATA.investment_trend,
+      scatter: DATA.investment_scatter
+    };
+  }
+
+  const c = DATA.cities[activeCity];
+  if (!c || !c.investment) {
+    return {
+      revenue: DATA.investment_revenue,
+      demand: DATA.investment_demand,
+      trend: DATA.investment_trend,
+      scatter: DATA.investment_scatter
+    };
+  }
+
+  const allLabels = DATA.investment_demand.labels;
+  const allValues = DATA.investment_demand.values;
+
+  const selectedIndex = allLabels.indexOf(activeCity);
+  const selectedDemand = selectedIndex >= 0 ? allValues[selectedIndex] : c.investment.demand;
+  const otherDemand = allValues.reduce((sum, val, idx) => idx === selectedIndex ? sum : sum + val, 0);
+
+  return {
+    revenue: {
+      labels: [activeCity],
+      values: [c.investment.revenue]
+    },
+    demand: {
+      labels: [activeCity, 'Autres villes'],
+      values: [selectedDemand, otherDemand]
+    },
+    trend: c.investment_trend || DATA.investment_trend,
+    scatter: {
+      points: [
+        {
+          x: c.investment.demand,
+          y: c.investment.revenue,
+          label: activeCity
+        }
+      ]
+    }
+  };
+}
+
 let mapInitialized = false;
 
 function initMap() {
   mapInitialized = true;
-  const map = L.map('map', { zoomControl: true, attributionControl: false })
-    .setView([46.5, 2.5], 5);
+  const map = L.map('map', { zoomControl: true, attributionControl: false }).setView([46.5, 2.5], 5);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 13
-  }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 13 }).addTo(map);
 
   const cities = [
-    { name: 'Lyon',        lat: 45.748,  lng: 4.847,  color: '#00e5b0', page: 'p2' },
-    { name: 'Paris',       lat: 48.856,  lng: 2.347,  color: '#ff5f6d', page: 'p2' },
-    { name: 'Bordeaux',    lat: 44.837,  lng: -0.578, color: '#ffc857', page: 'p3' },
-    { name: 'Pays Basque', lat: 43.470,  lng: -1.560, color: '#7b8cde', page: 'p3' },
+    { name: 'Lyon', lat: 45.748, lng: 4.847, color: '#00e5b0' },
+    { name: 'Paris', lat: 48.856, lng: 2.347, color: '#ff5f6d' },
+    { name: 'Bordeaux', lat: 44.837, lng: -0.578, color: '#ffc857' },
+    { name: 'Pays Basque', lat: 43.470, lng: -1.560, color: '#7b8cde' }
   ];
 
   cities.forEach(city => {
@@ -1415,10 +1335,10 @@ function initMap() {
 
     const circle = L.circle([city.lat, city.lng], {
       radius,
-      color:       city.color,
-      fillColor:   city.color,
+      color: city.color,
+      fillColor: city.color,
       fillOpacity: 0.18,
-      weight:      2,
+      weight: 2
     }).addTo(map);
 
     const popupHtml = `
@@ -1435,39 +1355,42 @@ function initMap() {
 
     circle.bindPopup(popupHtml, { className: 'custom-popup', maxWidth: 220 });
     circle.on('mouseover', () => circle.setStyle({ fillOpacity: 0.35 }));
-    circle.on('mouseout',  () => circle.setStyle({ fillOpacity: 0.18 }));
+    circle.on('mouseout', () => circle.setStyle({ fillOpacity: 0.18 }));
   });
 }
 
 function navFromMap(page, city) {
   document.querySelectorAll('.city-chip').forEach(c => c.classList.remove('active'));
   const chip = document.querySelector(`.city-chip[data-city="${city}"]`);
-  if (chip) { chip.classList.add('active'); activeCity = city; }
+  if (chip) {
+    chip.classList.add('active');
+    activeCity = city;
+  }
   showPage(page, null);
   updateAllCharts();
   updateStats();
+  updateInvestmentStats();
 }
 
-// ══════════════════════════════════════════
-//  CHART.JS DEFAULTS
-// ══════════════════════════════════════════
-Chart.defaults.color           = '#5a6a82';
-Chart.defaults.borderColor     = '#1e2d45';
-Chart.defaults.font.family     = "'Outfit', sans-serif";
+Chart.defaults.color = '#5a6a82';
+Chart.defaults.borderColor = '#1e2d45';
+Chart.defaults.font.family = "'Outfit', sans-serif";
 Chart.defaults.plugins.legend.labels.color = '#5a6a82';
 Chart.defaults.plugins.tooltip.backgroundColor = '#161e2e';
-Chart.defaults.plugins.tooltip.borderColor     = '#1e2d45';
-Chart.defaults.plugins.tooltip.borderWidth     = 1;
-Chart.defaults.plugins.tooltip.titleColor      = '#e8edf5';
-Chart.defaults.plugins.tooltip.bodyColor       = '#9aacbf';
-Chart.defaults.plugins.tooltip.padding         = 10;
+Chart.defaults.plugins.tooltip.borderColor = '#1e2d45';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.titleColor = '#e8edf5';
+Chart.defaults.plugins.tooltip.bodyColor = '#9aacbf';
+Chart.defaults.plugins.tooltip.padding = 10;
 
 const CITY_COLORS = {
-  'Lyon':        '#00e5b0',
-  'Paris':       '#ff5f6d',
-  'Bordeaux':    '#ffc857',
+  'Lyon': '#00e5b0',
+  'Paris': '#ff5f6d',
+  'Bordeaux': '#ffc857',
   'Pays Basque': '#7b8cde',
+  'Autres villes': '#5a6a82'
 };
+
 const PALETTE = ['#00e5b0','#ff5f6d','#ffc857','#7b8cde','#f9844a','#4cc9f0','#a8dadc','#e9c46a'];
 
 function makeBarColors(labels) {
@@ -1477,10 +1400,12 @@ function makeBarColors(labels) {
 const charts = {};
 
 function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+  if (charts[id]) {
+    charts[id].destroy();
+    delete charts[id];
+  }
 }
 
-// ── PAGE 2 ── Prix par ville
 function renderPrixVille(d) {
   destroyChart('prixVille');
   const ctx = document.getElementById('chart-prix-ville').getContext('2d');
@@ -1492,7 +1417,7 @@ function renderPrixVille(d) {
         data: d.values,
         backgroundColor: makeBarColors(d.labels),
         borderRadius: 8,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1506,7 +1431,6 @@ function renderPrixVille(d) {
   });
 }
 
-// ── PAGE 2 ── Room type doughnut
 function renderRoomType(d) {
   destroyChart('roomType');
   const ctx = document.getElementById('chart-room-type').getContext('2d');
@@ -1519,20 +1443,22 @@ function renderRoomType(d) {
         backgroundColor: PALETTE,
         borderWidth: 2,
         borderColor: '#161e2e',
-        hoverOffset: 8,
+        hoverOffset: 8
       }]
     },
     options: {
       responsive: true,
       cutout: '65%',
       plugins: {
-        legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 } } }
+        legend: {
+          position: 'bottom',
+          labels: { padding: 12, font: { size: 11 } }
+        }
       }
     }
   });
 }
 
-// ── PAGE 2 ── Disponibilité par ville
 function renderDispo(d) {
   destroyChart('dispo');
   const ctx = document.getElementById('chart-dispo').getContext('2d');
@@ -1543,10 +1469,10 @@ function renderDispo(d) {
       datasets: [{
         data: d.values,
         backgroundColor: makeBarColors(d.labels).map(c => c + '99'),
-        borderColor:     makeBarColors(d.labels),
+        borderColor: makeBarColors(d.labels),
         borderWidth: 2,
         borderRadius: 8,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1554,14 +1480,17 @@ function renderDispo(d) {
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82' } },
-        y: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82', callback: v => v + ' j' },
-             max: 365, min: 0 }
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' j' },
+          max: 365,
+          min: 0
+        }
       }
     }
   });
 }
 
-// ── PAGE 3 ── Listings par ville
 function renderListingsVille(d) {
   destroyChart('listingsVille');
   const ctx = document.getElementById('chart-listings-ville').getContext('2d');
@@ -1573,7 +1502,7 @@ function renderListingsVille(d) {
         data: d.values,
         backgroundColor: makeBarColors(d.labels),
         borderRadius: 8,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1587,7 +1516,6 @@ function renderListingsVille(d) {
   });
 }
 
-// ── PAGE 3 ── Top hosts
 function renderTopHosts(d) {
   destroyChart('topHosts');
   const ctx = document.getElementById('chart-top-hosts').getContext('2d');
@@ -1601,7 +1529,7 @@ function renderTopHosts(d) {
         borderColor: '#00e5b0',
         borderWidth: 1,
         borderRadius: 6,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1616,7 +1544,6 @@ function renderTopHosts(d) {
   });
 }
 
-// ── PAGE 3 ── Minimum nights
 function renderMinNights(d) {
   destroyChart('minNights');
   const ctx = document.getElementById('chart-min-nights').getContext('2d');
@@ -1630,7 +1557,7 @@ function renderMinNights(d) {
         borderColor: '#ffc857',
         borderWidth: 1,
         borderRadius: 6,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1644,7 +1571,6 @@ function renderMinNights(d) {
   });
 }
 
-// ── PAGE 3 ── Reviews par ville
 function renderReviewsVille(d) {
   destroyChart('reviewsVille');
   const ctx = document.getElementById('chart-reviews-ville').getContext('2d');
@@ -1659,7 +1585,7 @@ function renderReviewsVille(d) {
         borderColor: makeBarColors(d.labels),
         borderWidth: 2,
         borderRadius: 6,
-        borderSkipped: false,
+        borderSkipped: false
       }]
     },
     options: {
@@ -1673,11 +1599,8 @@ function renderReviewsVille(d) {
   });
 }
 
-// ── PAGE 4 ── Spider
-
 function renderSpiderAttractivite(d) {
   destroyChart('spiderAttractivite');
-
   const canvas = document.getElementById('spider-chart-attractivite');
   if (!canvas || !d || !d.labels || !d.datasets) return;
 
@@ -1731,12 +1654,8 @@ function renderSpiderAttractivite(d) {
             color: '#5a6a82',
             backdropColor: 'transparent'
           },
-          grid: {
-            color: '#1e2d45'
-          },
-          angleLines: {
-            color: '#1e2d45'
-          },
+          grid: { color: '#1e2d45' },
+          angleLines: { color: '#1e2d45' },
           pointLabels: {
             color: '#e8edf5',
             font: {
@@ -1750,27 +1669,192 @@ function renderSpiderAttractivite(d) {
   });
 }
 
-// ══════════════════════════════════════════
-//  STATS KPI
-// ══════════════════════════════════════════
+function renderInvestmentRevenue(d) {
+  destroyChart('investmentRevenue');
+  const ctx = document.getElementById('chart-invest-revenue').getContext('2d');
+  charts['investmentRevenue'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82' } },
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: {
+            color: '#5a6a82',
+            callback: v => Math.round(v).toLocaleString('fr-FR') + ' €'
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentDemand(d) {
+  destroyChart('investmentDemand');
+  const ctx = document.getElementById('chart-invest-demand').getContext('2d');
+
+  charts['investmentDemand'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderColor: '#161e2e',
+        borderWidth: 2,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#5a6a82',
+            padding: 12,
+            font: { size: 11 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = Number(context.raw || 0).toFixed(2);
+              return `${context.label} : ${value} reviews`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentTrend(d) {
+  destroyChart('investmentTrend');
+  const ctx = document.getElementById('chart-invest-trend').getContext('2d');
+  charts['investmentTrend'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        label: 'Prix moyen',
+        data: d.values,
+        borderColor: '#7b8cde',
+        backgroundColor: '#7b8cde22',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#7b8cde'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82' } },
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => Math.round(v) + ' €' }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentScatter(d) {
+  destroyChart('investmentScatter');
+  const ctx = document.getElementById('chart-invest-scatter').getContext('2d');
+  charts['investmentScatter'] = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: d.points.map((p, i) => ({
+        label: p.label,
+        data: [{ x: p.x, y: p.y }],
+        backgroundColor: CITY_COLORS[p.label] || PALETTE[i],
+        borderColor: CITY_COLORS[p.label] || PALETTE[i],
+        pointRadius: 7
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label} · Demande: ${context.raw.x} · Revenu: ${Math.round(context.raw.y).toLocaleString('fr-FR')} €`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Demande moyenne', color: '#5a6a82' },
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          title: { display: true, text: 'Revenu estimé', color: '#5a6a82' },
+          grid: { color: '#1e2d45' },
+          ticks: {
+            color: '#5a6a82',
+            callback: v => Math.round(v).toLocaleString('fr-FR') + ' €'
+          }
+        }
+      }
+    }
+  });
+}
+
 function updateStats() {
   const d = getCityData();
   const s = d.stats;
-  document.getElementById('stat-avg-price').textContent  = Math.round(s.avg_price) + ' €';
-  document.getElementById('stat-med-price').textContent  = Math.round(s.med_price) + ' €';
-  document.getElementById('stat-avail').textContent      = Math.round(s.avg_avail) + ' j';
-  document.getElementById('stat-total').textContent      = s.total_listings.toLocaleString('fr-FR');
-  document.getElementById('stat-hosts').textContent      = (s.nb_hosts || 0).toLocaleString('fr-FR');
-  document.getElementById('stat-ratio').textContent      = (s.ratio || 0).toFixed(1);
-  document.getElementById('stat-minnights').textContent  = s.med_minnights + ' n';
-  document.getElementById('stat-reviews').textContent    = (s.avg_reviews_month || 0).toFixed(2);
+  document.getElementById('stat-avg-price').textContent = Math.round(s.avg_price) + ' €';
+  document.getElementById('stat-med-price').textContent = Math.round(s.med_price) + ' €';
+  document.getElementById('stat-avail').textContent = Math.round(s.avg_avail) + ' j';
+  document.getElementById('stat-total').textContent = s.total_listings.toLocaleString('fr-FR');
+  document.getElementById('stat-hosts').textContent = (s.nb_hosts || 0).toLocaleString('fr-FR');
+  document.getElementById('stat-ratio').textContent = (s.ratio || 0).toFixed(1);
+  document.getElementById('stat-minnights').textContent = s.med_minnights + ' n';
+  document.getElementById('stat-reviews').textContent = (s.avg_reviews_month || 0).toFixed(2);
 }
 
-// ══════════════════════════════════════════
-//  UPDATE ALL
-// ══════════════════════════════════════════
+function updateInvestmentStats() {
+  if (activeCity === 'Toutes') {
+    document.getElementById('stat-best-city').textContent = 'Pays Basque';
+    document.getElementById('stat-best-revenue').textContent = '39 538 €';
+    document.getElementById('stat-best-demand-city').textContent = 'Paris';
+    document.getElementById('stat-price-2024').textContent = '169 €';
+    return;
+  }
+
+  const c = DATA.cities[activeCity];
+  if (!c || !c.investment) return;
+
+  document.getElementById('stat-best-city').textContent = activeCity;
+  document.getElementById('stat-best-revenue').textContent =
+    Math.round(c.investment.revenue).toLocaleString('fr-FR') + ' €';
+  document.getElementById('stat-best-demand-city').textContent = activeCity;
+  document.getElementById('stat-price-2024').textContent =
+    Math.round(c.avg_price).toLocaleString('fr-FR') + ' €';
+}
+
 function updateAllCharts() {
   const d = getCityData();
+  const invest = getInvestmentData();
+
   renderPrixVille(d.prix_par_ville);
   renderRoomType(d.room_type);
   renderDispo(d.dispo_par_ville);
@@ -1779,23 +1863,23 @@ function updateAllCharts() {
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
   renderSpiderAttractivite(d.spider_attractivite);
+
+  renderInvestmentRevenue(invest.revenue);
+  renderInvestmentDemand(invest.demand);
+  renderInvestmentTrend(invest.trend);
+  renderInvestmentScatter(invest.scatter);
 }
 
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   updateStats();
+  updateInvestmentStats();
   updateAllCharts();
   initMap();
 });
 
-// ══════════════════════════════════════════
-//  TULIP TRAIL
-// ══════════════════════════════════════════
 const TULIPS = ['🌷', '🌹', '🌸'];
 let lastTulip = 0;
-const THROTTLE_MS = 40; // une tulipe max toutes les 40ms
+const THROTTLE_MS = 40;
 
 document.addEventListener('mousemove', (e) => {
   const now = Date.now();
@@ -1805,9 +1889,9 @@ document.addEventListener('mousemove', (e) => {
   const el = document.createElement('span');
   el.className = 'tulip';
   el.textContent = TULIPS[Math.floor(Math.random() * TULIPS.length)];
-  el.style.left            = e.clientX + 'px';
-  el.style.top             = e.clientY + 'px';
-  el.style.fontSize        = (16 + Math.random() * 14) + 'px';
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  el.style.fontSize = (16 + Math.random() * 14) + 'px';
   el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
 
   document.body.appendChild(el);
