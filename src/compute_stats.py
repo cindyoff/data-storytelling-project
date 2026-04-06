@@ -112,7 +112,7 @@ def compute_spider_raw_metrics(df):
             "Prix moyen": round(float(sub["price"].mean()), 2),
             "Disponibilité": round(float(sub["availability_365"].mean()), 2),
             "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
-            "Min nights": int(sub["minimum_nights"].median()),
+            "Nb nuits min": int(sub["minimum_nights"].median()),
             "Nb annonces": int(len(sub)),
         })
 
@@ -124,7 +124,7 @@ def normalize_spider_metrics(spider_rows):
     Normalise chaque métrique sur une échelle 0-100 pour affichage radar.
     Conserve aussi les valeurs brutes pour les tooltips.
     """
-    metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Min nights", "Nb annonces"]
+    metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Nb nuits min", "Nb annonces"]
 
     normalized_rows = []
     for row in spider_rows:
@@ -161,7 +161,7 @@ def compute_city_detail(df, city):
         "Prix moyen": round(float(sub["price"].mean()), 2),
         "Disponibilité": round(float(sub["availability_365"].mean()), 2),
         "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
-        "Min nights": int(sub["minimum_nights"].median()),
+        "Nb nuits min": int(sub["minimum_nights"].median()),
         "Nb annonces": int(len(sub)),
     }
     return {

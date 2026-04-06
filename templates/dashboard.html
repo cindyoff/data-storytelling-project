@@ -15,6 +15,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
+  <!-- D3-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
   <style>
     :root {
       --bg:        #080c12;
@@ -376,21 +379,122 @@
       margin-top: 4px;
     }
 
-    #p4 .charts-grid-3 {
-      grid-template-columns: 1fr 1fr;
+    /* Page 4 - taille des canvas*/
+    /* ── PAGE 4 : LAYOUT 2 COLONNES ── */
+    #p4 .charts-grid-2 {
+      display: grid;
+      grid-template-columns: 1.5fr 1.5fr;
+      gap: 20px;
+      align-items: stretch;
     }
 
-    #p4 .chart-card:first-child {
-      grid-column: span 2;
-      height: 420px;
+    #p4 .chart-card {
+      min-height: 500px;
+      height: calc(100vh - 210px);
+      max-height: 620px;
+      overflow: hidden;
     }
 
-    #p4 .chart-card:not(:first-child) {
-      height: 300px;
+    #p4 .chart-card:hover {
+      border-color: rgba(0,229,176,0.25);
     }
 
-    #p4 canvas {
+    /* Colonne 1 : spider */
+    #p4 .chart-card.spider-card {
+      min-width: 0;
+    }
+
+    .spider-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      flex: 1;
+    }
+
+    .spider-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Colonne 3 : ranking */
+    #p4 .ranking-card {
+      min-width: 0;
+    }
+
+    #p4 .ranking-card canvas {
+      width: 100% !important;
       height: 100% !important;
+      min-height: 360px;
+      flex: 1;
+    }
+
+    /* Tooltip spider */
+    .spider-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 22, 35, 0.96);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.15s ease;
+      z-index: 5;
+    }
+
+    .spider-axis-label {
+      font-size: 11px;
+      fill: var(--text);
+    }
+
+    .spider-grid {
+      fill: none;
+      stroke: #1e2d45;
+    }
+
+    .spider-axis-line {
+      stroke: #1e2d45;
+    }
+
+    .spider-series {
+      fill-opacity: 0.10;
+      stroke-width: 2.2;
+    }
+
+    .spider-point {
+      stroke-width: 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 1350px) {
+      #p4 .charts-grid-3 {
+        grid-template-columns: 1.2fr 0.9fr 1fr;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      #p4 .charts-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      #p4 .chart-card {
+        height: auto;
+        min-height: 420px;
+        max-height: none;
+      }
+
+      .spider-d3-container,
+      #mini-map,
+      #p4 .ranking-card canvas {
+        min-height: 320px;
+        height: 320px !important;
+      }
     }
 
     ::-webkit-scrollbar { width: 5px; }
@@ -488,7 +592,7 @@
     </button>
 
     <button class="nav-btn" onclick="showPage('p4', this)" id="btn-p4">
-      <span class="nav-icon">📈</span>
+      <span class="nav-icon">⚙️</span>
       Vision 360
       <span class="nav-badge">P4</span>
     </button>
@@ -687,27 +791,29 @@
       <p id="p4-subtitle">Vision 360 des locations Airbnb</p>
     </div>
 
-    <div class="charts-grid-3">
-      <div class="chart-card">
+    <div class="charts-grid-2">
+      <!-- Colonne 1 : Spider -->
+      <div class="chart-card spider-card">
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Attractivité des villes</div>
-            <div class="chart-card-sub">Statistiques catégorielles</div>
+            <div class="chart-card-sub">Comparaison multi-critères</div>
           </div>
           <span class="chart-card-badge">Spider chart</span>
         </div>
-        <canvas id="spider-chart-attractivite"></canvas>
+        <div id="spider-chart-attractivite" class="spider-d3-container"></div>
       </div>
 
-      <div class="chart-card">
+      <!-- Colonne 2 : Ranking -->
+      <div class="chart-card ranking-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Annonces par localisation</div>
-            <div class="chart-card-sub">Densité des annonces</div>
+            <div class="chart-card-title">Ranking des villes</div>
+            <div class="chart-card-sub">Classement global</div>
           </div>
-          <span class="chart-card-badge">Horizontal bar</span>
+          <span class="chart-card-badge">Ranking</span>
         </div>
-        <canvas id="chart-annonces-localisation"></canvas>
+        <canvas id="chart-ranking-villes"></canvas>
       </div>
 
       <div class="chart-card">
@@ -798,8 +904,7 @@
       </div>
     </div>
   </section>
-
-</div>
+</div><!-- /#main -->
 
 <script>
 const DATA = {{ CHART_DATA_JSON }};
@@ -1163,80 +1268,240 @@ function renderReviewsVille(d) {
   });
 }
 
-function renderSpiderAttractivite(d) {
-  destroyChart('spiderAttractivite');
+// ── PAGE 4 ── Spider
+function renderSpiderAttractiviteD3(d) {
+  const container = d3.select('#spider-chart-attractivite');
+  if (container.empty() || !d || !d.labels || !d.datasets || !d.labels.length) return;
 
-  const canvas = document.getElementById('spider-chart-attractivite');
-  if (!canvas || !d || !d.labels || !d.datasets) return;
+  // Nettoyage complet avant redraw
+  container.selectAll('*').remove();
 
-  const ctx = canvas.getContext('2d');
+  const node = container.node();
+  const width = node.clientWidth || 520;
+  const height = node.clientHeight || 420;
 
-  charts['spiderAttractivite'] = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: d.labels,
-      datasets: d.datasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: '#5a6a82',
-            padding: 12,
-            font: { size: 11 }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const dataset = context.dataset;
-              const metric = context.label;
-              const score = context.raw;
-              const raw = dataset.rawValues ? dataset.rawValues[metric] : null;
+  const margin = 70;
+  const radius = Math.max(40, Math.min(width, height) / 2 - margin);
+  const levels = 5;
+  const angleSlice = (Math.PI * 2) / d.labels.length;
 
-              let suffix = '';
-              if (metric === 'Prix moyen') suffix = ' €';
-              if (metric === 'Disponibilité') suffix = ' j';
-              if (metric === 'Min nights') suffix = ' n';
+  // SVG racine
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
 
-              if (raw !== null && raw !== undefined) {
-                return `${dataset.label} · score ${score}/100 · brut : ${raw}${suffix}`;
-              }
-              return `${dataset.label} : ${score}/100`;
-            }
-          }
-        }
-      },
-      scales: {
-        r: {
-          min: 0,
-          max: 100,
-          ticks: {
-            stepSize: 20,
-            color: '#5a6a82',
-            backdropColor: 'transparent'
-          },
-          grid: {
-            color: '#1e2d45'
-          },
-          angleLines: {
-            color: '#1e2d45'
-          },
-          pointLabels: {
-            color: '#e8edf5',
-            font: {
-              family: "'Outfit', sans-serif",
-              size: 11
-            }
-          }
-        }
-      }
-    }
+  // Groupe centré
+  const g = svg.append('g')
+    .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+  // Tooltip HTML
+  const tooltip = container
+    .append('div')
+    .attr('class', 'spider-tooltip');
+
+  // Echelle radiale
+  const rScale = d3.scaleLinear()
+    .domain([0, 100])
+    .range([0, radius]);
+
+  // Helpers
+  function angleForIndex(i) {
+    return angleSlice * i - Math.PI / 2;
+  }
+
+  function pointForValue(value, i) {
+    const angle = angleForIndex(i);
+    const r = rScale(value);
+    return {
+      x: r * Math.cos(angle),
+      y: r * Math.sin(angle),
+      angle
+    };
+  }
+
+  // ─────────────────────────────
+  // Grille polygonale
+  // ─────────────────────────────
+  for (let level = 1; level <= levels; level++) {
+    const levelValue = (100 / levels) * level;
+
+    const points = d.labels.map((_, i) => {
+      const p = pointForValue(levelValue, i);
+      return [p.x, p.y];
+    });
+
+    g.append('polygon')
+      .attr('class', 'spider-grid')
+      .attr('points', points.map(p => p.join(',')).join(' '))
+      .attr('stroke-width', 1);
+
+    g.append('text')
+      .attr('x', 6)
+      .attr('y', -rScale(levelValue) + 12)
+      .attr('fill', '#5a6a82')
+      .attr('font-size', 10)
+      .text(`${Math.round(levelValue)}`);
+  }
+
+  // Cercle central optionnel
+  g.append('circle')
+    .attr('r', 2)
+    .attr('fill', '#5a6a82')
+    .attr('opacity', 0.5);
+
+  // ─────────────────────────────
+  // Axes + labels
+  // ─────────────────────────────
+  d.labels.forEach((label, i) => {
+    const axisPoint = pointForValue(100, i);
+
+    g.append('line')
+      .attr('class', 'spider-axis-line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', axisPoint.x)
+      .attr('y2', axisPoint.y);
+
+    const labelOffset = 24;
+    const labelPoint = {
+      x: (rScale(100) + labelOffset) * Math.cos(axisPoint.angle),
+      y: (rScale(100) + labelOffset) * Math.sin(axisPoint.angle)
+    };
+
+    g.append('text')
+      .attr('class', 'spider-axis-label')
+      .attr('x', labelPoint.x)
+      .attr('y', labelPoint.y)
+      .attr(
+        'text-anchor',
+        Math.abs(Math.cos(axisPoint.angle)) < 0.2
+          ? 'middle'
+          : Math.cos(axisPoint.angle) > 0
+            ? 'start'
+            : 'end'
+      )
+      .attr(
+        'dominant-baseline',
+        Math.abs(Math.sin(axisPoint.angle)) < 0.2
+          ? 'middle'
+          : Math.sin(axisPoint.angle) > 0
+            ? 'hanging'
+            : 'auto'
+      )
+      .text(label);
+  });
+
+  // ─────────────────────────────
+  // Générateur du polygone radar
+  // IMPORTANT :
+  // même repère cartésien que les points
+  // ─────────────────────────────
+  const radarLine = d3.line()
+    .x((d, i) => pointForValue(d, i).x)
+    .y((d, i) => pointForValue(d, i).y)
+    .curve(d3.curveLinearClosed);
+
+  const seriesGroup = g.append('g');
+
+  // ─────────────────────────────
+  // Séries
+  // ─────────────────────────────
+  d.datasets.forEach((dataset, datasetIndex) => {
+    const color = dataset.borderColor || '#00e5b0';
+    const fillColor = dataset.backgroundColor || '#00e5b022';
+    const values = dataset.data.map(v => Number(v) || 0);
+
+    const series = seriesGroup.append('g')
+      .attr('class', 'spider-series-group');
+
+    // Polygone
+    series.append('path')
+      .datum(values)
+      .attr('class', 'spider-series')
+      .attr('d', radarLine)
+      .attr('fill', fillColor)
+      .attr('stroke', color)
+      .attr('opacity', 0)
+      .transition()
+      .duration(700)
+      .delay(datasetIndex * 120)
+      .attr('opacity', 1);
+
+    // Points
+    values.forEach((value, i) => {
+      const metric = d.labels[i];
+      const raw = dataset.rawValues ? dataset.rawValues[metric] : value;
+      const p = pointForValue(value, i);
+
+      series.append('circle')
+        .attr('class', 'spider-point')
+        .attr('cx', p.x)
+        .attr('cy', p.y)
+        .attr('r', 0)
+        .attr('fill', '#080c12')
+        .attr('stroke', color)
+        .on('mousemove', function(event) {
+          const [mx, my] = d3.pointer(event, node);
+
+          tooltip
+            .style('opacity', 1)
+            .style('left', `${mx}px`)
+            .style('top', `${my}px`)
+            .html(`
+              <strong style="color:${color}">${dataset.label}</strong><br>
+              ${metric}<br>
+              Score normalisé : <strong>${value}</strong><br>
+              Valeur brute : <strong>${raw}</strong>
+            `);
+        })
+        .on('mouseleave', function() {
+          tooltip.style('opacity', 0);
+        })
+        .transition()
+        .duration(500)
+        .delay(350 + datasetIndex * 120 + i * 40)
+        .attr('r', 4);
+    });
+  });
+
+  // ─────────────────────────────
+  // Légende
+  // ─────────────────────────────
+  const legend = svg.append('g')
+    .attr('transform', 'translate(18, 18)');
+
+  d.datasets.forEach((dataset, i) => {
+    const item = legend.append('g')
+      .attr('transform', `translate(0, ${i * 20})`);
+
+    item.append('line')
+      .attr('x1', 0)
+      .attr('x2', 18)
+      .attr('y1', 0)
+      .attr('y2', 0)
+      .attr('stroke', dataset.borderColor || '#00e5b0')
+      .attr('stroke-width', 3);
+
+    item.append('text')
+      .attr('x', 24)
+      .attr('y', 4)
+      .attr('fill', '#e8edf5')
+      .attr('font-size', 11)
+      .text(dataset.label);
   });
 }
+
+// Gérer le resize en cas de changelment de la taille du container du spider
+let spiderResizeTimer = null;
+
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+  }, 120);
+});
 
 function renderMedianPriceByNeighbourhood(d) {
   destroyChart('medianPriceByNeighbourhood');
@@ -1449,6 +1714,7 @@ function updateAllCharts() {
   renderTopHosts(d.top_hosts);
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
+  renderSpiderAttractiviteD3(d.spider_attractivite);
   renderSpiderAttractivite(d.spider_attractivite);
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
