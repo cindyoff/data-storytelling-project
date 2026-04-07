@@ -184,57 +184,107 @@ def compute_top_hosts_reviews_timeline(df):
     """
     Top 3 des hôtes toutes villes confondues par période (année/mois),
     selon le nombre de reviews.
-    
-    Hypothèse: on utilise number_of_reviews_ltm comme proxy d'activité
-    sur la période associée à last_review.
+
+    On ne conserve que les périodes ayant de vraies reviews (> 0).
+    On nettoie aussi les noms d'hôtes pour éviter les valeurs vides.
     """
-    required_cols = ["host_id", "host_name", "city", "number_of_reviews_ltm", "review_year", "review_month", "review_period"]
+    required_cols = [
+        "host_id", "host_name", "city",
+        "number_of_reviews_ltm",
+        "review_year", "review_month", "review_period"
+    ]
     missing = [col for col in required_cols if col not in df.columns]
     if missing:
         return {"periods": [], "items": []}
 
-    sub = df.dropna(subset=["review_year", "review_month", "review_period"]).copy()
+    sub = df.dropna(subset=["review_year", "review_month"]).copy()
 
     if sub.empty:
         return {"periods": [], "items": []}
 
+    # Reviews numériques
+    sub["number_of_reviews_ltm"] = pd.to_numeric(
+        sub["number_of_reviews_ltm"],
+        errors="coerce"
+    ).fillna(0)
+
+    # Garder seulement les périodes avec activité réelle
+    sub = sub[sub["number_of_reviews_ltm"] > 0].copy()
+
+    if sub.empty:
+        return {"periods": [], "items": []}
+
+    # Nettoyage host_name
+    sub["host_name"] = (
+        sub["host_name"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+    )
+
+    # Pour éviter les noms vides
+    sub.loc[sub["host_name"] == "", "host_name"] = None
+
+    def choose_host_name(series):
+        s = series.dropna().astype(str).str.strip()
+        s = s[s != ""]
+        if not s.empty:
+            return s.mode().iat[0] if not s.mode().empty else s.iloc[0]
+        return "Hôte inconnu"
+
+    def choose_city(series):
+        s = series.dropna().astype(str).str.strip()
+        s = s[s != ""]
+        if not s.empty:
+            return s.mode().iat[0] if not s.mode().empty else s.iloc[0]
+        return ""
+
     grouped = (
         sub.groupby(
-            ["review_period", "review_year", "review_month", "host_id", "host_name"],
+            ["review_period", "review_year", "review_month", "host_id"],
             as_index=False
         )
         .agg(
+            host_name=("host_name", choose_host_name),
             reviews=("number_of_reviews_ltm", "sum"),
-            city=("city", lambda s: s.mode().iat[0] if not s.mode().empty else s.iloc[0])
+            city=("city", choose_city)
         )
     )
+
     items = []
     periods = []
 
     for (period, year, month), g in grouped.groupby(["review_period", "review_year", "review_month"]):
+        g = g[g["reviews"] > 0].copy()
+        if g.empty:
+            continue
+
         top3 = (
             g.sort_values(["reviews", "host_name"], ascending=[False, True])
              .head(3)
         )
 
+        if top3.empty or float(top3["reviews"].sum()) <= 0:
+            continue
+
         top3_records = []
         for _, row in top3.iterrows():
             top3_records.append({
                 "host_id": int(row["host_id"]),
-                "host_name": row["host_name"],
+                "host_name": str(row["host_name"]) if pd.notna(row["host_name"]) else "Hôte inconnu",
                 "reviews": float(row["reviews"]),
-                "city": row["city"],
+                "city": str(row["city"]) if pd.notna(row["city"]) else "",
                 "avatar": None
             })
 
         periods.append({
-            "period": period,
+            "period": str(period),
             "year": int(year),
             "month": int(month)
         })
 
         items.append({
-            "period": period,
+            "period": str(period),
             "year": int(year),
             "month": int(month),
             "top3": top3_records
@@ -242,10 +292,12 @@ def compute_top_hosts_reviews_timeline(df):
 
     periods = sorted(periods, key=lambda x: (x["year"], x["month"]))
     items = sorted(items, key=lambda x: (x["year"], x["month"]))
+
     return {
         "periods": periods,
         "items": items
     }
+
 
 def compute_all_stats(df):
     """Point d'entrée : renvoie un dict complet prêt pour generate_charts.py."""

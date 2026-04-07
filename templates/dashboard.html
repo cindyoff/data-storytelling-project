@@ -1782,13 +1782,21 @@ window.addEventListener('resize', () => {
   spiderResizeTimer = setTimeout(() => {
     const d = getCityData();
     renderSpiderAttractiviteD3(d.spider_attractivite);
+    if (document.getElementById('top-host-podium')) {
+      initTopHostsPodiumD3();
+      updateTopHostsPodium(false);
+    }
   }, 120);
 });
 
+
+// Générer le podium
 let topHostsTimeline = [];
 let topHostsPeriods = [];
 let topHostsAnimation = null;
 let topHostsAnimationIndex = 0;
+let topHostsPodiumSvg = null;
+let topHostsPodiumRoot = null;
 
 function getMonthLabel(month) {
   const labels = [
@@ -1812,65 +1820,7 @@ function truncateText(text, maxLength = 18) {
   return text.length > maxLength ? text.slice(0, maxLength - 1) + '…' : text;
 }
 
-function initTopHostsPodiumControls() {
-  const timeline = DATA.top_hosts_reviews_timeline;
-  if (!timeline || !timeline.periods || !timeline.items) return;
-
-  topHostsTimeline = timeline.items;
-  topHostsPeriods = timeline.periods;
-
-  const yearSelect = document.getElementById('top-host-year');
-  const monthSelect = document.getElementById('top-host-month');
-  const playBtn = document.getElementById('top-host-play-btn');
-
-  if (!yearSelect || !monthSelect || !playBtn) return;
-
-  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
-
-  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
-
-  const firstYear = years[0];
-  yearSelect.value = firstYear;
-  updateTopHostsMonthOptions(firstYear);
-
-  yearSelect.addEventListener('change', () => {
-    updateTopHostsMonthOptions(+yearSelect.value);
-    updateTopHostsPodium();
-  });
-
-  monthSelect.addEventListener('change', () => {
-    updateTopHostsPodium();
-  });
-
-  playBtn.addEventListener('click', toggleTopHostsAnimation);
-
-  updateTopHostsPodium();
-}
-
-function updateTopHostsMonthOptions(selectedYear) {
-  const monthSelect = document.getElementById('top-host-month');
-  if (!monthSelect) return;
-
-  const months = topHostsPeriods
-    .filter(p => p.year === +selectedYear)
-    .map(p => p.month)
-    .sort((a, b) => a - b);
-
-  monthSelect.innerHTML = months
-    .map(m => `<option value="${m}">${getMonthLabel(m)}</option>`)
-    .join('');
-
-  if (months.length) monthSelect.value = months[0];
-}
-
-function getSelectedTopHostsPeriodData() {
-  const year = +document.getElementById('top-host-year').value;
-  const month = +document.getElementById('top-host-month').value;
-
-  return topHostsTimeline.find(d => d.year === year && d.month === month) || null;
-}
-
-function renderTopHostsPodiumD3(periodData) {
+function initTopHostsPodiumD3() {
   const container = d3.select('#top-host-podium');
   if (container.empty()) return;
 
@@ -1885,16 +1835,7 @@ function renderTopHostsPodiumD3(periodData) {
     .attr('viewBox', `0 0 ${width} ${height}`)
     .attr('preserveAspectRatio', 'xMidYMid meet');
 
-  const data = (periodData && periodData.top3) ? periodData.top3 : [];
-  if (!data.length) {
-    svg.append('text')
-      .attr('x', width / 2)
-      .attr('y', height / 2)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#5a6a82')
-      .text('Aucune donnée disponible');
-    return;
-  }
+  const root = svg.append('g').attr('class', 'top-hosts-podium-root');
 
   const podiumSlots = [
     { rank: 2, x: width * 0.25, h: 150 },
@@ -1902,87 +1843,158 @@ function renderTopHostsPodiumD3(periodData) {
     { rank: 3, x: width * 0.75, h: 120 },
   ];
 
-  const rankedData = [
-    data[1] ? { ...data[1], rank: 2 } : null,
-    data[0] ? { ...data[0], rank: 1 } : null,
-    data[2] ? { ...data[2], rank: 3 } : null,
-  ].filter(Boolean);
-
   const rectWidth = 135;
   const baseY = height - 50;
 
-  const g = svg.append('g');
-
-  g.selectAll('.podium-block')
+  root.append('g')
+    .attr('class', 'podium-blocks')
+    .selectAll('.podium-block')
     .data(podiumSlots)
     .enter()
     .append('rect')
     .attr('class', d => `podium-block podium-rank-${d.rank}`)
     .attr('x', d => d.x - rectWidth / 2)
-    .attr('y', height)
-    .attr('width', rectWidth)
-    .attr('height', 0)
-    .attr('rx', 18)
-    .transition()
-    .duration(700)
     .attr('y', d => baseY - d.h)
-    .attr('height', d => d.h);
+    .attr('width', rectWidth)
+    .attr('height', d => d.h)
+    .attr('rx', 8);
 
-  const hostGroups = g.selectAll('.host-group')
-    .data(rankedData)
-    .enter()
+  root.append('g').attr('class', 'hosts-layer');
+
+  topHostsPodiumSvg = svg;
+  topHostsPodiumRoot = {
+    width,
+    height,
+    baseY,
+    rectWidth,
+    podiumSlots,
+    hostsLayer: root.select('.hosts-layer')
+  };
+}
+
+function updateTopHostsPodiumHosts(periodData, animate = true) {
+  if (!topHostsPodiumRoot) return;
+
+  const { baseY, podiumSlots, hostsLayer } = topHostsPodiumRoot;
+
+  const rawData = Array.isArray(periodData?.top3) ? periodData.top3 : [];
+
+  const rankedData = [
+    rawData[1] ? { ...rawData[1], rank: 2 } : null,
+    rawData[0] ? { ...rawData[0], rank: 1 } : null,
+    rawData[2] ? { ...rawData[2], rank: 3 } : null,
+  ].filter(Boolean);
+
+  const withPositions = rankedData
+    .map(item => {
+      const slot = podiumSlots.find(p => p.rank === item.rank);
+      if (!slot) return null;
+
+      return {
+        ...item,
+        host_name: item.host_name || item.host || item.name || 'Hôte inconnu',
+        reviews: Number(item.reviews ?? item.review_count ?? item.count ?? 0),
+        city: item.city || item.city_name || '',
+        rank: item.rank,
+        x: Number(slot.x),
+        y: Number(baseY - slot.h - 68)
+      };
+    })
+    .filter(d => d && Number.isFinite(d.x) && Number.isFinite(d.y));
+
+  console.log('rawData =', rawData);
+  console.log('rankedData =', rankedData);
+  console.log('withPositions =', withPositions);
+
+  const selection = hostsLayer
+    .selectAll('.host-group')
+    .data(withPositions, d => d.rank);
+
+  const enter = selection.enter()
     .append('g')
     .attr('class', d => `host-group rank-${d.rank}`)
-    .attr('transform', d => {
-      const slot = podiumSlots.find(p => p.rank === d.rank);
-      return `translate(${slot.x}, ${baseY - slot.h - 68})`;
-    })
+    .attr('transform', d => `translate(${d.x}, ${d.y + 60})`)
     .style('opacity', 0);
 
-  hostGroups.transition().duration(700).delay(250).style('opacity', 1);
-
-  hostGroups.append('text')
+  enter.append('text')
     .attr('class', 'host-rank-label')
     .attr('text-anchor', 'middle')
-    .attr('y', -58)
-    .text(d => `#${d.rank}`);
+    .attr('y', -58);
 
-  hostGroups.append('circle')
+  enter.append('circle')
     .attr('class', 'host-avatar-ring')
     .attr('r', 42);
 
-  hostGroups.append('circle')
+  enter.append('circle')
+    .attr('class', 'host-avatar-fill')
     .attr('r', 36)
     .attr('fill', '#d9dde5');
 
-  hostGroups.append('text')
+  enter.append('text')
     .attr('class', 'host-initials')
     .attr('text-anchor', 'middle')
-    .attr('dy', 6)
-    .text(d => getInitials(d.host_name));
+    .attr('dy', 6);
 
-  hostGroups.append('text')
+  enter.append('text')
     .attr('class', 'host-name')
     .attr('text-anchor', 'middle')
-    .attr('y', 66)
-    .text(d => truncateText(d.host_name, 16));
+    .attr('y', 62);
 
-  hostGroups.append('text')
+  enter.append('text')
     .attr('class', 'host-score')
     .attr('text-anchor', 'middle')
-    .attr('y', 86)
-    .text(d => `${Math.round(d.reviews)} reviews`);
+    .attr('y', 96);
 
-  hostGroups.append('text')
+  enter.append('text')
     .attr('class', 'host-city')
     .attr('text-anchor', 'middle')
-    .attr('y', 104)
-    .text(d => d.city || '');
+    .attr('y', 116);
+
+  const merged = enter.merge(selection);
+
+  if (animate) {
+    merged
+      .transition()
+      .duration(450)
+      .attr('transform', d => `translate(${d.x}, ${d.y + 70})`)
+      .style('opacity', 0);
+  }
+
+  merged
+    .transition()
+    .delay(animate ? 660 : 0)
+    .duration(10)
+    .on('start', function(datum) {
+      const g = d3.select(this);
+
+      g.attr('transform', `translate(${datum.x}, ${datum.y + 70})`);
+      g.select('.host-rank-label').text(`#${datum.rank}`);
+      g.select('.host-initials').text(getInitials(datum.host_name));
+      g.select('.host-name').text(truncateText(datum.host_name, 16));
+      g.select('.host-score').text(`${Math.round(datum.reviews)} reviews`);
+      g.select('.host-city').text(datum.city || '');
+    })
+    .transition()
+    .duration(750)
+    .attr('transform', d => `translate(${d.x}, ${d.y})`)
+    .style('opacity', 1);
+
+  selection.exit()
+    .transition()
+    .duration(300)
+    .style('opacity', 0)
+    .remove();
 }
 
-function updateTopHostsPodium() {
+function getSelectedTopHostsPeriodData() {
+  const year = +document.getElementById('top-host-year').value;
+  const month = +document.getElementById('top-host-month').value;
+  return topHostsTimeline.find(d => d.year === year && d.month === month) || null;
+}
+
+function updateTopHostsPodium(animate = false) {
   const periodData = getSelectedTopHostsPeriodData();
-  renderTopHostsPodiumD3(periodData);
+  updateTopHostsPodiumHosts(periodData, animate);
 
   const label = document.getElementById('top-host-current-period');
   if (label && periodData) {
@@ -1990,25 +2002,93 @@ function updateTopHostsPodium() {
   }
 }
 
-function toggleTopHostsAnimation() {
-  const btn = document.getElementById('top-host-play-btn');
-  if (!btn) return;
+//------------ Init des contrôles
+function initTopHostsPodiumControls() {
+  const timeline = DATA.top_hosts_reviews_timeline;
+  if (!timeline || !timeline.periods || !timeline.items || !timeline.periods.length) return;
 
+  topHostsTimeline = timeline.items;
+  topHostsPeriods = timeline.periods;
+
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const playBtn = document.getElementById('top-host-play-btn');
+
+  if (!yearSelect || !monthSelect || !playBtn) return;
+
+  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
+  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+
+  yearSelect.value = years[0];
+  updateTopHostsMonthOptions(+yearSelect.value);
+
+  yearSelect.addEventListener('change', () => {
+    stopTopHostsAnimation();
+    updateTopHostsMonthOptions(+yearSelect.value);
+    updateTopHostsPodium(true);
+  });
+
+  monthSelect.addEventListener('change', () => {
+    stopTopHostsAnimation();
+    updateTopHostsPodium(true);
+  });
+
+  playBtn.addEventListener('click', toggleTopHostsAnimation);
+
+  initTopHostsPodiumD3();
+  updateTopHostsPodium(false);
+}
+// ------------Mise à jour des mois disponibles pour une année donnée
+function updateTopHostsMonthOptions(selectedYear) {
+  const monthSelect = document.getElementById('top-host-month');
+  if (!monthSelect) return;
+
+  const months = topHostsPeriods
+    .filter(p => p.year === +selectedYear)
+    .map(p => p.month)
+    .sort((a, b) => a - b);
+
+  monthSelect.innerHTML = months
+    .map(m => `<option value="${m}">${getMonthLabel(m)}</option>`)
+    .join('');
+
+  if (months.length) {
+    monthSelect.value = months[0];
+  }
+}
+
+function stopTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
   if (topHostsAnimation) {
     clearInterval(topHostsAnimation);
     topHostsAnimation = null;
-    btn.textContent = '▶ Lancer';
+  }
+  if (btn) btn.textContent = '▶ Lancer';
+}
+
+
+function toggleTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
+  if (!btn || !topHostsPeriods.length) return;
+
+  if (topHostsAnimation) {
+    stopTopHostsAnimation();
     return;
   }
 
-  topHostsAnimationIndex = 0;
+  const currentYear = +document.getElementById('top-host-year').value;
+  const currentMonth = +document.getElementById('top-host-month').value;
+
+  const startIndex = topHostsPeriods.findIndex(
+    p => p.year === currentYear && p.month === currentMonth
+  );
+
+  topHostsAnimationIndex = startIndex >= 0 ? startIndex : 0;
   btn.textContent = '⏸ Stop';
 
   topHostsAnimation = setInterval(() => {
     if (topHostsAnimationIndex >= topHostsPeriods.length) {
-      clearInterval(topHostsAnimation);
-      topHostsAnimation = null;
-      btn.textContent = '▶ Lancer';
+      stopTopHostsAnimation();
       return;
     }
 
@@ -2020,19 +2100,12 @@ function toggleTopHostsAnimation() {
     updateTopHostsMonthOptions(period.year);
     monthSelect.value = period.month;
 
-    updateTopHostsPodium();
+    updateTopHostsPodium(true);
     topHostsAnimationIndex += 1;
   }, 2000);
 }
 
-window.addEventListener('resize', () => {
-  clearTimeout(spiderResizeTimer);
-  spiderResizeTimer = setTimeout(() => {
-    const d = getCityData();
-    renderSpiderAttractiviteD3(d.spider_attractivite);
-    updateTopHostsPodium();
-  }, 120);
-});
+// ---- Générer le podium
 
 let topHostsTimeline = [];
 let topHostsPeriods = [];
