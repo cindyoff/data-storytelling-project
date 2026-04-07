@@ -72,6 +72,8 @@ def generate_chart_configs(stats: dict) -> str:
         "min_nights": stats["min_nights"],
         "reviews_par_ville": stats["reviews_par_ville"],
         "spider_attractivite": build_spider_chart_payload(stats["spider_chart"]),
+        "top_hosts_reviews_timeline": stats["top_hosts_reviews_timeline"],
+        "cities":             stats["cities"],
         "median_price_by_neighbourhood": stats.get(
             "median_price_by_neighbourhood",
             {"labels": [], "values": []}

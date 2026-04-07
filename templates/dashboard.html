@@ -381,9 +381,9 @@
 
     /* Page 4 - taille des canvas*/
     /* ── PAGE 4 : LAYOUT 2 COLONNES ── */
-    #p4 .charts-grid-2 {
+    #p4 .charts-grid-3 {
       display: grid;
-      grid-template-columns: 1.5fr 1.5fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 20px;
       align-items: stretch;
     }
@@ -495,6 +495,254 @@
         min-height: 320px;
         height: 320px !important;
       }
+    }
+
+    /* ── PAGE 4 : PODIUM TOP HOSTS ── */
+    #p4 .chart-card.podium-card {
+      min-width: 0;
+    }
+
+    .top-host-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .control-group select,
+    #top-host-play-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+    }
+
+    #top-host-play-btn {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    #top-host-play-btn:hover {
+      border-color: rgba(0,229,176,0.35);
+      color: var(--accent);
+    }
+
+    .period-label-group {
+      margin-left: auto;
+      justify-content: flex-end;
+    }
+
+    #top-host-current-period {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .podium-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      flex: 1;
+    }
+
+    .podium-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .podium-block {
+      stroke-width: 2px;
+    }
+
+    .podium-rank-1 {
+      fill: #d4af37;
+      stroke: #b8901f;
+    }
+
+    .podium-rank-2 {
+      fill: #c0c0c0;
+      stroke: #969696;
+    }
+
+    .podium-rank-3 {
+      fill: #cd7f32;
+      stroke: #9c5d1f;
+    }
+
+    .host-avatar-ring {
+      fill: #ffffff;
+      stroke: #243447;
+      stroke-width: 4px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28));
+    }
+
+    .host-name {
+      fill: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .host-score {
+      fill: var(--muted);
+      font-size: 12px;
+    }
+
+    .host-city {
+      fill: var(--muted);
+      font-size: 11px;
+    }
+
+    .host-rank-label {
+      fill: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .host-initials {
+      fill: #243447;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* ── PAGE 4 : PODIUM TOP HOSTS ── */
+    #p4 .chart-card.podium-card {
+      min-width: 0;
+    }
+
+    .top-host-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .control-group select,
+    #top-host-play-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+    }
+
+    #top-host-play-btn {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    #top-host-play-btn:hover {
+      border-color: rgba(0,229,176,0.35);
+      color: var(--accent);
+    }
+
+    .period-label-group {
+      margin-left: auto;
+      justify-content: flex-end;
+    }
+
+    #top-host-current-period {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .podium-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      flex: 1;
+    }
+
+    .podium-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .podium-block {
+      stroke-width: 2px;
+    }
+
+    .podium-rank-1 {
+      fill: #d4af37;
+      stroke: #b8901f;
+    }
+
+    .podium-rank-2 {
+      fill: #c0c0c0;
+      stroke: #969696;
+    }
+
+    .podium-rank-3 {
+      fill: #cd7f32;
+      stroke: #9c5d1f;
+    }
+
+    .host-avatar-ring {
+      fill: #ffffff;
+      stroke: #243447;
+      stroke-width: 4px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28));
+    }
+
+    .host-name {
+      fill: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .host-score {
+      fill: var(--muted);
+      font-size: 12px;
+    }
+
+    .host-city {
+      fill: var(--muted);
+      font-size: 11px;
+    }
+
+    .host-rank-label {
+      fill: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .host-initials {
+      fill: #243447;
+      font-size: 18px;
+      font-weight: 800;
     }
 
     ::-webkit-scrollbar { width: 5px; }
@@ -791,7 +1039,7 @@
       <p id="p4-subtitle">Vision 360 des locations Airbnb</p>
     </div>
 
-    <div class="charts-grid-2">
+    <div class="charts-grid-3">
       <!-- Colonne 1 : Spider -->
       <div class="chart-card spider-card">
         <div class="chart-card-header">
@@ -815,6 +1063,40 @@
         </div>
         <canvas id="chart-ranking-villes"></canvas>
       </div>
+
+      <!-- Colonne 3 : Ranking temporel des hôtes-->
+      <div class="chart-card podium-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Top 3 des meilleurs hôtes</div>
+            <div class="chart-card-sub">Selon le nombre de reviews · filtrage mensuel</div>
+          </div>
+          <span class="chart-card-badge">D3 Podium</span>
+        </div>
+
+        <div class="top-host-controls">
+          <div class="control-group">
+            <label for="top-host-year">Année</label>
+            <select id="top-host-year"></select>
+          </div>
+
+          <div class="control-group">
+            <label for="top-host-month">Mois</label>
+            <select id="top-host-month"></select>
+          </div>
+
+          <div class="control-group">
+            <button id="top-host-play-btn" type="button">▶ Lancer</button>
+          </div>
+
+          <div class="control-group period-label-group">
+            <span id="top-host-current-period">Période : —</span>
+          </div>
+        </div>
+
+        <div id="top-host-podium" class="podium-d3-container"></div>
+      </div>
+
 
       <div class="chart-card">
         <div class="chart-card-header">
@@ -1503,6 +1785,504 @@ window.addEventListener('resize', () => {
   }, 120);
 });
 
+let topHostsTimeline = [];
+let topHostsPeriods = [];
+let topHostsAnimation = null;
+let topHostsAnimationIndex = 0;
+
+function getMonthLabel(month) {
+  const labels = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+  return labels[month - 1] || String(month);
+}
+
+function getInitials(name) {
+  return (name || '')
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(x => x[0].toUpperCase())
+    .join('');
+}
+
+function truncateText(text, maxLength = 18) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength - 1) + '…' : text;
+}
+
+function initTopHostsPodiumControls() {
+  const timeline = DATA.top_hosts_reviews_timeline;
+  if (!timeline || !timeline.periods || !timeline.items) return;
+
+  topHostsTimeline = timeline.items;
+  topHostsPeriods = timeline.periods;
+
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const playBtn = document.getElementById('top-host-play-btn');
+
+  if (!yearSelect || !monthSelect || !playBtn) return;
+
+  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
+
+  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+
+  const firstYear = years[0];
+  yearSelect.value = firstYear;
+  updateTopHostsMonthOptions(firstYear);
+
+  yearSelect.addEventListener('change', () => {
+    updateTopHostsMonthOptions(+yearSelect.value);
+    updateTopHostsPodium();
+  });
+
+  monthSelect.addEventListener('change', () => {
+    updateTopHostsPodium();
+  });
+
+  playBtn.addEventListener('click', toggleTopHostsAnimation);
+
+  updateTopHostsPodium();
+}
+
+function updateTopHostsMonthOptions(selectedYear) {
+  const monthSelect = document.getElementById('top-host-month');
+  if (!monthSelect) return;
+
+  const months = topHostsPeriods
+    .filter(p => p.year === +selectedYear)
+    .map(p => p.month)
+    .sort((a, b) => a - b);
+
+  monthSelect.innerHTML = months
+    .map(m => `<option value="${m}">${getMonthLabel(m)}</option>`)
+    .join('');
+
+  if (months.length) monthSelect.value = months[0];
+}
+
+function getSelectedTopHostsPeriodData() {
+  const year = +document.getElementById('top-host-year').value;
+  const month = +document.getElementById('top-host-month').value;
+
+  return topHostsTimeline.find(d => d.year === year && d.month === month) || null;
+}
+
+function renderTopHostsPodiumD3(periodData) {
+  const container = d3.select('#top-host-podium');
+  if (container.empty()) return;
+
+  container.selectAll('*').remove();
+
+  const node = container.node();
+  const width = node.clientWidth || 520;
+  const height = node.clientHeight || 420;
+
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  const data = (periodData && periodData.top3) ? periodData.top3 : [];
+  if (!data.length) {
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', height / 2)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#5a6a82')
+      .text('Aucune donnée disponible');
+    return;
+  }
+
+  const podiumSlots = [
+    { rank: 2, x: width * 0.25, h: 150 },
+    { rank: 1, x: width * 0.50, h: 220 },
+    { rank: 3, x: width * 0.75, h: 120 },
+  ];
+
+  const rankedData = [
+    data[1] ? { ...data[1], rank: 2 } : null,
+    data[0] ? { ...data[0], rank: 1 } : null,
+    data[2] ? { ...data[2], rank: 3 } : null,
+  ].filter(Boolean);
+
+  const rectWidth = 135;
+  const baseY = height - 50;
+
+  const g = svg.append('g');
+
+  g.selectAll('.podium-block')
+    .data(podiumSlots)
+    .enter()
+    .append('rect')
+    .attr('class', d => `podium-block podium-rank-${d.rank}`)
+    .attr('x', d => d.x - rectWidth / 2)
+    .attr('y', height)
+    .attr('width', rectWidth)
+    .attr('height', 0)
+    .attr('rx', 18)
+    .transition()
+    .duration(700)
+    .attr('y', d => baseY - d.h)
+    .attr('height', d => d.h);
+
+  const hostGroups = g.selectAll('.host-group')
+    .data(rankedData)
+    .enter()
+    .append('g')
+    .attr('class', d => `host-group rank-${d.rank}`)
+    .attr('transform', d => {
+      const slot = podiumSlots.find(p => p.rank === d.rank);
+      return `translate(${slot.x}, ${baseY - slot.h - 68})`;
+    })
+    .style('opacity', 0);
+
+  hostGroups.transition().duration(700).delay(250).style('opacity', 1);
+
+  hostGroups.append('text')
+    .attr('class', 'host-rank-label')
+    .attr('text-anchor', 'middle')
+    .attr('y', -58)
+    .text(d => `#${d.rank}`);
+
+  hostGroups.append('circle')
+    .attr('class', 'host-avatar-ring')
+    .attr('r', 42);
+
+  hostGroups.append('circle')
+    .attr('r', 36)
+    .attr('fill', '#d9dde5');
+
+  hostGroups.append('text')
+    .attr('class', 'host-initials')
+    .attr('text-anchor', 'middle')
+    .attr('dy', 6)
+    .text(d => getInitials(d.host_name));
+
+  hostGroups.append('text')
+    .attr('class', 'host-name')
+    .attr('text-anchor', 'middle')
+    .attr('y', 66)
+    .text(d => truncateText(d.host_name, 16));
+
+  hostGroups.append('text')
+    .attr('class', 'host-score')
+    .attr('text-anchor', 'middle')
+    .attr('y', 86)
+    .text(d => `${Math.round(d.reviews)} reviews`);
+
+  hostGroups.append('text')
+    .attr('class', 'host-city')
+    .attr('text-anchor', 'middle')
+    .attr('y', 104)
+    .text(d => d.city || '');
+}
+
+function updateTopHostsPodium() {
+  const periodData = getSelectedTopHostsPeriodData();
+  renderTopHostsPodiumD3(periodData);
+
+  const label = document.getElementById('top-host-current-period');
+  if (label && periodData) {
+    label.textContent = `Période : ${getMonthLabel(periodData.month)} ${periodData.year}`;
+  }
+}
+
+function toggleTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
+  if (!btn) return;
+
+  if (topHostsAnimation) {
+    clearInterval(topHostsAnimation);
+    topHostsAnimation = null;
+    btn.textContent = '▶ Lancer';
+    return;
+  }
+
+  topHostsAnimationIndex = 0;
+  btn.textContent = '⏸ Stop';
+
+  topHostsAnimation = setInterval(() => {
+    if (topHostsAnimationIndex >= topHostsPeriods.length) {
+      clearInterval(topHostsAnimation);
+      topHostsAnimation = null;
+      btn.textContent = '▶ Lancer';
+      return;
+    }
+
+    const period = topHostsPeriods[topHostsAnimationIndex];
+    const yearSelect = document.getElementById('top-host-year');
+    const monthSelect = document.getElementById('top-host-month');
+
+    yearSelect.value = period.year;
+    updateTopHostsMonthOptions(period.year);
+    monthSelect.value = period.month;
+
+    updateTopHostsPodium();
+    topHostsAnimationIndex += 1;
+  }, 2000);
+}
+
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+    updateTopHostsPodium();
+  }, 120);
+});
+
+let topHostsTimeline = [];
+let topHostsPeriods = [];
+let topHostsAnimation = null;
+let topHostsAnimationIndex = 0;
+
+function getMonthLabel(month) {
+  const labels = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+  return labels[month - 1] || String(month);
+}
+
+function getInitials(name) {
+  return (name || '')
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(x => x[0].toUpperCase())
+    .join('');
+}
+
+function truncateText(text, maxLength = 18) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength - 1) + '…' : text;
+}
+
+function initTopHostsPodiumControls() {
+  const timeline = DATA.top_hosts_reviews_timeline;
+  if (!timeline || !timeline.periods || !timeline.items) return;
+
+  topHostsTimeline = timeline.items;
+  topHostsPeriods = timeline.periods;
+
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const playBtn = document.getElementById('top-host-play-btn');
+
+  if (!yearSelect || !monthSelect || !playBtn) return;
+
+  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
+
+  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+
+  const firstYear = years[0];
+  yearSelect.value = firstYear;
+  updateTopHostsMonthOptions(firstYear);
+
+  yearSelect.addEventListener('change', () => {
+    updateTopHostsMonthOptions(+yearSelect.value);
+    updateTopHostsPodium();
+  });
+
+  monthSelect.addEventListener('change', () => {
+    updateTopHostsPodium();
+  });
+
+  playBtn.addEventListener('click', toggleTopHostsAnimation);
+
+  updateTopHostsPodium();
+}
+
+function updateTopHostsMonthOptions(selectedYear) {
+  const monthSelect = document.getElementById('top-host-month');
+  if (!monthSelect) return;
+
+  const months = topHostsPeriods
+    .filter(p => p.year === +selectedYear)
+    .map(p => p.month)
+    .sort((a, b) => a - b);
+
+  monthSelect.innerHTML = months
+    .map(m => `<option value="${m}">${getMonthLabel(m)}</option>`)
+    .join('');
+
+  if (months.length) monthSelect.value = months[0];
+}
+
+function getSelectedTopHostsPeriodData() {
+  const year = +document.getElementById('top-host-year').value;
+  const month = +document.getElementById('top-host-month').value;
+
+  return topHostsTimeline.find(d => d.year === year && d.month === month) || null;
+}
+
+function renderTopHostsPodiumD3(periodData) {
+  const container = d3.select('#top-host-podium');
+  if (container.empty()) return;
+
+  container.selectAll('*').remove();
+
+  const node = container.node();
+  const width = node.clientWidth || 520;
+  const height = node.clientHeight || 420;
+
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  const data = (periodData && periodData.top3) ? periodData.top3 : [];
+  if (!data.length) {
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', height / 2)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#5a6a82')
+      .text('Aucune donnée disponible');
+    return;
+  }
+
+  const podiumSlots = [
+    { rank: 2, x: width * 0.25, h: 150 },
+    { rank: 1, x: width * 0.50, h: 220 },
+    { rank: 3, x: width * 0.75, h: 120 },
+  ];
+
+  const rankedData = [
+    data[1] ? { ...data[1], rank: 2 } : null,
+    data[0] ? { ...data[0], rank: 1 } : null,
+    data[2] ? { ...data[2], rank: 3 } : null,
+  ].filter(Boolean);
+
+  const rectWidth = 135;
+  const baseY = height - 50;
+
+  const g = svg.append('g');
+
+  g.selectAll('.podium-block')
+    .data(podiumSlots)
+    .enter()
+    .append('rect')
+    .attr('class', d => `podium-block podium-rank-${d.rank}`)
+    .attr('x', d => d.x - rectWidth / 2)
+    .attr('y', height)
+    .attr('width', rectWidth)
+    .attr('height', 0)
+    .attr('rx', 18)
+    .transition()
+    .duration(700)
+    .attr('y', d => baseY - d.h)
+    .attr('height', d => d.h);
+
+  const hostGroups = g.selectAll('.host-group')
+    .data(rankedData)
+    .enter()
+    .append('g')
+    .attr('class', d => `host-group rank-${d.rank}`)
+    .attr('transform', d => {
+      const slot = podiumSlots.find(p => p.rank === d.rank);
+      return `translate(${slot.x}, ${baseY - slot.h - 68})`;
+    })
+    .style('opacity', 0);
+
+  hostGroups.transition().duration(700).delay(250).style('opacity', 1);
+
+  hostGroups.append('text')
+    .attr('class', 'host-rank-label')
+    .attr('text-anchor', 'middle')
+    .attr('y', -58)
+    .text(d => `#${d.rank}`);
+
+  hostGroups.append('circle')
+    .attr('class', 'host-avatar-ring')
+    .attr('r', 42);
+
+  hostGroups.append('circle')
+    .attr('r', 36)
+    .attr('fill', '#d9dde5');
+
+  hostGroups.append('text')
+    .attr('class', 'host-initials')
+    .attr('text-anchor', 'middle')
+    .attr('dy', 6)
+    .text(d => getInitials(d.host_name));
+
+  hostGroups.append('text')
+    .attr('class', 'host-name')
+    .attr('text-anchor', 'middle')
+    .attr('y', 66)
+    .text(d => truncateText(d.host_name, 16));
+
+  hostGroups.append('text')
+    .attr('class', 'host-score')
+    .attr('text-anchor', 'middle')
+    .attr('y', 86)
+    .text(d => `${Math.round(d.reviews)} reviews`);
+
+  hostGroups.append('text')
+    .attr('class', 'host-city')
+    .attr('text-anchor', 'middle')
+    .attr('y', 104)
+    .text(d => d.city || '');
+}
+
+function updateTopHostsPodium() {
+  const periodData = getSelectedTopHostsPeriodData();
+  renderTopHostsPodiumD3(periodData);
+
+  const label = document.getElementById('top-host-current-period');
+  if (label && periodData) {
+    label.textContent = `Période : ${getMonthLabel(periodData.month)} ${periodData.year}`;
+  }
+}
+
+function toggleTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
+  if (!btn) return;
+
+  if (topHostsAnimation) {
+    clearInterval(topHostsAnimation);
+    topHostsAnimation = null;
+    btn.textContent = '▶ Lancer';
+    return;
+  }
+
+  topHostsAnimationIndex = 0;
+  btn.textContent = '⏸ Stop';
+
+  topHostsAnimation = setInterval(() => {
+    if (topHostsAnimationIndex >= topHostsPeriods.length) {
+      clearInterval(topHostsAnimation);
+      topHostsAnimation = null;
+      btn.textContent = '▶ Lancer';
+      return;
+    }
+
+    const period = topHostsPeriods[topHostsAnimationIndex];
+    const yearSelect = document.getElementById('top-host-year');
+    const monthSelect = document.getElementById('top-host-month');
+
+    yearSelect.value = period.year;
+    updateTopHostsMonthOptions(period.year);
+    monthSelect.value = period.month;
+
+    updateTopHostsPodium();
+    topHostsAnimationIndex += 1;
+  }, 2000);
+}
+
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+    updateTopHostsPodium();
+  }, 120);
+});
+
 function renderMedianPriceByNeighbourhood(d) {
   destroyChart('medianPriceByNeighbourhood');
   const ctx = document.getElementById('chart-median-price-neighbourhood').getContext('2d');
@@ -1726,6 +2506,7 @@ function updateAllCharts() {
 document.addEventListener('DOMContentLoaded', () => {
   updateStats();
   updateAllCharts();
+  initTopHostsPodiumControls();
   initMap();
 });
 

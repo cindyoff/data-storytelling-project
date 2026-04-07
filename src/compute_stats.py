@@ -180,6 +180,73 @@ def compute_city_detail(df, city):
     }
 
 
+def compute_top_hosts_reviews_timeline(df):
+    """
+    Top 3 des hôtes toutes villes confondues par période (année/mois),
+    selon le nombre de reviews.
+    
+    Hypothèse: on utilise number_of_reviews_ltm comme proxy d'activité
+    sur la période associée à last_review.
+    """
+    required_cols = ["host_id", "host_name", "city", "number_of_reviews_ltm", "review_year", "review_month", "review_period"]
+    missing = [col for col in required_cols if col not in df.columns]
+    if missing:
+        return {"periods": [], "items": []}
+
+    sub = df.dropna(subset=["review_year", "review_month", "review_period"]).copy()
+
+    if sub.empty:
+        return {"periods": [], "items": []}
+
+    grouped = (
+        sub.groupby(
+            ["review_period", "review_year", "review_month", "host_id", "host_name"],
+            as_index=False
+        )
+        .agg(
+            reviews=("number_of_reviews_ltm", "sum"),
+            city=("city", lambda s: s.mode().iat[0] if not s.mode().empty else s.iloc[0])
+        )
+    )
+    items = []
+    periods = []
+
+    for (period, year, month), g in grouped.groupby(["review_period", "review_year", "review_month"]):
+        top3 = (
+            g.sort_values(["reviews", "host_name"], ascending=[False, True])
+             .head(3)
+        )
+
+        top3_records = []
+        for _, row in top3.iterrows():
+            top3_records.append({
+                "host_id": int(row["host_id"]),
+                "host_name": row["host_name"],
+                "reviews": float(row["reviews"]),
+                "city": row["city"],
+                "avatar": None
+            })
+
+        periods.append({
+            "period": period,
+            "year": int(year),
+            "month": int(month)
+        })
+
+        items.append({
+            "period": period,
+            "year": int(year),
+            "month": int(month),
+            "top3": top3_records
+        })
+
+    periods = sorted(periods, key=lambda x: (x["year"], x["month"]))
+    items = sorted(items, key=lambda x: (x["year"], x["month"]))
+    return {
+        "periods": periods,
+        "items": items
+    }
+
 def compute_all_stats(df):
     """Point d'entrée : renvoie un dict complet prêt pour generate_charts.py."""
     spider_rows = compute_spider_raw_metrics(df)
@@ -194,6 +261,7 @@ def compute_all_stats(df):
         "min_nights":         compute_min_nights(df),
         "reviews_par_ville":  compute_reviews_par_ville(df),
         "spider_chart":       spider_chart,
+        "top_hosts_reviews_timeline": compute_top_hosts_reviews_timeline(df),
         "cities": {
             city: compute_city_detail(df, city)
             for city in CITIES

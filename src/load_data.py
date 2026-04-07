@@ -142,4 +142,11 @@ def load_all(data_dir="data/"):
         load_bordeaux(f"{data_dir}listings-bordeaux.csv"),
     ]
     df = pd.concat(dfs, ignore_index=True)
+
+    if "last_review" in df.columns:
+        df["last_review"] = pd.to_datetime(df["last_review"], errors="coerce")
+        df["review_year"] = df["last_review"].dt.year
+        df["review_month"] = df["last_review"].dt.month
+        df["review_period"] = df["last_review"].dt.to_period("M").astype(str)
+        
     return df
