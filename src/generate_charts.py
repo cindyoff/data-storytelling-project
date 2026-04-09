@@ -13,6 +13,7 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return super().default(obj)
 
+
 CITY_COLORS = {
     "Lyon": "#00e5b0",
     "Paris": "#ff5f6d",
@@ -52,17 +53,25 @@ def build_spider_chart_payload(spider_chart: dict) -> dict:
 
 
 def generate_chart_configs(stats: dict) -> str:
+    """
+    Construit le payload complet injecté dans le dashboard HTML.
+    Les données d'investissement doivent déjà être présentes dans `stats`.
+    """
     payload = {
-        "stats":              stats["stats"],
-        "prix_par_ville":     stats["prix_par_ville"],
-        "room_type":          stats["room_type"],
-        "dispo_par_ville":    stats["dispo_par_ville"],
+        "stats": stats["stats"],
+        "prix_par_ville": stats["prix_par_ville"],
+        "room_type": stats["room_type"],
+        "dispo_par_ville": stats["dispo_par_ville"],
         "listings_par_ville": stats["listings_par_ville"],
-        "top_hosts":          stats["top_hosts"],
-        "min_nights":         stats["min_nights"],
-        "reviews_par_ville":  stats["reviews_par_ville"],
+        "top_hosts": stats["top_hosts"],
+        "min_nights": stats["min_nights"],
+        "reviews_par_ville": stats["reviews_par_ville"],
         "spider_attractivite": build_spider_chart_payload(stats["spider_chart"]),
-        "cities":             stats["cities"],
+        "investment_revenue": stats.get("investment_revenue", {"labels": [], "values": []}),
+        "investment_demand": stats.get("investment_demand", {"labels": [], "values": []}),
+        "investment_score_by_city": stats.get("investment_score_by_city", {"labels": [], "values": []}),
+        "investment_trend": stats.get("investment_trend", {"labels": [], "values": []}),
+        "cities": stats["cities"],
     }
 
     return json.dumps(payload, ensure_ascii=False, indent=2, cls=NumpyEncoder)

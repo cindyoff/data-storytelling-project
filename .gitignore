@@ -1,2 +1,5 @@
 .DS_Store
 src/__py*
+static/
+__pycache__/
+*.pyc

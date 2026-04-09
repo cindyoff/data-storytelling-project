@@ -280,3 +280,5 @@ class TestComputeAllStats:
         result = compute_all_stats(minimal_df)
         for city in minimal_df["city"].unique():
             assert city in result["cities"]
+
+
