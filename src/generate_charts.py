@@ -67,10 +67,31 @@ def generate_chart_configs(stats: dict) -> str:
         "min_nights": stats["min_nights"],
         "reviews_par_ville": stats["reviews_par_ville"],
         "spider_attractivite": build_spider_chart_payload(stats["spider_chart"]),
-        "investment_revenue": stats.get("investment_revenue", {"labels": [], "values": []}),
-        "investment_demand": stats.get("investment_demand", {"labels": [], "values": []}),
-        "investment_score_by_city": stats.get("investment_score_by_city", {"labels": [], "values": []}),
-        "investment_trend": stats.get("investment_trend", {"labels": [], "values": []}),
+        "median_price_by_neighbourhood": stats.get(
+            "median_price_by_neighbourhood",
+            {"labels": [], "values": []}
+        ),
+        "price_normalized_by_city": stats.get(
+            "price_normalized_by_city",
+            {"labels": [], "values": []}
+        ),
+        "estimated_revenue_by_city": stats.get(
+            "estimated_revenue_by_city",
+            {"labels": [], "values": []}
+        ),
+        "investment_ranking": stats.get(
+            "investment_ranking",
+            {"labels": [], "values": []}
+        ),
+        "room_type_investment": stats.get(
+            "room_type_investment",
+            {
+                "labels": [],
+                "median_price": [],
+                "estimated_revenue": [],
+                "avg_reviews": []
+            }
+        ),
         "cities": stats["cities"],
     }
 

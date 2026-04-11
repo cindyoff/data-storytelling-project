@@ -5,15 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Airbnb Dashboard — France</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-  <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
   <style>
@@ -727,29 +724,29 @@
   <section class="page" id="p5">
     <div class="page-header">
       <h2>Analyse investissement</h2>
-      <p id="p5-subtitle">Rentabilité potentielle par ville</p>
+      <p id="p5-subtitle">Prix médian, prix normalisé et revenu estimé</p>
     </div>
 
     <div class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Revenu estimé moyen</div>
+        <div class="stat-label">Prix médian</div>
         <div class="stat-value" id="stat-invest-revenue">—</div>
-        <div class="stat-delta">Par annonce</div>
+        <div class="stat-delta">Ville ou vue globale</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Demande moyenne</div>
+        <div class="stat-label">Reviews moyennes</div>
         <div class="stat-value v2" id="stat-invest-demand">—</div>
-        <div class="stat-delta">Reviews moyennes</div>
+        <div class="stat-delta">Indicateur de demande</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Score investissement</div>
+        <div class="stat-label">Prix normalisé</div>
         <div class="stat-value v3" id="stat-invest-score">—</div>
-        <div class="stat-delta">Score synthétique</div>
+        <div class="stat-delta">Comparaison entre villes</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Ville active</div>
-        <div class="stat-value v4" id="stat-invest-city">Toutes</div>
-        <div class="stat-delta">Filtre courant</div>
+        <div class="stat-label">Classement</div>
+        <div class="stat-value v4" id="stat-invest-city">—</div>
+        <div class="stat-delta">Par revenu estimé</div>
       </div>
     </div>
 
@@ -757,45 +754,45 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Revenu estimé moyen</div>
-            <div class="chart-card-sub">Par ville</div>
+            <div class="chart-card-title">Prix médian par quartier</div>
+            <div class="chart-card-sub">Top quartiers</div>
+          </div>
+          <span class="chart-card-badge">Horizontal bar</span>
+        </div>
+        <canvas id="chart-median-price-neighbourhood"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Prix normalisé par ville</div>
+            <div class="chart-card-sub">Échelle 0 à 100</div>
           </div>
           <span class="chart-card-badge">Bar chart</span>
         </div>
-        <canvas id="chart-investment-revenue"></canvas>
+        <canvas id="chart-price-normalized"></canvas>
       </div>
 
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Demande moyenne</div>
-            <div class="chart-card-sub">Nombre moyen de reviews</div>
+            <div class="chart-card-title">Analyse par room_type</div>
+            <div class="chart-card-sub">Prix médian vs revenu estimé</div>
           </div>
-          <span class="chart-card-badge">Doughnut</span>
+          <span class="chart-card-badge">Grouped bar</span>
         </div>
-        <canvas id="chart-investment-demand"></canvas>
+        <canvas id="chart-room-type-investment"></canvas>
       </div>
 
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Évolution des prix</div>
-            <div class="chart-card-sub">Tendance annuelle</div>
+            <div class="chart-card-title">Revenu estimé par ville</div>
+            <div class="chart-card-sub">Classement automatique</div>
           </div>
-          <span class="chart-card-badge">Line chart</span>
+          <span class="chart-card-badge">Horizontal bar</span>
         </div>
-        <canvas id="chart-investment-trend"></canvas>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-card-header">
-          <div>
-            <div class="chart-card-title">Score investissement</div>
-            <div class="chart-card-sub">Comparaison des villes</div>
-          </div>
-          <span class="chart-card-badge">Scatter</span>
-        </div>
-        <canvas id="chart-investment-score"></canvas>
+        <canvas id="chart-investment-ranking"></canvas>
       </div>
     </div>
   </section>
@@ -810,7 +807,7 @@ const pagesMeta = {
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
   p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
-  p5: { title: 'Analyse investissement', sub: 'Rentabilité et demande' },
+  p5: { title: 'Analyse investissement', sub: 'Prix médian, prix normalisé et revenu estimé' },
 };
 
 function showPage(id, btn) {
@@ -856,19 +853,26 @@ function buildFilteredData(city) {
       labels: DATA.spider_attractivite.labels,
       datasets: DATA.spider_attractivite.datasets.filter(ds => ds.label === city)
     },
-    investment_revenue: {
+    median_price_by_neighbourhood: c.median_price_by_neighbourhood || { labels: [], values: [] },
+    price_normalized_by_city: {
       labels: [city],
-      values: [c.investment?.revenue || 0]
+      values: [c.investment?.price_normalized || 0]
     },
-    investment_demand: {
+    estimated_revenue_by_city: {
       labels: [city],
-      values: [c.investment?.demand || 0]
+      values: [c.investment?.estimated_revenue || 0]
     },
-    investment_score_by_city: {
+    investment_ranking: {
       labels: [city],
-      values: [c.investment?.score || 0]
+      values: [c.investment?.estimated_revenue || 0]
     },
-    investment_trend: c.investment_trend || { labels: [], values: [] },
+    room_type_investment: c.room_type_investment || {
+      labels: [],
+      median_price: [],
+      estimated_revenue: [],
+      avg_reviews: []
+    },
+    investment: c.investment || {},
     stats: {
       avg_price: c.avg_price,
       med_price: c.med_price,
@@ -1039,8 +1043,11 @@ function renderDispo(d) {
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82' } },
-        y: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82', callback: v => v + ' j' },
-             max: 365, min: 0 }
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' j' },
+          max: 365, min: 0
+        }
       }
     }
   });
@@ -1229,10 +1236,46 @@ function renderSpiderAttractivite(d) {
   });
 }
 
-function renderInvestmentRevenue(d) {
-  destroyChart('investmentRevenue');
-  const ctx = document.getElementById('chart-investment-revenue').getContext('2d');
-  charts['investmentRevenue'] = new Chart(ctx, {
+function renderMedianPriceByNeighbourhood(d) {
+  destroyChart('medianPriceByNeighbourhood');
+  const ctx = document.getElementById('chart-median-price-neighbourhood').getContext('2d');
+
+  charts['medianPriceByNeighbourhood'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: '#00e5b088',
+        borderColor: '#00e5b0',
+        borderWidth: 1,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderPriceNormalized(d) {
+  destroyChart('priceNormalized');
+  const ctx = document.getElementById('chart-price-normalized').getContext('2d');
+
+  charts['priceNormalized'] = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: d.labels,
@@ -1240,92 +1283,7 @@ function renderInvestmentRevenue(d) {
         data: d.values,
         backgroundColor: makeBarColors(d.labels),
         borderRadius: 8,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } }
-    }
-  });
-}
-
-function renderInvestmentDemand(d) {
-  destroyChart('investmentDemand');
-  const ctx = document.getElementById('chart-investment-demand').getContext('2d');
-  charts['investmentDemand'] = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: d.labels,
-      datasets: [{
-        data: d.values,
-        backgroundColor: makeBarColors(d.labels),
-        borderWidth: 2,
-        borderColor: '#161e2e',
-        hoverOffset: 8,
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '65%',
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            padding: 12,
-            font: { size: 11 },
-            color: '#5a6a82'
-          }
-        }
-      }
-    }
-  });
-}
-
-function renderInvestmentTrend(d) {
-  destroyChart('investmentTrend');
-  const ctx = document.getElementById('chart-investment-trend').getContext('2d');
-  charts['investmentTrend'] = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: d.labels,
-      datasets: [{
-        label: 'Prix moyen',
-        data: d.values,
-        tension: 0.3,
-        fill: false,
-        borderColor: '#00e5b0',
-        backgroundColor: '#00e5b0',
-        pointRadius: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } }
-    }
-  });
-}
-
-function renderInvestmentScore(d) {
-  destroyChart('investmentScore');
-  const ctx = document.getElementById('chart-investment-score').getContext('2d');
-
-  const points = (d.labels || []).map((label, i) => ({
-    x: i + 1,
-    y: d.values[i],
-    city: label
-  }));
-
-  charts['investmentScore'] = new Chart(ctx, {
-    type: 'scatter',
-    data: {
-      datasets: [{
-        label: 'Score investissement',
-        data: points,
-        backgroundColor: makeBarColors(d.labels),
-        borderColor: makeBarColors(d.labels),
-        pointRadius: 6,
-        pointHoverRadius: 8
+        borderSkipped: false
       }]
     },
     options: {
@@ -1335,28 +1293,105 @@ function renderInvestmentScore(d) {
         tooltip: {
           callbacks: {
             label: function(context) {
-              const point = context.raw;
-              return `${point.city} : ${point.y}`;
+              return `Prix normalisé : ${context.raw.toFixed(1)}/100`;
             }
           }
         }
       },
       scales: {
         x: {
-          min: 0,
-          max: (d.labels?.length || 0) + 1,
-          ticks: {
-            color: '#5a6a82',
-            callback: function(value) {
-              const idx = value - 1;
-              return d.labels && d.labels[idx] ? d.labels[idx] : '';
-            }
-          },
-          grid: { color: '#1e2d45' }
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
         },
         y: {
-          ticks: { color: '#5a6a82' },
-          grid: { color: '#1e2d45' }
+          min: 0,
+          max: 100,
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderRoomTypeInvestment(d) {
+  destroyChart('roomTypeInvestment');
+  const ctx = document.getElementById('chart-room-type-investment').getContext('2d');
+
+  charts['roomTypeInvestment'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [
+        {
+          label: 'Prix médian',
+          data: d.median_price,
+          backgroundColor: '#00e5b088',
+          borderColor: '#00e5b0',
+          borderWidth: 1
+        },
+        {
+          label: 'Revenu estimé',
+          data: d.estimated_revenue,
+          backgroundColor: '#ff5f6d66',
+          borderColor: '#ff5f6d',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#5a6a82' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentRanking(d) {
+  destroyChart('investmentRanking');
+  const ctx = document.getElementById('chart-investment-ranking').getContext('2d');
+
+  charts['investmentRanking'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: '#1e2d45' },
+          ticks: {
+            color: '#5a6a82',
+            callback: v => Math.round(v) + ' €'
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
         }
       }
     }
@@ -1371,6 +1406,7 @@ function averageOfArray(arr) {
 function updateStats() {
   const d = getCityData();
   const s = d.stats;
+
   document.getElementById('stat-avg-price').textContent  = Math.round(s.avg_price) + ' €';
   document.getElementById('stat-med-price').textContent  = Math.round(s.med_price) + ' €';
   document.getElementById('stat-avail').textContent      = Math.round(s.avg_avail) + ' j';
@@ -1380,22 +1416,26 @@ function updateStats() {
   document.getElementById('stat-minnights').textContent  = s.med_minnights + ' n';
   document.getElementById('stat-reviews').textContent    = (s.avg_reviews_month || 0).toFixed(2);
 
-  const investRevenue = activeCity === 'Toutes'
-    ? averageOfArray(DATA.investment_revenue?.values || [])
-    : (d.investment_revenue?.values?.[0] || 0);
+  const investMedianPrice = activeCity === 'Toutes'
+    ? averageOfArray(DATA.median_price_by_neighbourhood?.values || [])
+    : (d.investment?.median_price || 0);
 
   const investDemand = activeCity === 'Toutes'
-    ? averageOfArray(DATA.investment_demand?.values || [])
-    : (d.investment_demand?.values?.[0] || 0);
+    ? 0
+    : (d.investment?.avg_reviews || 0);
 
   const investScore = activeCity === 'Toutes'
-    ? averageOfArray(DATA.investment_score_by_city?.values || [])
-    : (d.investment_score_by_city?.values?.[0] || 0);
+    ? averageOfArray(DATA.price_normalized_by_city?.values || [])
+    : (d.investment?.price_normalized || 0);
 
-  document.getElementById('stat-invest-revenue').textContent = Math.round(investRevenue) + ' €';
-  document.getElementById('stat-invest-demand').textContent  = investDemand.toFixed(1);
+  const investRank = activeCity === 'Toutes'
+    ? 'Global'
+    : ('#' + (d.investment?.rank || '-'));
+
+  document.getElementById('stat-invest-revenue').textContent = Math.round(investMedianPrice) + ' €';
+  document.getElementById('stat-invest-demand').textContent  = activeCity === 'Toutes' ? '—' : investDemand.toFixed(1);
   document.getElementById('stat-invest-score').textContent   = investScore.toFixed(1);
-  document.getElementById('stat-invest-city').textContent    = activeCity;
+  document.getElementById('stat-invest-city').textContent    = investRank;
 }
 
 function updateAllCharts() {
@@ -1409,10 +1449,10 @@ function updateAllCharts() {
   renderReviewsVille(d.reviews_par_ville);
   renderSpiderAttractivite(d.spider_attractivite);
 
-  renderInvestmentRevenue(d.investment_revenue || { labels: [], values: [] });
-  renderInvestmentDemand(d.investment_demand || { labels: [], values: [] });
-  renderInvestmentTrend(d.investment_trend || { labels: [], values: [] });
-  renderInvestmentScore(d.investment_score_by_city || { labels: [], values: [] });
+  renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
+  renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
+  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], estimated_revenue: [], avg_reviews: [] });
+  renderInvestmentRanking(d.investment_ranking || { labels: [], values: [] });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1433,9 +1473,9 @@ document.addEventListener('mousemove', (e) => {
   const el = document.createElement('span');
   el.className = 'tulip';
   el.textContent = TULIPS[Math.floor(Math.random() * TULIPS.length)];
-  el.style.left            = e.clientX + 'px';
-  el.style.top             = e.clientY + 'px';
-  el.style.fontSize        = (16 + Math.random() * 14) + 'px';
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  el.style.fontSize = (16 + Math.random() * 14) + 'px';
   el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
 
   document.body.appendChild(el);

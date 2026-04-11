@@ -1,368 +1,245 @@
-import json
-from pathlib import Path
-
-import matplotlib.pyplot as plt
 import pandas as pd
 
-from src.load_data import load_all
 
+def preparer_donnees_investissement(df):
+    df = df.copy()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-OUTPUT_DIR = BASE_DIR / "output"
-STATIC_DIR = BASE_DIR / "static"
-
-
-def charger_donnees(data_path=DATA_DIR):
-    df = load_all(str(data_path))
-    return df
-
-
-def preparer_dates(df):
-    if "last_review" in df.columns:
-        df["last_review"] = pd.to_datetime(df["last_review"], errors="coerce")
-        df["year"] = df["last_review"].dt.year
-    else:
-        print("Pas de colonne last_review")
-
-    if "host_since" in df.columns:
-        df["host_since"] = pd.to_datetime(df["host_since"], errors="coerce")
-        df["host_year"] = df["host_since"].dt.year
-    else:
-        print("Pas de colonne host_since")
-
-    return df
-
-
-def nettoyer_donnees(df):
     if "price" in df.columns:
         df["price"] = pd.to_numeric(df["price"], errors="coerce")
-        df = df[df["price"].notna()]
-        df = df[df["price"] > 0]
 
     if "availability_365" in df.columns:
-        df["availability_365"] = pd.to_numeric(df["availability_365"], errors="coerce").fillna(0)
+        df["availability_365"] = pd.to_numeric(df["availability_365"], errors="coerce")
 
     if "number_of_reviews" in df.columns:
-        df["number_of_reviews"] = pd.to_numeric(df["number_of_reviews"], errors="coerce").fillna(0)
+        df["number_of_reviews"] = pd.to_numeric(
+            df["number_of_reviews"], errors="coerce"
+        ).fillna(0)
+
+    if "calculated_host_listings_count" in df.columns:
+        df["calculated_host_listings_count"] = pd.to_numeric(
+            df["calculated_host_listings_count"], errors="coerce"
+        ).fillna(1)
+    else:
+        df["calculated_host_listings_count"] = 1
 
     if "city" in df.columns:
         df["city"] = df["city"].fillna("Inconnue")
+    else:
+        df["city"] = "Inconnue"
+
+    if "neighbourhood" in df.columns:
+        df["neighbourhood"] = df["neighbourhood"].fillna("Inconnu")
+    else:
+        df["neighbourhood"] = "Inconnu"
+
+    if "room_type" in df.columns:
+        df["room_type"] = df["room_type"].fillna("Inconnu")
+    else:
+        df["room_type"] = "Inconnu"
+
+    df = df[df["price"].notna()]
+    df = df[df["price"] > 0]
+
+    if "availability_365" in df.columns:
+        df = df[df["availability_365"].notna()]
+        df = df[(df["availability_365"] >= 0) & (df["availability_365"] <= 365)]
+    else:
+        df["availability_365"] = 0
 
     return df
 
 
-def afficher_infos_colonnes(df):
-    print("Colonnes du dataset :")
-    print(df.columns.tolist())
+def normaliser_serie(s):
+    s = s.astype(float)
 
-    if "year" in df.columns:
-        print("\nAnnées trouvées dans last_review :")
-        print(df["year"].value_counts().sort_index())
+    if len(s) == 0:
+        return s
 
-    if "host_year" in df.columns:
-        print("\nAnnées trouvées dans host_since :")
-        print(df["host_year"].value_counts().sort_index())
+    min_val = s.min()
+    max_val = s.max()
 
+    if pd.isna(min_val) or pd.isna(max_val) or min_val == max_val:
+        return pd.Series([50.0] * len(s), index=s.index)
 
-def verifier_prix(df):
-    if "price" not in df.columns:
-        print("Pas de colonne price")
-        return
-
-    print("=== VERIFICATION DES PRIX ===")
-    print("Nombre total de lignes :", len(df))
-    print("Prix manquants :", df["price"].isna().sum())
-    print("Prix non manquants :", df["price"].notna().sum())
-    print("Prix = 0 :", (df["price"] == 0).sum())
-    print("Prix < 0 :", (df["price"] < 0).sum())
-
-    if "city" in df.columns:
-        print("\nPrix manquants par ville :")
-        print(df.groupby("city")["price"].apply(lambda x: x.isna().sum()))
-
-        print("\nRésumé des prix par ville :")
-        print(df.groupby("city")["price"].describe())
+    return ((s - min_val) / (max_val - min_val)) * 100
 
 
-def calculer_indicateurs(df):
-    df["estimated_booked_days"] = 365 - df["availability_365"]
-    df["estimated_revenue"] = df["price"] * df["estimated_booked_days"]
-
-    df["investment_score"] = (
-        df["price"] * df["availability_365"]
-    ) / (df["number_of_reviews"] + 1)
-
-    return df
-
-
-def analyser_revenu_demande(df):
-    analysis = df.groupby("city")[["estimated_revenue", "number_of_reviews"]].mean()
-
-    print("\n=== REVENU VS DEMANDE ===")
-    print(analysis)
-
-    return analysis
+def analyser_prix_median_par_quartier(df):
+    quartier_stats = (
+        df.groupby(["city", "neighbourhood"])["price"]
+        .median()
+        .reset_index(name="median_price")
+        .sort_values(["city", "median_price"], ascending=[True, False])
+    )
+    return quartier_stats
 
 
-def analyser_evolution_prix(df):
-    if "year" not in df.columns:
-        return pd.Series(dtype=float)
-
-    trend = df.dropna(subset=["year"]).groupby("year")["price"].mean()
-
-    print("\n=== EVOLUTION PRIX ===")
-    print(trend)
-
-    return trend
-
-
-def analyser_evolution_prix_par_ville(df):
-    if "year" not in df.columns:
-        return pd.DataFrame()
-
-    trend_by_city = (
-        df.dropna(subset=["year"])
-          .groupby(["city", "year"])["price"]
-          .mean()
-          .reset_index()
+def analyser_room_type_investissement(df):
+    room_stats = (
+        df.groupby(["city", "room_type"])
+        .agg(
+            median_price=("price", "median"),
+            avg_reviews=("number_of_reviews", "mean"),
+            avg_availability=("availability_365", "mean"),
+            listings_count=("price", "count"),
+        )
+        .reset_index()
     )
 
-    print("\n=== EVOLUTION PRIX PAR VILLE ===")
-    print(trend_by_city)
+    room_stats["estimated_booked_days"] = 365 - room_stats["avg_availability"]
+    room_stats["estimated_revenue"] = (
+        room_stats["median_price"] * room_stats["estimated_booked_days"]
+    ).round(2)
 
-    return trend_by_city
-
-
-def creer_dossier_sortie():
-    STATIC_DIR.mkdir(parents=True, exist_ok=True)
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    return room_stats.sort_values(["city", "estimated_revenue"], ascending=[True, False])
 
 
-def generer_graphique_revenu(df):
-    revenue_by_city = df.groupby("city")["estimated_revenue"].mean().sort_values(ascending=False)
-
-    plt.figure(figsize=(8, 5))
-    revenue_by_city.plot(kind="bar")
-    plt.title("Revenu estimé moyen par ville")
-    plt.xlabel("Ville")
-    plt.ylabel("Revenu estimé")
-    plt.xticks(rotation=0)
-    plt.tight_layout()
-    plt.savefig(STATIC_DIR / "revenue_by_city.png")
-    plt.close()
-
-    return revenue_by_city
-
-
-def generer_graphique_demande(df):
-    demand_by_city = df.groupby("city")["number_of_reviews"].mean().sort_values(ascending=False)
-
-    plt.figure(figsize=(8, 5))
-    demand_by_city.plot(kind="bar")
-    plt.title("Demande moyenne par ville")
-    plt.xlabel("Ville")
-    plt.ylabel("Nombre moyen de reviews")
-    plt.xticks(rotation=0)
-    plt.tight_layout()
-    plt.savefig(STATIC_DIR / "demand_by_city.png")
-    plt.close()
-
-    return demand_by_city
-
-
-def generer_graphique_prix_par_annee(df):
-    if "year" not in df.columns:
-        return pd.Series(dtype=float)
-
-    price_by_year = df.dropna(subset=["year"]).groupby("year")["price"].mean()
-
-    plt.figure(figsize=(8, 5))
-    price_by_year.plot(kind="line", marker="o")
-    plt.title("Evolution moyenne des prix par année")
-    plt.xlabel("Année")
-    plt.ylabel("Prix moyen")
-    plt.tight_layout()
-    plt.savefig(STATIC_DIR / "price_by_year.png")
-    plt.close()
-
-    return price_by_year
-
-
-def generer_graphique_score_investissement(df):
-    score_by_city = df.groupby("city")["investment_score"].mean().sort_values(ascending=False)
-
-    plt.figure(figsize=(8, 5))
-    score_by_city.plot(kind="bar")
-    plt.title("Score d'investissement moyen par ville")
-    plt.xlabel("Ville")
-    plt.ylabel("Score d'investissement")
-    plt.xticks(rotation=0)
-    plt.tight_layout()
-    plt.savefig(STATIC_DIR / "investment_score_by_city.png")
-    plt.close()
-
-    return score_by_city
-
-
-def sauvegarder_json_investissement(df):
-    revenue_by_city = df.groupby("city")["estimated_revenue"].mean().round(2)
-    demand_by_city = df.groupby("city")["number_of_reviews"].mean().round(2)
-    score_by_city = df.groupby("city")["investment_score"].mean().round(2)
-
-    if "year" in df.columns:
-        trend_global = (
-            df.dropna(subset=["year"])
-              .groupby("year")["price"]
-              .mean()
-              .round(2)
+def analyser_prix_normalise_par_ville(df):
+    city_price_stats = (
+        df.groupby("city")
+        .agg(
+            median_price=("price", "median"),
+            avg_price=("price", "mean"),
+            listings_count=("price", "count"),
         )
-    else:
-        trend_global = pd.Series(dtype=float)
+        .sort_values("median_price", ascending=False)
+    )
 
-    investment_data = {
-        "investment_revenue": {
-            "labels": revenue_by_city.index.tolist(),
-            "values": revenue_by_city.tolist()
-        },
-        "investment_demand": {
-            "labels": demand_by_city.index.tolist(),
-            "values": demand_by_city.tolist()
-        },
-        "investment_score_by_city": {
-            "labels": score_by_city.index.tolist(),
-            "values": score_by_city.tolist()
-        },
-        "investment_trend": {
-            "labels": trend_global.index.astype(int).astype(str).tolist() if len(trend_global) > 0 else [],
-            "values": trend_global.tolist() if len(trend_global) > 0 else []
-        },
-        "cities": {}
-    }
+    city_price_stats["price_normalized"] = (
+        normaliser_serie(city_price_stats["median_price"]).round(2)
+    )
 
-    for city in df["city"].dropna().unique():
-        city_df = df[df["city"] == city]
+    return city_price_stats
 
-        if "year" in city_df.columns:
-            city_trend = (
-                city_df.dropna(subset=["year"])
-                       .groupby("year")["price"]
-                       .mean()
-                       .round(2)
-            )
-        else:
-            city_trend = pd.Series(dtype=float)
 
-        investment_data["cities"][city] = {
-            "investment": {
-                "revenue": round(city_df["estimated_revenue"].mean(), 2),
-                "demand": round(city_df["number_of_reviews"].mean(), 2),
-                "score": round(city_df["investment_score"].mean(), 2)
-            },
-            "investment_trend": {
-                "labels": city_trend.index.astype(int).astype(str).tolist() if len(city_trend) > 0 else [],
-                "values": city_trend.tolist() if len(city_trend) > 0 else []
-            }
+def analyser_revenu_estime_par_ville(df):
+    city_revenue_stats = (
+        df.groupby("city")
+        .agg(
+            median_price=("price", "median"),
+            avg_availability=("availability_365", "mean"),
+            avg_reviews=("number_of_reviews", "mean"),
+            listings_count=("price", "count"),
+        )
+        .copy()
+    )
+
+    city_revenue_stats["estimated_booked_days"] = 365 - city_revenue_stats["avg_availability"]
+    city_revenue_stats["estimated_revenue"] = (
+        city_revenue_stats["median_price"] * city_revenue_stats["estimated_booked_days"]
+    ).round(2)
+
+    city_revenue_stats = city_revenue_stats.sort_values("estimated_revenue", ascending=False)
+    return city_revenue_stats
+
+
+def top_quartiers_par_ville(quartier_stats, top_n=5):
+    result = {}
+
+    for city in quartier_stats["city"].dropna().unique():
+        city_df = quartier_stats[quartier_stats["city"] == city].head(top_n)
+        result[city] = {
+            "labels": city_df["neighbourhood"].tolist(),
+            "values": city_df["median_price"].round(2).tolist(),
         }
 
-    output_file = OUTPUT_DIR / "investment_data.json"
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(investment_data, f, ensure_ascii=False, indent=2)
-
-    print(f"\nJSON généré dans {output_file}")
+    return result
 
 
-def main():
-    creer_dossier_sortie()
+def room_type_payload_par_ville(room_stats):
+    result = {}
 
-    df = charger_donnees(DATA_DIR)
-    df = preparer_dates(df)
-    df = nettoyer_donnees(df)
+    for city in room_stats["city"].dropna().unique():
+        city_df = room_stats[room_stats["city"] == city]
+        result[city] = {
+            "labels": city_df["room_type"].tolist(),
+            "median_price": city_df["median_price"].round(2).tolist(),
+            "estimated_revenue": city_df["estimated_revenue"].round(2).tolist(),
+            "avg_reviews": city_df["avg_reviews"].round(2).tolist(),
+        }
 
-    afficher_infos_colonnes(df)
-    verifier_prix(df)
+    return result
 
-    df = calculer_indicateurs(df)
-
-    analyser_revenu_demande(df)
-    analyser_evolution_prix(df)
-    analyser_evolution_prix_par_ville(df)
-
-    generer_graphique_revenu(df)
-    generer_graphique_demande(df)
-    generer_graphique_prix_par_annee(df)
-    generer_graphique_score_investissement(df)
-
-    sauvegarder_json_investissement(df)
-
-    print(f"\nGraphiques générés dans {STATIC_DIR}")
-    print(f"JSON généré dans {OUTPUT_DIR / 'investment_data.json'}")
 
 def compute_investment_dashboard_data(df):
-    df = preparer_dates(df.copy())
-    df = nettoyer_donnees(df)
-    df = calculer_indicateurs(df)
+    df = preparer_donnees_investissement(df)
 
-    revenue_by_city = df.groupby("city")["estimated_revenue"].mean().round(2)
-    demand_by_city = df.groupby("city")["number_of_reviews"].mean().round(2)
-    score_by_city = df.groupby("city")["investment_score"].mean().round(2)
+    quartier_stats = analyser_prix_median_par_quartier(df)
+    room_stats = analyser_room_type_investissement(df)
+    city_price_stats = analyser_prix_normalise_par_ville(df)
+    city_revenue_stats = analyser_revenu_estime_par_ville(df)
 
-    if "year" in df.columns:
-        trend_global = (
-            df.dropna(subset=["year"])
-              .groupby("year")["price"]
-              .mean()
-              .round(2)
+    revenue_ranking_labels = city_revenue_stats.index.tolist()
+    revenue_ranking_values = city_revenue_stats["estimated_revenue"].round(2).tolist()
+
+    global_quartiers = (
+        quartier_stats.groupby("neighbourhood")["median_price"]
+        .median()
+        .sort_values(ascending=False)
+        .head(10)
+    )
+
+    room_type_global = (
+        room_stats.groupby("room_type")
+        .agg(
+            median_price=("median_price", "mean"),
+            estimated_revenue=("estimated_revenue", "mean"),
+            avg_reviews=("avg_reviews", "mean"),
         )
-    else:
-        trend_global = pd.Series(dtype=float)
+        .reset_index()
+    )
 
     investment_data = {
-        "investment_revenue": {
-            "labels": revenue_by_city.index.tolist(),
-            "values": revenue_by_city.tolist()
+        "median_price_by_neighbourhood": {
+            "labels": global_quartiers.index.tolist(),
+            "values": global_quartiers.round(2).tolist(),
         },
-        "investment_demand": {
-            "labels": demand_by_city.index.tolist(),
-            "values": demand_by_city.tolist()
+        "price_normalized_by_city": {
+            "labels": city_price_stats.index.tolist(),
+            "values": city_price_stats["price_normalized"].round(2).tolist(),
         },
-        "investment_score_by_city": {
-            "labels": score_by_city.index.tolist(),
-            "values": score_by_city.tolist()
+        "estimated_revenue_by_city": {
+            "labels": city_revenue_stats.index.tolist(),
+            "values": city_revenue_stats["estimated_revenue"].round(2).tolist(),
         },
-        "investment_trend": {
-            "labels": trend_global.index.astype(int).astype(str).tolist() if len(trend_global) > 0 else [],
-            "values": trend_global.tolist() if len(trend_global) > 0 else []
+        "investment_ranking": {
+            "labels": revenue_ranking_labels,
+            "values": revenue_ranking_values,
         },
-        "cities": {}
+        "room_type_investment": {
+            "labels": room_type_global["room_type"].tolist(),
+            "median_price": room_type_global["median_price"].round(2).tolist(),
+            "estimated_revenue": room_type_global["estimated_revenue"].round(2).tolist(),
+            "avg_reviews": room_type_global["avg_reviews"].round(2).tolist(),
+        },
+        "cities": {},
     }
+
+    quartiers_top = top_quartiers_par_ville(quartier_stats, top_n=5)
+    room_types_city = room_type_payload_par_ville(room_stats)
 
     for city in df["city"].dropna().unique():
         city_df = df[df["city"] == city]
 
-        if "year" in city_df.columns:
-            city_trend = (
-                city_df.dropna(subset=["year"])
-                       .groupby("year")["price"]
-                       .mean()
-                       .round(2)
-            )
-        else:
-            city_trend = pd.Series(dtype=float)
+        city_price_row = city_price_stats.loc[city] if city in city_price_stats.index else None
+        city_revenue_row = city_revenue_stats.loc[city] if city in city_revenue_stats.index else None
 
         investment_data["cities"][city] = {
             "investment": {
-                "revenue": round(city_df["estimated_revenue"].mean(), 2),
-                "demand": round(city_df["number_of_reviews"].mean(), 2),
-                "score": round(city_df["investment_score"].mean(), 2)
+                "median_price": round(city_df["price"].median(), 2),
+                "avg_reviews": round(city_df["number_of_reviews"].mean(), 2),
+                "avg_availability": round(city_df["availability_365"].mean(), 2),
+                "price_normalized": round(float(city_price_row["price_normalized"]), 2) if city_price_row is not None else 0,
+                "estimated_revenue": round(float(city_revenue_row["estimated_revenue"]), 2) if city_revenue_row is not None else 0,
+                "rank": revenue_ranking_labels.index(city) + 1 if city in revenue_ranking_labels else None,
             },
-            "investment_trend": {
-                "labels": city_trend.index.astype(int).astype(str).tolist() if len(city_trend) > 0 else [],
-                "values": city_trend.tolist() if len(city_trend) > 0 else []
-            }
+            "median_price_by_neighbourhood": quartiers_top.get(
+                city, {"labels": [], "values": []}
+            ),
+            "room_type_investment": room_types_city.get(
+                city,
+                {"labels": [], "median_price": [], "estimated_revenue": [], "avg_reviews": []},
+            ),
         }
 
     return investment_data
-
-if __name__ == "__main__":
-    main()
