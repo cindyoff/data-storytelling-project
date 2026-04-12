@@ -75,8 +75,8 @@ def generate_chart_configs(stats: dict) -> str:
             "price_normalized_by_city",
             {"labels": [], "values": []}
         ),
-        "estimated_revenue_by_city": stats.get(
-            "estimated_revenue_by_city",
+        "investment_score_by_city": stats.get(
+            "investment_score_by_city",
             {"labels": [], "values": []}
         ),
         "investment_ranking": stats.get(
@@ -88,7 +88,7 @@ def generate_chart_configs(stats: dict) -> str:
             {
                 "labels": [],
                 "median_price": [],
-                "estimated_revenue": [],
+                "investment_score": [],
                 "avg_reviews": []
             }
         ),

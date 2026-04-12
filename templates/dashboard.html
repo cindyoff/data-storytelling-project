@@ -724,12 +724,12 @@
   <section class="page" id="p5">
     <div class="page-header">
       <h2>Analyse investissement</h2>
-      <p id="p5-subtitle">Prix médian, prix normalisé et revenu estimé</p>
+      <p id="p5-subtitle">Prix normalisé et score d'investissement</p>
     </div>
 
     <div class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Prix médian</div>
+        <div class="stat-label">Prix médian normalisé</div>
         <div class="stat-value" id="stat-invest-revenue">—</div>
         <div class="stat-delta">Ville ou vue globale</div>
       </div>
@@ -746,7 +746,7 @@
       <div class="stat-card">
         <div class="stat-label">Classement</div>
         <div class="stat-value v4" id="stat-invest-city">—</div>
-        <div class="stat-delta">Par revenu estimé</div>
+        <div class="stat-delta">Par score d'investissement</div>
       </div>
     </div>
 
@@ -766,9 +766,9 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Prix normalisé par ville</div>
-            <div class="chart-card-sub">Échelle 0 à 100</div>
+            <div class="chart-card-sub">Répartition relative des prix normalisés</div>
           </div>
-          <span class="chart-card-badge">Bar chart</span>
+          <span class="chart-card-badge">Doughnut</span>
         </div>
         <canvas id="chart-price-normalized"></canvas>
       </div>
@@ -777,7 +777,7 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Analyse par room_type</div>
-            <div class="chart-card-sub">Prix médian vs revenu estimé</div>
+            <div class="chart-card-sub">Prix médian vs score d'investissement</div>
           </div>
           <span class="chart-card-badge">Grouped bar</span>
         </div>
@@ -787,7 +787,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Revenu estimé par ville</div>
+            <div class="chart-card-title">Score d'investissement par ville</div>
             <div class="chart-card-sub">Classement automatique</div>
           </div>
           <span class="chart-card-badge">Horizontal bar</span>
@@ -807,7 +807,7 @@ const pagesMeta = {
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
   p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
-  p5: { title: 'Analyse investissement', sub: 'Prix médian, prix normalisé et revenu estimé' },
+  p5: { title: 'Analyse investissement', sub: 'Prix normalisé et score d\'investissement' },
 };
 
 function showPage(id, btn) {
@@ -858,18 +858,18 @@ function buildFilteredData(city) {
       labels: [city],
       values: [c.investment?.price_normalized || 0]
     },
-    estimated_revenue_by_city: {
+    investment_score_by_city: {
       labels: [city],
-      values: [c.investment?.estimated_revenue || 0]
+      values: [c.investment?.investment_score || 0]
     },
     investment_ranking: {
       labels: [city],
-      values: [c.investment?.estimated_revenue || 0]
+      values: [c.investment?.investment_score || 0]
     },
     room_type_investment: c.room_type_investment || {
       labels: [],
       median_price: [],
-      estimated_revenue: [],
+      investment_score: [],
       avg_reviews: []
     },
     investment: c.investment || {},
@@ -1260,7 +1260,7 @@ function renderMedianPriceByNeighbourhood(d) {
       scales: {
         x: {
           grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+          ticks: { color: '#5a6a82' }
         },
         y: {
           grid: { display: false },
@@ -1276,38 +1276,35 @@ function renderPriceNormalized(d) {
   const ctx = document.getElementById('chart-price-normalized').getContext('2d');
 
   charts['priceNormalized'] = new Chart(ctx, {
-    type: 'bar',
+    type: 'doughnut',
     data: {
       labels: d.labels,
       datasets: [{
         data: d.values,
         backgroundColor: makeBarColors(d.labels),
-        borderRadius: 8,
-        borderSkipped: false
+        borderColor: '#161e2e',
+        borderWidth: 2,
+        hoverOffset: 10
       }]
     },
     options: {
       responsive: true,
+      cutout: '65%',
       plugins: {
-        legend: { display: false },
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#5a6a82',
+            padding: 12,
+            font: { size: 11 }
+          }
+        },
         tooltip: {
           callbacks: {
             label: function(context) {
-              return `Prix normalisé : ${context.raw.toFixed(1)}/100`;
+              return `${context.label} : ${Number(context.raw).toFixed(3)}`;
             }
           }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82' }
-        },
-        y: {
-          min: 0,
-          max: 100,
-          grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82' }
         }
       }
     }
@@ -1331,8 +1328,8 @@ function renderRoomTypeInvestment(d) {
           borderWidth: 1
         },
         {
-          label: 'Revenu estimé',
-          data: d.estimated_revenue,
+          label: "Score d'investissement",
+          data: d.investment_score,
           backgroundColor: '#ff5f6d66',
           borderColor: '#ff5f6d',
           borderWidth: 1
@@ -1354,7 +1351,7 @@ function renderRoomTypeInvestment(d) {
         },
         y: {
           grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+          ticks: { color: '#5a6a82' }
         }
       }
     }
@@ -1386,7 +1383,7 @@ function renderInvestmentRanking(d) {
           grid: { color: '#1e2d45' },
           ticks: {
             color: '#5a6a82',
-            callback: v => Math.round(v) + ' €'
+            callback: v => Number(v).toFixed(2)
           }
         },
         y: {
@@ -1421,8 +1418,8 @@ function updateStats() {
     : (d.investment?.median_price || 0);
 
   const investDemand = activeCity === 'Toutes'
-    ? 0
-    : (d.investment?.avg_reviews || 0);
+    ? '—'
+    : (d.investment?.avg_reviews || 0).toFixed(1);
 
   const investScore = activeCity === 'Toutes'
     ? averageOfArray(DATA.price_normalized_by_city?.values || [])
@@ -1432,9 +1429,9 @@ function updateStats() {
     ? 'Global'
     : ('#' + (d.investment?.rank || '-'));
 
-  document.getElementById('stat-invest-revenue').textContent = Math.round(investMedianPrice) + ' €';
-  document.getElementById('stat-invest-demand').textContent  = activeCity === 'Toutes' ? '—' : investDemand.toFixed(1);
-  document.getElementById('stat-invest-score').textContent   = investScore.toFixed(1);
+  document.getElementById('stat-invest-revenue').textContent = Number(investMedianPrice).toFixed(3);
+  document.getElementById('stat-invest-demand').textContent  = investDemand;
+  document.getElementById('stat-invest-score').textContent   = Number(investScore).toFixed(3);
   document.getElementById('stat-invest-city').textContent    = investRank;
 }
 
@@ -1451,7 +1448,7 @@ function updateAllCharts() {
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
   renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
-  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], estimated_revenue: [], avg_reviews: [] });
+  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], investment_score: [], avg_reviews: [] });
   renderInvestmentRanking(d.investment_ranking || { labels: [], values: [] });
 }
 

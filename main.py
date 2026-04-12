@@ -18,7 +18,7 @@ if __name__ == "__main__":
     print("Fusion des statistiques...")
     stats["median_price_by_neighbourhood"] = investment_stats["median_price_by_neighbourhood"]
     stats["price_normalized_by_city"] = investment_stats["price_normalized_by_city"]
-    stats["estimated_revenue_by_city"] = investment_stats["estimated_revenue_by_city"]
+    stats["investment_score_by_city"] = investment_stats["investment_score_by_city"]
     stats["investment_ranking"] = investment_stats["investment_ranking"]
     stats["room_type_investment"] = investment_stats["room_type_investment"]
 

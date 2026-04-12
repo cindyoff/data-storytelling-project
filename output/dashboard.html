@@ -724,12 +724,12 @@
   <section class="page" id="p5">
     <div class="page-header">
       <h2>Analyse investissement</h2>
-      <p id="p5-subtitle">Prix médian, prix normalisé et revenu estimé</p>
+      <p id="p5-subtitle">Prix normalisé et score d'investissement</p>
     </div>
 
     <div class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Prix médian</div>
+        <div class="stat-label">Prix médian normalisé</div>
         <div class="stat-value" id="stat-invest-revenue">—</div>
         <div class="stat-delta">Ville ou vue globale</div>
       </div>
@@ -746,7 +746,7 @@
       <div class="stat-card">
         <div class="stat-label">Classement</div>
         <div class="stat-value v4" id="stat-invest-city">—</div>
-        <div class="stat-delta">Par revenu estimé</div>
+        <div class="stat-delta">Par score d'investissement</div>
       </div>
     </div>
 
@@ -766,9 +766,9 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Prix normalisé par ville</div>
-            <div class="chart-card-sub">Échelle 0 à 100</div>
+            <div class="chart-card-sub">Répartition relative des prix normalisés</div>
           </div>
-          <span class="chart-card-badge">Bar chart</span>
+          <span class="chart-card-badge">Doughnut</span>
         </div>
         <canvas id="chart-price-normalized"></canvas>
       </div>
@@ -777,7 +777,7 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Analyse par room_type</div>
-            <div class="chart-card-sub">Prix médian vs revenu estimé</div>
+            <div class="chart-card-sub">Prix médian vs score d'investissement</div>
           </div>
           <span class="chart-card-badge">Grouped bar</span>
         </div>
@@ -787,7 +787,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Revenu estimé par ville</div>
+            <div class="chart-card-title">Score d'investissement par ville</div>
             <div class="chart-card-sub">Classement automatique</div>
           </div>
           <span class="chart-card-badge">Horizontal bar</span>
@@ -1056,16 +1056,16 @@ const DATA = {
       "Bayonne-Nord"
     ],
     "values": [
-      140.0,
-      133.0,
-      131.0,
-      130.75,
-      124.5,
-      124.0,
-      122.5,
-      120.0,
-      115.5,
-      113.0
+      0.3276,
+      0.3215,
+      0.3197,
+      0.3195,
+      0.3134,
+      0.3132,
+      0.3118,
+      0.3094,
+      0.3049,
+      0.3023
     ]
   },
   "price_normalized_by_city": {
@@ -1076,38 +1076,38 @@ const DATA = {
       "Lyon"
     ],
     "values": [
-      100.0,
-      13.33,
-      3.33,
-      0.0
+      0.3002,
+      0.2687,
+      0.2645,
+      0.2631
     ]
   },
-  "estimated_revenue_by_city": {
+  "investment_score_by_city": {
     "labels": [
       "Paris",
-      "Pays Basque",
       "Lyon",
+      "Pays Basque",
       "Bordeaux"
     ],
     "values": [
-      24079.73,
-      22119.25,
-      20327.45,
-      18352.49
+      76.1268,
+      66.0147,
+      59.816,
+      59.1971
     ]
   },
   "investment_ranking": {
     "labels": [
       "Paris",
-      "Pays Basque",
       "Lyon",
+      "Pays Basque",
       "Bordeaux"
     ],
     "values": [
-      24079.73,
-      22119.25,
-      20327.45,
-      18352.49
+      76.1268,
+      66.0147,
+      59.816,
+      59.1971
     ]
   },
   "room_type_investment": {
@@ -1118,16 +1118,16 @@ const DATA = {
       "Shared room"
     ],
     "median_price": [
-      95.0,
-      141.46,
-      63.47,
-      48.0
+      0.2808,
+      0.3281,
+      0.2333,
+      0.1916
     ],
-    "estimated_revenue": [
-      22444.92,
-      24274.34,
-      14979.32,
-      13012.7
+    "investment_score": [
+      66.8211,
+      56.4211,
+      55.5172,
+      50.2803
     ],
     "avg_reviews": [
       41.1,
@@ -1218,12 +1218,12 @@ const DATA = {
         "Nb annonces": 9647
       },
       "investment": {
-        "median_price": 81.0,
+        "median_price": 0.2631,
         "avg_reviews": 44.4,
         "avg_availability": 114.04,
-        "price_normalized": 0.0,
-        "estimated_revenue": 20327.45,
-        "rank": 3
+        "price_normalized": 0.2631,
+        "investment_score": 66.0147,
+        "rank": 2
       },
       "median_price_by_neighbourhood": {
         "labels": [
@@ -1234,37 +1234,37 @@ const DATA = {
           "3e Arrondissement"
         ],
         "values": [
-          93.0,
-          85.67,
-          84.0,
-          81.0,
-          79.17
+          0.2793,
+          0.2696,
+          0.2673,
+          0.2631,
+          0.2604
         ]
       },
       "room_type_investment": {
         "labels": [
           "Hotel room",
           "Shared room",
-          "Entire home/apt",
-          "Private room"
+          "Private room",
+          "Entire home/apt"
         ],
         "median_price": [
-          123.0,
-          83.5,
-          84.0,
-          67.88
+          0.3123,
+          0.2666,
+          0.2423,
+          0.2673
         ],
-        "estimated_revenue": [
-          36240.27,
-          26623.98,
-          20460.58,
-          18916.33
+        "investment_score": [
+          92.0119,
+          85.0084,
+          67.5236,
+          65.116
         ],
         "avg_reviews": [
           51.27,
           71.6,
-          46.68,
-          35.2
+          35.2,
+          46.68
         ]
       }
     },
@@ -1349,11 +1349,11 @@ const DATA = {
         "Nb annonces": 24908
       },
       "investment": {
-        "median_price": 85.0,
+        "median_price": 0.2687,
         "avg_reviews": 47.63,
         "avg_availability": 81.71,
-        "price_normalized": 13.33,
-        "estimated_revenue": 24079.73,
+        "price_normalized": 0.2687,
+        "investment_score": 76.1268,
         "rank": 1
       },
       "median_price_by_neighbourhood": {
@@ -1365,35 +1365,35 @@ const DATA = {
           "Palais-Bourbon"
         ],
         "values": [
-          140.0,
-          124.0,
-          115.5,
-          110.0,
-          110.0
+          0.3276,
+          0.3132,
+          0.3049,
+          0.2991,
+          0.2991
         ]
       },
       "room_type_investment": {
         "labels": [
-          "Hotel room",
           "Entire home/apt",
+          "Hotel room",
           "Private room",
           "Shared room"
         ],
         "median_price": [
-          165.0,
-          89.0,
-          55.0,
-          40.0
+          0.2741,
+          0.347,
+          0.2176,
+          0.1805
         ],
-        "estimated_revenue": [
-          35799.17,
-          25270.66,
-          16036.54,
-          9764.57
+        "investment_score": [
+          77.8381,
+          75.2909,
+          63.4606,
+          44.0699
         ],
         "avg_reviews": [
-          52.04,
           45.31,
+          52.04,
           59.01,
           196.23
         ]
@@ -1480,11 +1480,11 @@ const DATA = {
         "Nb annonces": 12252
       },
       "investment": {
-        "median_price": 82.0,
+        "median_price": 0.2645,
         "avg_reviews": 38.3,
         "avg_availability": 141.19,
-        "price_normalized": 3.33,
-        "estimated_revenue": 18352.49,
+        "price_normalized": 0.2645,
+        "investment_score": 59.1971,
         "rank": 4
       },
       "median_price_by_neighbourhood": {
@@ -1496,36 +1496,36 @@ const DATA = {
           "Bordeaux-Martignas-sur-Jalle"
         ],
         "values": [
-          124.5,
-          122.5,
-          96.0,
-          92.0,
-          91.0
+          0.3134,
+          0.3118,
+          0.2828,
+          0.278,
+          0.2768
         ]
       },
       "room_type_investment": {
         "labels": [
           "Entire home/apt",
-          "Hotel room",
           "Private room",
+          "Hotel room",
           "Shared room"
         ],
         "median_price": [
-          90.0,
-          144.86,
-          55.0,
-          26.5
+          0.2755,
+          0.2176,
+          0.3315,
+          0.133
         ],
-        "estimated_revenue": [
-          20325.55,
-          17056.93,
-          12004.05,
-          4463.52
+        "investment_score": [
+          62.2078,
+          47.503,
+          39.0393,
+          22.3952
         ],
         "avg_reviews": [
           38.66,
-          33.0,
           37.4,
+          33.0,
           19.89
         ]
       }
@@ -1611,12 +1611,12 @@ const DATA = {
         "Nb annonces": 11845
       },
       "investment": {
-        "median_price": 111.0,
+        "median_price": 0.3002,
         "avg_reviews": 34.83,
         "avg_availability": 165.73,
-        "price_normalized": 100.0,
-        "estimated_revenue": 22119.25,
-        "rank": 2
+        "price_normalized": 0.3002,
+        "investment_score": 59.816,
+        "rank": 3
       },
       "median_price_by_neighbourhood": {
         "labels": [
@@ -1627,36 +1627,36 @@ const DATA = {
           "Bayonne-Nord"
         ],
         "values": [
-          133.0,
-          131.0,
-          130.75,
-          120.0,
-          113.0
+          0.3215,
+          0.3197,
+          0.3195,
+          0.3094,
+          0.3023
         ]
       },
       "room_type_investment": {
         "labels": [
           "Entire home/apt",
-          "Private room",
           "Shared room",
+          "Private room",
           "Hotel room"
         ],
         "median_price": [
-          117.0,
-          76.0,
-          42.0,
-          133.0
+          0.3064,
+          0.1862,
+          0.2556,
+          0.3215
         ],
-        "estimated_revenue": [
-          23722.89,
-          12960.38,
-          11198.73,
-          8001.0
+        "investment_score": [
+          62.1225,
+          49.6477,
+          43.5814,
+          19.3422
         ],
         "avg_reviews": [
           33.77,
-          43.84,
           42.03,
+          43.84,
           13.63
         ]
       }
@@ -1669,7 +1669,7 @@ const pagesMeta = {
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
   p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
-  p5: { title: 'Analyse investissement', sub: 'Prix médian, prix normalisé et revenu estimé' },
+  p5: { title: 'Analyse investissement', sub: 'Prix normalisé et score d\'investissement' },
 };
 
 function showPage(id, btn) {
@@ -1720,18 +1720,18 @@ function buildFilteredData(city) {
       labels: [city],
       values: [c.investment?.price_normalized || 0]
     },
-    estimated_revenue_by_city: {
+    investment_score_by_city: {
       labels: [city],
-      values: [c.investment?.estimated_revenue || 0]
+      values: [c.investment?.investment_score || 0]
     },
     investment_ranking: {
       labels: [city],
-      values: [c.investment?.estimated_revenue || 0]
+      values: [c.investment?.investment_score || 0]
     },
     room_type_investment: c.room_type_investment || {
       labels: [],
       median_price: [],
-      estimated_revenue: [],
+      investment_score: [],
       avg_reviews: []
     },
     investment: c.investment || {},
@@ -2122,7 +2122,7 @@ function renderMedianPriceByNeighbourhood(d) {
       scales: {
         x: {
           grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+          ticks: { color: '#5a6a82' }
         },
         y: {
           grid: { display: false },
@@ -2138,38 +2138,35 @@ function renderPriceNormalized(d) {
   const ctx = document.getElementById('chart-price-normalized').getContext('2d');
 
   charts['priceNormalized'] = new Chart(ctx, {
-    type: 'bar',
+    type: 'doughnut',
     data: {
       labels: d.labels,
       datasets: [{
         data: d.values,
         backgroundColor: makeBarColors(d.labels),
-        borderRadius: 8,
-        borderSkipped: false
+        borderColor: '#161e2e',
+        borderWidth: 2,
+        hoverOffset: 10
       }]
     },
     options: {
       responsive: true,
+      cutout: '65%',
       plugins: {
-        legend: { display: false },
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#5a6a82',
+            padding: 12,
+            font: { size: 11 }
+          }
+        },
         tooltip: {
           callbacks: {
             label: function(context) {
-              return `Prix normalisé : ${context.raw.toFixed(1)}/100`;
+              return `${context.label} : ${Number(context.raw).toFixed(3)}`;
             }
           }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82' }
-        },
-        y: {
-          min: 0,
-          max: 100,
-          grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82' }
         }
       }
     }
@@ -2193,8 +2190,8 @@ function renderRoomTypeInvestment(d) {
           borderWidth: 1
         },
         {
-          label: 'Revenu estimé',
-          data: d.estimated_revenue,
+          label: "Score d'investissement",
+          data: d.investment_score,
           backgroundColor: '#ff5f6d66',
           borderColor: '#ff5f6d',
           borderWidth: 1
@@ -2216,7 +2213,7 @@ function renderRoomTypeInvestment(d) {
         },
         y: {
           grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+          ticks: { color: '#5a6a82' }
         }
       }
     }
@@ -2248,7 +2245,7 @@ function renderInvestmentRanking(d) {
           grid: { color: '#1e2d45' },
           ticks: {
             color: '#5a6a82',
-            callback: v => Math.round(v) + ' €'
+            callback: v => Number(v).toFixed(2)
           }
         },
         y: {
@@ -2283,8 +2280,8 @@ function updateStats() {
     : (d.investment?.median_price || 0);
 
   const investDemand = activeCity === 'Toutes'
-    ? 0
-    : (d.investment?.avg_reviews || 0);
+    ? '—'
+    : (d.investment?.avg_reviews || 0).toFixed(1);
 
   const investScore = activeCity === 'Toutes'
     ? averageOfArray(DATA.price_normalized_by_city?.values || [])
@@ -2294,9 +2291,9 @@ function updateStats() {
     ? 'Global'
     : ('#' + (d.investment?.rank || '-'));
 
-  document.getElementById('stat-invest-revenue').textContent = Math.round(investMedianPrice) + ' €';
-  document.getElementById('stat-invest-demand').textContent  = activeCity === 'Toutes' ? '—' : investDemand.toFixed(1);
-  document.getElementById('stat-invest-score').textContent   = investScore.toFixed(1);
+  document.getElementById('stat-invest-revenue').textContent = Number(investMedianPrice).toFixed(3);
+  document.getElementById('stat-invest-demand').textContent  = investDemand;
+  document.getElementById('stat-invest-score').textContent   = Number(investScore).toFixed(3);
   document.getElementById('stat-invest-city').textContent    = investRank;
 }
 
@@ -2313,7 +2310,7 @@ function updateAllCharts() {
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
   renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
-  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], estimated_revenue: [], avg_reviews: [] });
+  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], investment_score: [], avg_reviews: [] });
   renderInvestmentRanking(d.investment_ranking || { labels: [], values: [] });
 }
 
