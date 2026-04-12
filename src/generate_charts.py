@@ -1,3 +1,8 @@
+
+
+
+
+
 import json
 import numpy as np
 
@@ -12,6 +17,7 @@ class NumpyEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         return super().default(obj)
+
 
 CITY_COLORS = {
     "Lyon": "#00e5b0",
@@ -52,17 +58,46 @@ def build_spider_chart_payload(spider_chart: dict) -> dict:
 
 
 def generate_chart_configs(stats: dict) -> str:
+    """
+    Construit le payload complet injecté dans le dashboard HTML.
+    Les données d'investissement doivent déjà être présentes dans `stats`.
+    """
     payload = {
-        "stats":              stats["stats"],
-        "prix_par_ville":     stats["prix_par_ville"],
-        "room_type":          stats["room_type"],
-        "dispo_par_ville":    stats["dispo_par_ville"],
+        "stats": stats["stats"],
+        "prix_par_ville": stats["prix_par_ville"],
+        "room_type": stats["room_type"],
+        "dispo_par_ville": stats["dispo_par_ville"],
         "listings_par_ville": stats["listings_par_ville"],
-        "top_hosts":          stats["top_hosts"],
-        "min_nights":         stats["min_nights"],
-        "reviews_par_ville":  stats["reviews_par_ville"],
+        "top_hosts": stats["top_hosts"],
+        "min_nights": stats["min_nights"],
+        "reviews_par_ville": stats["reviews_par_ville"],
         "spider_attractivite": build_spider_chart_payload(stats["spider_chart"]),
-        "cities":             stats["cities"],
+        "median_price_by_neighbourhood": stats.get(
+            "median_price_by_neighbourhood",
+            {"labels": [], "values": []}
+        ),
+        "price_normalized_by_city": stats.get(
+            "price_normalized_by_city",
+            {"labels": [], "values": []}
+        ),
+        "estimated_revenue_by_city": stats.get(
+            "estimated_revenue_by_city",
+            {"labels": [], "values": []}
+        ),
+        "investment_ranking": stats.get(
+            "investment_ranking",
+            {"labels": [], "values": []}
+        ),
+        "room_type_investment": stats.get(
+            "room_type_investment",
+            {
+                "labels": [],
+                "median_price": [],
+                "estimated_revenue": [],
+                "avg_reviews": []
+            }
+        ),
+        "cities": stats["cities"],
     }
 
     return json.dumps(payload, ensure_ascii=False, indent=2, cls=NumpyEncoder)

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,15 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Airbnb Dashboard — France</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-  <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
   <style>
@@ -42,7 +41,6 @@
       overflow: hidden;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
       width: var(--sidebar-w);
       min-width: var(--sidebar-w);
@@ -150,7 +148,6 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* ── MAIN AREA ── */
     #main {
       flex: 1;
       display: flex;
@@ -183,6 +180,7 @@
       margin-left: auto;
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
     .city-chip {
       padding: 5px 14px;
@@ -205,7 +203,6 @@
     .city-chip[data-city="Pays Basque"].active{ border-color: var(--accent4); background: rgba(123,140,222,0.1);color: var(--accent4); }
     .city-chip[data-city="Toutes"].active     { border-color: var(--text);    background: rgba(255,255,255,0.05); color: var(--text); }
 
-    /* ── PAGES ── */
     .page {
       flex: 1;
       overflow-y: auto;
@@ -214,7 +211,6 @@
     }
     .page.active { display: flex; flex-direction: column; gap: 20px; }
 
-    /* ── PAGE 1 : MAP ── */
     .map-header {
       display: flex;
       align-items: flex-start;
@@ -282,7 +278,6 @@
       white-space: nowrap;
     }
 
-    /* ── CHARTS GRID ── */
     .page-header {
       display: flex;
       flex-direction: column;
@@ -347,7 +342,6 @@
       max-height: 230px;
     }
 
-    /* ── STAT STRIP (page 2 + 3) ── */
     .stat-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -382,31 +376,27 @@
       margin-top: 4px;
     }
 
-    /* Page 4 - taille des canvas*/
+    #p4 .charts-grid-3 {
+      grid-template-columns: 1fr 1fr;
+    }
 
-  #p4 .charts-grid-3 {
-    grid-template-columns: 1fr 1fr;
-  }
+    #p4 .chart-card:first-child {
+      grid-column: span 2;
+      height: 420px;
+    }
 
-  #p4 .chart-card:first-child {
-    grid-column: span 2;
-    height: 420px; /* spider chart plus grand */
-  }
+    #p4 .chart-card:not(:first-child) {
+      height: 300px;
+    }
 
-  #p4 .chart-card:not(:first-child) {
-    height: 300px;
-  }
+    #p4 canvas {
+      height: 100% !important;
+    }
 
-  #p4 canvas {
-    height: 100% !important;
-}
-
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-    /* ── LEAFLET CUSTOM ── */
     .leaflet-container { background: #080c12 !important; }
     .leaflet-tile { filter: brightness(0.3) saturate(0.6) hue-rotate(180deg); }
     .custom-popup .leaflet-popup-content-wrapper {
@@ -451,7 +441,6 @@
       .stat-strip { grid-template-columns: 1fr 1fr; }
     }
 
-    /* ── TULIP TRAIL ── */
     .tulip {
       position: fixed;
       pointer-events: none;
@@ -471,7 +460,6 @@
 </head>
 <body>
 
-<!-- ══════════════ SIDEBAR ══════════════ -->
 <aside id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-tag">Analytics</div>
@@ -504,6 +492,12 @@
       Vision 360
       <span class="nav-badge">P4</span>
     </button>
+
+    <button class="nav-btn" onclick="showPage('p5', this)" id="btn-p5">
+      <span class="nav-icon">💼</span>
+      Analyse investissement
+      <span class="nav-badge">P5</span>
+    </button>
   </nav>
 
   <div class="sidebar-footer">
@@ -512,10 +506,8 @@
   </div>
 </aside>
 
-<!-- ══════════════ MAIN ══════════════ -->
 <div id="main">
 
-  <!-- TOPBAR -->
   <div class="topbar">
     <span class="topbar-title" id="topbar-title">Carte géographique</span>
     <span class="topbar-breadcrumb" id="topbar-sub">Vue d'ensemble des 4 zones</span>
@@ -528,7 +520,6 @@
     </div>
   </div>
 
-  <!-- ═══ PAGE 1 : MAP ═══ -->
   <section class="page active" id="p1">
     <div class="map-header">
       <div>
@@ -549,7 +540,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 2 : ANALYSE DES PRIX ═══ -->
   <section class="page" id="p2">
     <div class="page-header">
       <h2>Analyse des prix</h2>
@@ -615,7 +605,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 3 : ANALYSE DES HÔTES ═══ -->
   <section class="page" id="p3">
     <div class="page-header">
       <h2>Analyse des hôtes &amp; offre</h2>
@@ -692,9 +681,6 @@
     </div>
   </section>
 
-
-
-  <!-- ═══ PAGE 4 : Graphiques particuliers ═══ -->
   <section class="page" id="p4">
     <div class="page-header">
       <h2>Graphiques particuliers</h2>
@@ -705,7 +691,7 @@
       <div class="chart-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Attractivité des villes </div>
+            <div class="chart-card-title">Attractivité des villes</div>
             <div class="chart-card-sub">Statistiques catégorielles</div>
           </div>
           <span class="chart-card-badge">Spider chart</span>
@@ -734,37 +720,96 @@
         </div>
         <canvas id="chart-top3-hosts"></canvas>
       </div>
-<!--
-      <div class="chart-card">
-        <div class="chart-card-header">
-          <div>
-            <div class="chart-card-title">Reviews par mois</div>
-            <div class="chart-card-sub">Activité par ville</div>
-          </div>
-          <span class="chart-card-badge">Bar chart</span>
-        </div>
-        <canvas id="chart-reviews-ville"></canvas>
-      </div>
--->
     </div>
   </section>
 
-</div><!-- /#main -->
+  <section class="page" id="p5">
+    <div class="page-header">
+      <h2>Analyse investissement</h2>
+      <p id="p5-subtitle">Prix médian, prix normalisé et revenu estimé</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-label">Prix médian</div>
+        <div class="stat-value" id="stat-invest-revenue">—</div>
+        <div class="stat-delta">Ville ou vue globale</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Reviews moyennes</div>
+        <div class="stat-value v2" id="stat-invest-demand">—</div>
+        <div class="stat-delta">Indicateur de demande</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Prix normalisé</div>
+        <div class="stat-value v3" id="stat-invest-score">—</div>
+        <div class="stat-delta">Comparaison entre villes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Classement</div>
+        <div class="stat-value v4" id="stat-invest-city">—</div>
+        <div class="stat-delta">Par revenu estimé</div>
+      </div>
+    </div>
+
+    <div class="charts-grid-4">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Prix médian par quartier</div>
+            <div class="chart-card-sub">Top quartiers</div>
+          </div>
+          <span class="chart-card-badge">Horizontal bar</span>
+        </div>
+        <canvas id="chart-median-price-neighbourhood"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Prix normalisé par ville</div>
+            <div class="chart-card-sub">Échelle 0 à 100</div>
+          </div>
+          <span class="chart-card-badge">Bar chart</span>
+        </div>
+        <canvas id="chart-price-normalized"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Analyse par room_type</div>
+            <div class="chart-card-sub">Prix médian vs revenu estimé</div>
+          </div>
+          <span class="chart-card-badge">Grouped bar</span>
+        </div>
+        <canvas id="chart-room-type-investment"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Revenu estimé par ville</div>
+            <div class="chart-card-sub">Classement automatique</div>
+          </div>
+          <span class="chart-card-badge">Horizontal bar</span>
+        </div>
+        <canvas id="chart-investment-ranking"></canvas>
+      </div>
+    </div>
+  </section>
+
+</div>
 
 <script>
-// ══════════════════════════════════════════
-//  DATA (injectée par Python via build_dashboard.py)
-// ══════════════════════════════════════════
 const DATA = {{ CHART_DATA_JSON }};
 
-// ══════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════
 const pagesMeta = {
   p1: { title: 'Carte géographique',   sub: 'Vue d\'ensemble des 4 zones' },
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
   p3: { title: 'Analyse des hôtes',    sub: 'Distribution des listings' },
   p4: { title: 'Vision 360',           sub: 'Performance par catégorie' },
+  p5: { title: 'Analyse investissement', sub: 'Prix médian, prix normalisé et revenu estimé' },
 };
 
 function showPage(id, btn) {
@@ -778,9 +823,6 @@ function showPage(id, btn) {
   if (id === 'p1' && !mapInitialized) initMap();
 }
 
-// ══════════════════════════════════════════
-//  CITY FILTER
-// ══════════════════════════════════════════
 let activeCity = 'Toutes';
 
 function filterCity(city, btn) {
@@ -813,16 +855,39 @@ function buildFilteredData(city) {
       labels: DATA.spider_attractivite.labels,
       datasets: DATA.spider_attractivite.datasets.filter(ds => ds.label === city)
     },
-    stats:              { avg_price: c.avg_price, med_price: c.med_price, avg_avail: c.avg_avail,
-                          total_listings: c.count, nb_hosts: c.nb_hosts,
-                          ratio: c.ratio, med_minnights: c.med_minnights,
-                          avg_reviews_month: c.avg_reviews_month }
+    median_price_by_neighbourhood: c.median_price_by_neighbourhood || { labels: [], values: [] },
+    price_normalized_by_city: {
+      labels: [city],
+      values: [c.investment?.price_normalized || 0]
+    },
+    estimated_revenue_by_city: {
+      labels: [city],
+      values: [c.investment?.estimated_revenue || 0]
+    },
+    investment_ranking: {
+      labels: [city],
+      values: [c.investment?.estimated_revenue || 0]
+    },
+    room_type_investment: c.room_type_investment || {
+      labels: [],
+      median_price: [],
+      estimated_revenue: [],
+      avg_reviews: []
+    },
+    investment: c.investment || {},
+    stats: {
+      avg_price: c.avg_price,
+      med_price: c.med_price,
+      avg_avail: c.avg_avail,
+      total_listings: c.count,
+      nb_hosts: c.nb_hosts,
+      ratio: c.ratio,
+      med_minnights: c.med_minnights,
+      avg_reviews_month: c.avg_reviews_month
+    }
   };
 }
 
-// ══════════════════════════════════════════
-//  LEAFLET MAP
-// ══════════════════════════════════════════
 let mapInitialized = false;
 
 function initMap() {
@@ -880,9 +945,6 @@ function navFromMap(page, city) {
   updateStats();
 }
 
-// ══════════════════════════════════════════
-//  CHART.JS DEFAULTS
-// ══════════════════════════════════════════
 Chart.defaults.color           = '#5a6a82';
 Chart.defaults.borderColor     = '#1e2d45';
 Chart.defaults.font.family     = "'Outfit', sans-serif";
@@ -912,7 +974,6 @@ function destroyChart(id) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
 
-// ── PAGE 2 ── Prix par ville
 function renderPrixVille(d) {
   destroyChart('prixVille');
   const ctx = document.getElementById('chart-prix-ville').getContext('2d');
@@ -938,7 +999,6 @@ function renderPrixVille(d) {
   });
 }
 
-// ── PAGE 2 ── Room type doughnut
 function renderRoomType(d) {
   destroyChart('roomType');
   const ctx = document.getElementById('chart-room-type').getContext('2d');
@@ -964,7 +1024,6 @@ function renderRoomType(d) {
   });
 }
 
-// ── PAGE 2 ── Disponibilité par ville
 function renderDispo(d) {
   destroyChart('dispo');
   const ctx = document.getElementById('chart-dispo').getContext('2d');
@@ -986,14 +1045,16 @@ function renderDispo(d) {
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82' } },
-        y: { grid: { color: '#1e2d45' }, ticks: { color: '#5a6a82', callback: v => v + ' j' },
-             max: 365, min: 0 }
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' j' },
+          max: 365, min: 0
+        }
       }
     }
   });
 }
 
-// ── PAGE 3 ── Listings par ville
 function renderListingsVille(d) {
   destroyChart('listingsVille');
   const ctx = document.getElementById('chart-listings-ville').getContext('2d');
@@ -1019,7 +1080,6 @@ function renderListingsVille(d) {
   });
 }
 
-// ── PAGE 3 ── Top hosts
 function renderTopHosts(d) {
   destroyChart('topHosts');
   const ctx = document.getElementById('chart-top-hosts').getContext('2d');
@@ -1048,7 +1108,6 @@ function renderTopHosts(d) {
   });
 }
 
-// ── PAGE 3 ── Minimum nights
 function renderMinNights(d) {
   destroyChart('minNights');
   const ctx = document.getElementById('chart-min-nights').getContext('2d');
@@ -1076,7 +1135,6 @@ function renderMinNights(d) {
   });
 }
 
-// ── PAGE 3 ── Reviews par ville
 function renderReviewsVille(d) {
   destroyChart('reviewsVille');
   const ctx = document.getElementById('chart-reviews-ville').getContext('2d');
@@ -1104,8 +1162,6 @@ function renderReviewsVille(d) {
     }
   });
 }
-
-// ── PAGE 4 ── Spider
 
 function renderSpiderAttractivite(d) {
   destroyChart('spiderAttractivite');
@@ -1182,12 +1238,177 @@ function renderSpiderAttractivite(d) {
   });
 }
 
-// ══════════════════════════════════════════
-//  STATS KPI
-// ══════════════════════════════════════════
+function renderMedianPriceByNeighbourhood(d) {
+  destroyChart('medianPriceByNeighbourhood');
+  const ctx = document.getElementById('chart-median-price-neighbourhood').getContext('2d');
+
+  charts['medianPriceByNeighbourhood'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: '#00e5b088',
+        borderColor: '#00e5b0',
+        borderWidth: 1,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderPriceNormalized(d) {
+  destroyChart('priceNormalized');
+  const ctx = document.getElementById('chart-price-normalized').getContext('2d');
+
+  charts['priceNormalized'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `Prix normalisé : ${context.raw.toFixed(1)}/100`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          min: 0,
+          max: 100,
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderRoomTypeInvestment(d) {
+  destroyChart('roomTypeInvestment');
+  const ctx = document.getElementById('chart-room-type-investment').getContext('2d');
+
+  charts['roomTypeInvestment'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [
+        {
+          label: 'Prix médian',
+          data: d.median_price,
+          backgroundColor: '#00e5b088',
+          borderColor: '#00e5b0',
+          borderWidth: 1
+        },
+        {
+          label: 'Revenu estimé',
+          data: d.estimated_revenue,
+          backgroundColor: '#ff5f6d66',
+          borderColor: '#ff5f6d',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#5a6a82' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentRanking(d) {
+  destroyChart('investmentRanking');
+  const ctx = document.getElementById('chart-investment-ranking').getContext('2d');
+
+  charts['investmentRanking'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: '#1e2d45' },
+          ticks: {
+            color: '#5a6a82',
+            callback: v => Math.round(v) + ' €'
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function averageOfArray(arr) {
+  if (!arr || arr.length === 0) return 0;
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
 function updateStats() {
   const d = getCityData();
   const s = d.stats;
+
   document.getElementById('stat-avg-price').textContent  = Math.round(s.avg_price) + ' €';
   document.getElementById('stat-med-price').textContent  = Math.round(s.med_price) + ' €';
   document.getElementById('stat-avail').textContent      = Math.round(s.avg_avail) + ' j';
@@ -1196,11 +1417,29 @@ function updateStats() {
   document.getElementById('stat-ratio').textContent      = (s.ratio || 0).toFixed(1);
   document.getElementById('stat-minnights').textContent  = s.med_minnights + ' n';
   document.getElementById('stat-reviews').textContent    = (s.avg_reviews_month || 0).toFixed(2);
+
+  const investMedianPrice = activeCity === 'Toutes'
+    ? averageOfArray(DATA.median_price_by_neighbourhood?.values || [])
+    : (d.investment?.median_price || 0);
+
+  const investDemand = activeCity === 'Toutes'
+    ? 0
+    : (d.investment?.avg_reviews || 0);
+
+  const investScore = activeCity === 'Toutes'
+    ? averageOfArray(DATA.price_normalized_by_city?.values || [])
+    : (d.investment?.price_normalized || 0);
+
+  const investRank = activeCity === 'Toutes'
+    ? 'Global'
+    : ('#' + (d.investment?.rank || '-'));
+
+  document.getElementById('stat-invest-revenue').textContent = Math.round(investMedianPrice) + ' €';
+  document.getElementById('stat-invest-demand').textContent  = activeCity === 'Toutes' ? '—' : investDemand.toFixed(1);
+  document.getElementById('stat-invest-score').textContent   = investScore.toFixed(1);
+  document.getElementById('stat-invest-city').textContent    = investRank;
 }
 
-// ══════════════════════════════════════════
-//  UPDATE ALL
-// ══════════════════════════════════════════
 function updateAllCharts() {
   const d = getCityData();
   renderPrixVille(d.prix_par_ville);
@@ -1211,23 +1450,22 @@ function updateAllCharts() {
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
   renderSpiderAttractivite(d.spider_attractivite);
+
+  renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
+  renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
+  renderRoomTypeInvestment(d.room_type_investment || { labels: [], median_price: [], estimated_revenue: [], avg_reviews: [] });
+  renderInvestmentRanking(d.investment_ranking || { labels: [], values: [] });
 }
 
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   updateStats();
   updateAllCharts();
   initMap();
 });
 
-// ══════════════════════════════════════════
-//  TULIP TRAIL
-// ══════════════════════════════════════════
 const TULIPS = ['🌷', '🌹', '🌸'];
 let lastTulip = 0;
-const THROTTLE_MS = 40; // une tulipe max toutes les 40ms
+const THROTTLE_MS = 40;
 
 document.addEventListener('mousemove', (e) => {
   const now = Date.now();
@@ -1237,9 +1475,9 @@ document.addEventListener('mousemove', (e) => {
   const el = document.createElement('span');
   el.className = 'tulip';
   el.textContent = TULIPS[Math.floor(Math.random() * TULIPS.length)];
-  el.style.left            = e.clientX + 'px';
-  el.style.top             = e.clientY + 'px';
-  el.style.fontSize        = (16 + Math.random() * 14) + 'px';
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  el.style.fontSize = (16 + Math.random() * 14) + 'px';
   el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
 
   document.body.appendChild(el);
