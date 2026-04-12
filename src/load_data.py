@@ -1,22 +1,40 @@
 import pandas as pd
 
+CONFIG = {
+    "normalisation_prix": True,
+    "nb_pieces_reference": 3.0,
+    "normalisation" : {
+        "Paris": 2.6,
+        "Bordeaux": 3.0,
+        "Lyon": 3.0,
+        "Pays Basque": 3.9
+    }
+}
+
+# 
 # fonctions de load (chargement) -----------
 def load_lyon(path="data/listings-lyon.csv"):
     df = pd.read_csv(path, sep=",")
     df = clean_lyon(df)
     df["city"] = "Lyon"
+    if CONFIG["normalisation"]:
+        df["price"] = df["price"]/CONFIG["normalisation"]["Lyon"]
     return df
 
 def load_paysbasque(path="data/listings-paysbasque.csv"):
     df = pd.read_csv(path, sep=",")
     df = clean_paysbasque(df)
     df["city"] = "Pays Basque"
+    if CONFIG["normalisation"]:
+        df["price"] = df["price"]/CONFIG["normalisation"]["Pays Basque"]
     return df
 
 def load_bordeaux(path="data/listings-bordeaux.csv"):
     df = pd.read_csv(path, sep=",")
     df = clean_bordeaux(df)
     df["city"] = "Bordeaux"
+    if CONFIG["normalisation"]:
+        df["price"] = df["price"]/CONFIG["normalisation"]["Bordeaux"]
     return df
 
 def load_prix_paris(path = "data/prix-paris.csv"):
@@ -37,6 +55,9 @@ def load_paris(path="data/listings-paris.csv", prix_path = "data/prix-paris.csv"
     
     # attribut de la ville
     df["city"] = "Paris"
+    if CONFIG["normalisation"]:
+        df["price"] = df["price"]/CONFIG["normalisation"]["Paris"]
+
     return df
 
 # nettoyage --------

@@ -790,12 +790,12 @@
 
     <div class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Prix moyen / nuit</div>
+        <div class="stat-label">Prix moyen / nuit (1 pc)</div>
         <div class="stat-value" id="stat-avg-price">—</div>
         <div class="stat-delta">Toutes typologies</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Médiane prix</div>
+        <div class="stat-label">Médiane prix (1 pc)</div>
         <div class="stat-value v2" id="stat-med-price">—</div>
         <div class="stat-delta">Hors outliers</div>
       </div>
@@ -816,7 +816,7 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Prix moyen par ville</div>
-            <div class="chart-card-sub">€ / nuit · moyenne</div>
+            <div class="chart-card-sub">€ / nuit · moyenne (1 pc)</div>
           </div>
           <span class="chart-card-badge">Bar chart</span>
         </div>
@@ -1079,8 +1079,8 @@
 // ══════════════════════════════════════════
 const DATA = {
   "stats": {
-    "avg_price": 158.11,
-    "med_price": 89.0,
+    "avg_price": 50.2,
+    "med_price": 30.0,
     "avg_avail": 116.42,
     "total_listings": 58652,
     "nb_hosts": 47011,
@@ -1096,10 +1096,10 @@ const DATA = {
       "Pays Basque"
     ],
     "values": [
-      128.46,
-      102.97,
-      115.64,
-      322.99
+      42.82,
+      34.32,
+      44.48,
+      82.82
     ]
   },
   "room_type": {
@@ -1222,7 +1222,7 @@ const DATA = {
           0.0
         ],
         "rawValues": {
-          "Prix moyen": 102.97,
+          "Prix moyen": 34.32,
           "Disponibilité": 114.04,
           "Reviews 12m": 9.12,
           "Nb nuits min": 2,
@@ -1240,14 +1240,14 @@ const DATA = {
       {
         "label": "Paris",
         "data": [
-          5.8,
+          20.9,
           0.0,
           0.0,
           100.0,
           100.0
         ],
         "rawValues": {
-          "Prix moyen": 115.64,
+          "Prix moyen": 44.48,
           "Disponibilité": 81.71,
           "Reviews 12m": 4.75,
           "Nb nuits min": 4,
@@ -1265,14 +1265,14 @@ const DATA = {
       {
         "label": "Bordeaux",
         "data": [
-          11.6,
+          17.5,
           70.8,
           78.5,
           0.0,
           17.1
         ],
         "rawValues": {
-          "Prix moyen": 128.46,
+          "Prix moyen": 42.82,
           "Disponibilité": 141.19,
           "Reviews 12m": 8.18,
           "Nb nuits min": 2,
@@ -1297,7 +1297,7 @@ const DATA = {
           14.4
         ],
         "rawValues": {
-          "Prix moyen": 322.99,
+          "Prix moyen": 82.82,
           "Disponibilité": 165.73,
           "Reviews 12m": 6.98,
           "Nb nuits min": 3,
@@ -1751,8 +1751,8 @@ const DATA = {
   },
   "cities": {
     "Lyon": {
-      "avg_price": 102.97,
-      "med_price": 81.0,
+      "avg_price": 34.32,
+      "med_price": 27.0,
       "avg_avail": 114.04,
       "count": 9647,
       "nb_hosts": 7279,
@@ -1837,22 +1837,41 @@ const DATA = {
           30
         ]
       },
-      min_nights: {
-        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
-        values: [2985, 2936, 719, 550, 73, 489, 54, 1837, 4]
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          2985,
+          2936,
+          719,
+          550,
+          73,
+          489,
+          54,
+          1837,
+          4
+        ]
       },
-      investment: {
-        revenue: 25126.09,
-        demand: 44.40
-      },
-      investment_trend: {
-        labels: ["2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
-        values: [126.33, 80.42, 127.60, 101.04, 103.38, 96.88, 95.88, 98.51, 102.22, 101.10, 117.64, 102.58, 99.93]
+      "spider_raw": {
+        "Prix moyen": 34.32,
+        "Disponibilité": 114.04,
+        "Reviews 12m": 9.12,
+        "Nb nuits min": 2,
+        "Nb annonces": 9647
       }
     },
     "Paris": {
-      "avg_price": 115.64,
-      "med_price": 85.0,
+      "avg_price": 44.48,
+      "med_price": 32.69,
       "avg_avail": 81.71,
       "count": 24908,
       "nb_hosts": 21252,
@@ -1899,22 +1918,41 @@ const DATA = {
           30
         ]
       },
-      min_nights: {
-        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
-        values: [3516, 3653, 3511, 4295, 374, 1133, 161, 8246, 19]
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          3516,
+          3653,
+          3511,
+          4295,
+          374,
+          1133,
+          161,
+          8246,
+          19
+        ]
       },
-      investment: {
-        revenue: 28981.96,
-        demand: 47.63
-      },
-      investment_trend: {
-        labels: ["2010", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
-        values: [60.00, 99.00, 97.67, 83.97, 77.33, 78.92, 96.39, 87.90, 99.14, 96.51, 101.65, 137.31, 130.82, 131.24, 132.55]
+      "spider_raw": {
+        "Prix moyen": 44.48,
+        "Disponibilité": 81.71,
+        "Reviews 12m": 4.75,
+        "Nb nuits min": 4,
+        "Nb annonces": 24908
       }
     },
     "Bordeaux": {
-      "avg_price": 128.46,
-      "med_price": 82.0,
+      "avg_price": 42.82,
+      "med_price": 27.33,
       "avg_avail": 141.19,
       "count": 12252,
       "nb_hosts": 9517,
@@ -1961,22 +1999,41 @@ const DATA = {
           28
         ]
       },
-      min_nights: {
-        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
-        values: [3372, 3736, 1426, 1806, 121, 486, 136, 1162, 7]
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          3372,
+          3736,
+          1426,
+          1806,
+          121,
+          486,
+          136,
+          1162,
+          7
+        ]
       },
-      investment: {
-        revenue: 28013.44,
-        demand: 38.30
-      },
-      investment_trend: {
-        labels: ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
-        values: [84.75, 111.48, 119.64, 171.88, 120.03, 124.36, 137.63, 116.32, 120.18, 155.44, 153.04, 120.25]
+      "spider_raw": {
+        "Prix moyen": 42.82,
+        "Disponibilité": 141.19,
+        "Reviews 12m": 8.18,
+        "Nb nuits min": 2,
+        "Nb annonces": 12252
       }
     },
     "Pays Basque": {
-      "avg_price": 322.99,
-      "med_price": 111.0,
+      "avg_price": 82.82,
+      "med_price": 28.46,
       "avg_avail": 165.73,
       "count": 11845,
       "nb_hosts": 9071,
@@ -2023,6 +2080,36 @@ const DATA = {
           31
         ]
       },
+      "min_nights": {
+        "labels": [
+          "1 n",
+          "2 n",
+          "3 n",
+          "4-7 n",
+          "8-14 n",
+          "15-30 n",
+          "31-90 n",
+          "91-365 n",
+          "365+ n"
+        ],
+        "values": [
+          2162,
+          2769,
+          1845,
+          4553,
+          121,
+          143,
+          12,
+          239,
+          1
+        ]
+      },
+      "spider_raw": {
+        "Prix moyen": 82.82,
+        "Disponibilité": 165.73,
+        "Reviews 12m": 6.98,
+        "Nb nuits min": 3,
+        "Nb annonces": 11845
       min_nights: {
         labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
         values: [2162, 2769, 1845, 4553, 121, 143, 12, 239, 1]
