@@ -180,14 +180,7 @@ def compute_city_detail(df, city):
     }
 
 
-def compute_top_hosts_reviews_timeline(df):
-    """
-    Top 3 des hôtes toutes villes confondues par période (année/mois),
-    selon le nombre de reviews.
-
-    On ne conserve que les périodes ayant de vraies reviews (> 0).
-    On nettoie aussi les noms d'hôtes pour éviter les valeurs vides.
-    """
+def compute_top_hosts_reviews_timeline_core(df):
     required_cols = [
         "host_id", "host_name", "city",
         "number_of_reviews_ltm",
@@ -202,27 +195,22 @@ def compute_top_hosts_reviews_timeline(df):
     if sub.empty:
         return {"periods": [], "items": []}
 
-    # Reviews numériques
     sub["number_of_reviews_ltm"] = pd.to_numeric(
         sub["number_of_reviews_ltm"],
         errors="coerce"
     ).fillna(0)
 
-    # Garder seulement les périodes avec activité réelle
     sub = sub[sub["number_of_reviews_ltm"] > 0].copy()
-
     if sub.empty:
         return {"periods": [], "items": []}
 
-    # Nettoyage host_name
+    # Nettoyage noms
     sub["host_name"] = (
         sub["host_name"]
         .fillna("")
         .astype(str)
         .str.strip()
     )
-
-    # Pour éviter les noms vides
     sub.loc[sub["host_name"] == "", "host_name"] = None
 
     def choose_host_name(series):
@@ -264,7 +252,7 @@ def compute_top_hosts_reviews_timeline(df):
              .head(3)
         )
 
-        if top3.empty or float(top3["reviews"].sum()) <= 0:
+        if top3.empty:
             continue
 
         top3_records = []
@@ -298,6 +286,24 @@ def compute_top_hosts_reviews_timeline(df):
         "items": items
     }
 
+def compute_top_hosts_reviews_timeline_by_city(df):
+    """
+    Renvoie le top 3 des hôtes par période :
+    - global ("Toutes")
+    - par ville
+    """
+
+    result = {}
+
+    # Global
+    result["Toutes"] = compute_top_hosts_reviews_timeline_core(df)
+
+    # Par ville
+    for city in df["city"].dropna().unique():
+        sub = df[df["city"] == city]
+        result[city] = compute_top_hosts_reviews_timeline_core(sub)
+
+    return result
 
 def compute_all_stats(df):
     """Point d'entrée : renvoie un dict complet prêt pour generate_charts.py."""
@@ -313,7 +319,7 @@ def compute_all_stats(df):
         "min_nights":         compute_min_nights(df),
         "reviews_par_ville":  compute_reviews_par_ville(df),
         "spider_chart":       spider_chart,
-        "top_hosts_reviews_timeline": compute_top_hosts_reviews_timeline(df),
+        "top_hosts_reviews_timeline": compute_top_hosts_reviews_timeline_by_city(df),
         "cities": {
             city: compute_city_detail(df, city)
             for city in CITIES
