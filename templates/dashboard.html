@@ -1083,6 +1083,7 @@ function filterCity(city, btn) {
   btn.classList.add('active');
   updateAllCharts();
   updateStats();
+  refreshTopHostsPodiumForActiveCity();
 }
 
 function getCityData() {
@@ -1195,6 +1196,7 @@ function navFromMap(page, city) {
   showPage(page, null);
   updateAllCharts();
   updateStats();
+  refreshTopHostsPodiumForActiveCity();
 }
 
 Chart.defaults.color           = '#5a6a82';
@@ -1865,41 +1867,77 @@ function updateTopHostsPodium(animate = false) {
 }
 
 //------------ Init des contrôles
+  //-- Récupérer la timeline de l'animation en fonction de la sélection
+function getTopHostsTimelineForActiveCity() {
+  const timelines = DATA.top_hosts_reviews_timeline || {};
+
+  if (activeCity === 'Toutes') {
+    return timelines['Toutes'] || { periods: [], items: [] };
+  }
+
+  return timelines[activeCity] || timelines['Toutes'] || { periods: [], items: [] };
+}
+
+
+  //-- Ajout de la fonction de refresh du podium. Idée : Au moment de l'initialisation, cette fonction charge les données en fonction de la sélection active
+function refreshTopHostsPodiumForActiveCity() {
+  stopTopHostsAnimation();
+  initTopHostsPodiumD3();
+
+  const timeline = getTopHostsTimelineForActiveCity();
+
+  topHostsTimeline = timeline.items || [];
+  topHostsPeriods = timeline.periods || [];
+  topHostsAnimationIndex = 0;
+
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const label = document.getElementById('top-host-current-period');
+
+  if (!yearSelect || !monthSelect || !label) return;
+
+  if (!topHostsPeriods.length) {
+    yearSelect.innerHTML = '';
+    monthSelect.innerHTML = '';
+    label.textContent = 'Période : —';
+    renderTopHostsPodiumD3(null);
+    return;
+  }
+
+  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
+
+  yearSelect.innerHTML = years
+    .map(y => `<option value="${y}">${y}</option>`)
+    .join('');
+
+  yearSelect.value = years[0];
+  updateTopHostsMonthOptions(+yearSelect.value);
+  updateTopHostsPodium();
+}
+
 function initTopHostsPodiumControls() {
-  const timeline = DATA.top_hosts_reviews_timeline;
-  if (!timeline || !timeline.periods || !timeline.items || !timeline.periods.length) return;
-
-  topHostsTimeline = timeline.items;
-  topHostsPeriods = timeline.periods;
-
   const yearSelect = document.getElementById('top-host-year');
   const monthSelect = document.getElementById('top-host-month');
   const playBtn = document.getElementById('top-host-play-btn');
 
   if (!yearSelect || !monthSelect || !playBtn) return;
 
-  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
-  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
-
-  yearSelect.value = years[0];
-  updateTopHostsMonthOptions(+yearSelect.value);
-
   yearSelect.addEventListener('change', () => {
     stopTopHostsAnimation();
     updateTopHostsMonthOptions(+yearSelect.value);
-    updateTopHostsPodium(true);
+    updateTopHostsPodium();
   });
 
   monthSelect.addEventListener('change', () => {
     stopTopHostsAnimation();
-    updateTopHostsPodium(true);
+    updateTopHostsPodium();
   });
 
   playBtn.addEventListener('click', toggleTopHostsAnimation);
 
-  initTopHostsPodiumD3();
-  updateTopHostsPodium(false);
+  refreshTopHostsPodiumForActiveCity();
 }
+
 // ------------Mise à jour des mois disponibles pour une année donnée
 function updateTopHostsMonthOptions(selectedYear) {
   const monthSelect = document.getElementById('top-host-month');
