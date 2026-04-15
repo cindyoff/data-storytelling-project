@@ -44,7 +44,6 @@
       overflow: hidden;
     }
 
-    /* ── SIDEBAR ── */
     #sidebar {
       width: var(--sidebar-w);
       min-width: var(--sidebar-w);
@@ -152,7 +151,6 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* ── MAIN AREA ── */
     #main {
       flex: 1;
       display: flex;
@@ -208,7 +206,6 @@
     .city-chip[data-city="Pays Basque"].active{ border-color: var(--accent4); background: rgba(123,140,222,0.1);color: var(--accent4); }
     .city-chip[data-city="Toutes"].active     { border-color: var(--text);    background: rgba(255,255,255,0.05); color: var(--text); }
 
-    /* ── PAGES ── */
     .page {
       flex: 1;
       overflow-y: auto;
@@ -217,7 +214,6 @@
     }
     .page.active { display: flex; flex-direction: column; gap: 20px; }
 
-    /* ── PAGE 1 : MAP ── */
     .map-header {
       display: flex;
       align-items: flex-start;
@@ -285,7 +281,6 @@
       white-space: nowrap;
     }
 
-    /* ── CHARTS GRID ── */
     .page-header {
       display: flex;
       flex-direction: column;
@@ -350,7 +345,6 @@
       max-height: 230px;
     }
 
-    /* ── STAT STRIP (page 2 + 3) ── */
     .stat-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -627,12 +621,11 @@
       font-weight: 800;
     }
 
-    /* ── SCROLLBAR ── */
+
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-    /* ── LEAFLET CUSTOM ── */
     .leaflet-container { background: #080c12 !important; }
     .leaflet-tile { filter: brightness(0.3) saturate(0.6) hue-rotate(180deg); }
     .custom-popup .leaflet-popup-content-wrapper {
@@ -677,7 +670,6 @@
       .stat-strip { grid-template-columns: 1fr 1fr; }
     }
 
-    /* ── TULIP TRAIL ── */
     .tulip {
       position: fixed;
       pointer-events: none;
@@ -697,7 +689,6 @@
 </head>
 <body>
 
-<!-- ══════════════ SIDEBAR ══════════════ -->
 <aside id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-tag">Analytics</div>
@@ -733,7 +724,7 @@
 
     <button class="nav-btn" onclick="showPage('p5', this)" id="btn-p5">
       <span class="nav-icon">💼</span>
-      Investissement
+      Analyse investissement
       <span class="nav-badge">P5</span>
     </button>
   </nav>
@@ -744,10 +735,8 @@
   </div>
 </aside>
 
-<!-- ══════════════ MAIN ══════════════ -->
 <div id="main">
 
-  <!-- TOPBAR -->
   <div class="topbar">
     <span class="topbar-title" id="topbar-title">Carte géographique</span>
     <span class="topbar-breadcrumb" id="topbar-sub">Vue d'ensemble des 4 zones</span>
@@ -760,7 +749,6 @@
     </div>
   </div>
 
-  <!-- ═══ PAGE 1 : MAP ═══ -->
   <section class="page active" id="p1">
     <div class="map-header">
       <div>
@@ -781,7 +769,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 2 : ANALYSE DES PRIX ═══ -->
   <section class="page" id="p2">
     <div class="page-header">
       <h2>Analyse des prix</h2>
@@ -847,7 +834,6 @@
     </div>
   </section>
 
-  <!-- ═══ PAGE 3 : ANALYSE DES HÔTES ═══ -->
   <section class="page" id="p3">
     <div class="page-header">
       <h2>Analyse des hôtes &amp; offre</h2>
@@ -924,9 +910,6 @@
     </div>
   </section>
 
-
-
-  <!-- ═══ PAGE 4 : Graphiques particuliers ═══ -->
   <section class="page" id="p4">
     <div class="page-header">
       <h2>Graphiques particuliers</h2>
@@ -991,9 +974,7 @@
         <div id="top-host-podium" class="podium-d3-container"></div>
       </div>
 
-    </div>
   </section>
-</div><!-- /#main -->
 
   <section class="page" id="p5">
     <div class="page-header">
@@ -1070,13 +1051,9 @@
       </div>
     </div>
   </section>
-
-</div>
+</div><!-- /#main -->
 
 <script>
-// ══════════════════════════════════════════
-//  DATA (injectée par Python via build_dashboard.py)
-// ══════════════════════════════════════════
 const DATA = {
   "stats": {
     "avg_price": 50.2,
@@ -1208,10 +1185,15 @@ const DATA = {
       1.0
     ]
   },
-
-  spider_attractivite: {
-    labels: ["Prix moyen", "Disponibilité", "Reviews 12m", "Min nights", "Nb annonces"],
-    datasets: [
+  "spider_attractivite": {
+    "labels": [
+      "Prix moyen",
+      "Disponibilité",
+      "Reviews 12m",
+      "Nb nuits min",
+      "Nb annonces"
+    ],
+    "datasets": [
       {
         "label": "Lyon",
         "data": [
@@ -1772,44 +1754,6 @@ const DATA = {
           20,
           11
         ]
-
-  investment_revenue: {
-    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
-    values: [28013.44, 25126.09, 28981.96, 39537.59]
-  },
-
-  investment_demand: {
-    labels: ["Bordeaux", "Lyon", "Paris", "Pays Basque"],
-    values: [38.30, 44.40, 47.63, 34.83]
-  },
-
-  investment_trend: {
-    labels: ["2010", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
-    values: [60.00, 99.00, 102.88, 82.89, 84.73, 87.48, 107.65, 95.35, 103.13, 117.54, 129.66, 148.69, 158.01, 169.46, 146.02]
-  },
-
-  investment_scatter: {
-    points: [
-      { x: 38.30, y: 28013.44, label: "Bordeaux" },
-      { x: 44.40, y: 25126.09, label: "Lyon" },
-      { x: 47.63, y: 28981.96, label: "Paris" },
-      { x: 34.83, y: 39537.59, label: "Pays Basque" }
-    ]
-  },
-
-  cities: {
-    Lyon: {
-      avg_price: 102.97,
-      med_price: 81.0,
-      avg_avail: 114.04,
-      count: 9647,
-      nb_hosts: 7279,
-      ratio: 1.33,
-      med_minnights: 2,
-      avg_reviews_month: 1.32,
-      room_type: {
-        labels: ["Entire home/apt", "Private room", "Shared room", "Hotel room"],
-        values: [7648, 1968, 20, 11]
       },
       "top_hosts": {
         "labels": [
@@ -1867,6 +1811,56 @@ const DATA = {
         "Reviews 12m": 9.12,
         "Nb nuits min": 2,
         "Nb annonces": 9647
+      },
+      "investment": {
+        "median_price": 27.0,
+        "avg_reviews": 44.4,
+        "avg_availability": 114.04,
+        "price_normalized": 0.0,
+        "estimated_revenue": 6775.82,
+        "rank": 2
+      },
+      "median_price_by_neighbourhood": {
+        "labels": [
+          "2e Arrondissement",
+          "1er Arrondissement",
+          "5e Arrondissement",
+          "6e Arrondissement",
+          "3e Arrondissement"
+        ],
+        "values": [
+          31.0,
+          28.56,
+          28.0,
+          27.0,
+          26.39
+        ]
+      },
+      "room_type_investment": {
+        "labels": [
+          "Hotel room",
+          "Shared room",
+          "Entire home/apt",
+          "Private room"
+        ],
+        "median_price": [
+          41.0,
+          27.83,
+          28.0,
+          22.62
+        ],
+        "estimated_revenue": [
+          12080.09,
+          8874.66,
+          6820.19,
+          6305.44
+        ],
+        "avg_reviews": [
+          51.27,
+          71.6,
+          46.68,
+          35.2
+        ]
       }
     },
     "Paris": {
@@ -1948,6 +1942,56 @@ const DATA = {
         "Reviews 12m": 4.75,
         "Nb nuits min": 4,
         "Nb annonces": 24908
+      },
+      "investment": {
+        "median_price": 32.69,
+        "avg_reviews": 47.63,
+        "avg_availability": 81.71,
+        "price_normalized": 100.0,
+        "estimated_revenue": 9261.43,
+        "rank": 1
+      },
+      "median_price_by_neighbourhood": {
+        "labels": [
+          "Élysée",
+          "Louvre",
+          "Luxembourg",
+          "Hôtel-de-Ville",
+          "Palais-Bourbon"
+        ],
+        "values": [
+          53.85,
+          47.69,
+          44.42,
+          42.31,
+          42.31
+        ]
+      },
+      "room_type_investment": {
+        "labels": [
+          "Hotel room",
+          "Entire home/apt",
+          "Private room",
+          "Shared room"
+        ],
+        "median_price": [
+          63.46,
+          34.23,
+          21.15,
+          15.38
+        ],
+        "estimated_revenue": [
+          13768.91,
+          9719.48,
+          6167.9,
+          3755.6
+        ],
+        "avg_reviews": [
+          52.04,
+          45.31,
+          59.01,
+          196.23
+        ]
       }
     },
     "Bordeaux": {
@@ -2029,6 +2073,56 @@ const DATA = {
         "Reviews 12m": 8.18,
         "Nb nuits min": 2,
         "Nb annonces": 12252
+      },
+      "investment": {
+        "median_price": 27.33,
+        "avg_reviews": 38.3,
+        "avg_availability": 141.19,
+        "price_normalized": 5.86,
+        "estimated_revenue": 6117.5,
+        "rank": 3
+      },
+      "median_price_by_neighbourhood": {
+        "labels": [
+          "Bordeaux-Bouliac",
+          "Bordeaux-Saint-Aubin-de-Medoc",
+          "Bordeaux-Saint-Vincent-de-Paul",
+          "Bordeaux-Le Taillan-Medoc",
+          "Bordeaux-Martignas-sur-Jalle"
+        ],
+        "values": [
+          41.5,
+          40.83,
+          32.0,
+          30.67,
+          30.33
+        ]
+      },
+      "room_type_investment": {
+        "labels": [
+          "Entire home/apt",
+          "Hotel room",
+          "Private room",
+          "Shared room"
+        ],
+        "median_price": [
+          30.0,
+          48.29,
+          18.33,
+          8.83
+        ],
+        "estimated_revenue": [
+          6775.18,
+          5685.64,
+          4001.35,
+          1487.84
+        ],
+        "avg_reviews": [
+          38.66,
+          33.0,
+          37.4,
+          19.89
+        ]
       }
     },
     "Pays Basque": {
@@ -2110,25 +2204,155 @@ const DATA = {
         "Reviews 12m": 6.98,
         "Nb nuits min": 3,
         "Nb annonces": 11845
-      min_nights: {
-        labels: ["1 n", "2 n", "3 n", "4-7 n", "8-14 n", "15-30 n", "31-90 n", "91-365 n", "365+ n"],
-        values: [2162, 2769, 1845, 4553, 121, 143, 12, 239, 1]
       },
-      investment: {
-        revenue: 39537.59,
-        demand: 34.83
+      "investment": {
+        "median_price": 28.46,
+        "avg_reviews": 34.83,
+        "avg_availability": 165.73,
+        "price_normalized": 25.68,
+        "estimated_revenue": 5671.6,
+        "rank": 4
       },
-      investment_trend: {
-        labels: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"],
-        values: [261.00, 131.64, 195.42, 257.84, 218.41, 770.04, 293.29, 297.74, 273.43, 278.28, 201.63]
+      "median_price_by_neighbourhood": {
+        "labels": [
+          "Ustaritz",
+          "Biarritz",
+          "Saint-Pierre-d'Irube",
+          "Saint-Jean-de-Luz",
+          "Bayonne-Nord"
+        ],
+        "values": [
+          34.1,
+          33.59,
+          33.53,
+          30.77,
+          28.97
+        ]
+      },
+      "room_type_investment": {
+        "labels": [
+          "Entire home/apt",
+          "Private room",
+          "Shared room",
+          "Hotel room"
+        ],
+        "median_price": [
+          30.0,
+          19.49,
+          10.77,
+          34.1
+        ],
+        "estimated_revenue": [
+          6082.79,
+          3323.17,
+          2871.47,
+          2051.54
+        ],
+        "avg_reviews": [
+          33.77,
+          43.84,
+          42.03,
+          13.63
+        ]
       }
     }
+  },
+  "median_price_by_neighbourhood": {
+    "labels": [
+      "Élysée",
+      "Louvre",
+      "Luxembourg",
+      "Hôtel-de-Ville",
+      "Palais-Bourbon",
+      "Passy",
+      "Bordeaux-Bouliac",
+      "Bordeaux-Saint-Aubin-de-Medoc",
+      "Temple",
+      "Bourse"
+    ],
+    "values": [
+      53.85,
+      47.69,
+      44.42,
+      42.31,
+      42.31,
+      42.31,
+      41.5,
+      40.83,
+      40.38,
+      38.85
+    ]
+  },
+  "price_normalized_by_city": {
+    "labels": [
+      "Paris",
+      "Pays Basque",
+      "Bordeaux",
+      "Lyon"
+    ],
+    "values": [
+      100.0,
+      25.68,
+      5.86,
+      0.0
+    ]
+  },
+  "estimated_revenue_by_city": {
+    "labels": [
+      "Paris",
+      "Lyon",
+      "Bordeaux",
+      "Pays Basque"
+    ],
+    "values": [
+      9261.43,
+      6775.82,
+      6117.5,
+      5671.6
+    ]
+  },
+  "investment_ranking": {
+    "labels": [
+      "Paris",
+      "Lyon",
+      "Bordeaux",
+      "Pays Basque"
+    ],
+    "values": [
+      9261.43,
+      6775.82,
+      6117.5,
+      5671.6
+    ]
+  },
+  "room_type_investment": {
+    "labels": [
+      "Entire home/apt",
+      "Hotel room",
+      "Private room",
+      "Shared room"
+    ],
+    "median_price": [
+      30.56,
+      46.71,
+      20.4,
+      15.71
+    ],
+    "estimated_revenue": [
+      7349.41,
+      8396.54,
+      4949.46,
+      4247.39
+    ],
+    "avg_reviews": [
+      41.1,
+      37.49,
+      43.86,
+      82.44
+    ]
   }
 };
 
-// ══════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════
 const pagesMeta = {
   p1: { title: 'Carte géographique',   sub: 'Vue d\'ensemble des 4 zones' },
   p2: { title: 'Analyse des prix',     sub: 'Prix et disponibilité' },
@@ -2148,9 +2372,6 @@ function showPage(id, btn) {
   if (id === 'p1' && !mapInitialized) initMap();
 }
 
-// ══════════════════════════════════════════
-//  CITY FILTER
-// ══════════════════════════════════════════
 let activeCity = 'Toutes';
 
 function filterCity(city, btn) {
@@ -2271,12 +2492,11 @@ function navFromMap(page, city) {
   showPage(page, null);
   updateAllCharts();
   updateStats();
-  updateInvestmentStats();
 }
 
-Chart.defaults.color = '#5a6a82';
-Chart.defaults.borderColor = '#1e2d45';
-Chart.defaults.font.family = "'Outfit', sans-serif";
+Chart.defaults.color           = '#5a6a82';
+Chart.defaults.borderColor     = '#1e2d45';
+Chart.defaults.font.family     = "'Outfit', sans-serif";
 Chart.defaults.plugins.legend.labels.color = '#5a6a82';
 Chart.defaults.plugins.tooltip.backgroundColor = '#161e2e';
 Chart.defaults.plugins.tooltip.borderColor     = '#1e2d45';
@@ -2303,7 +2523,6 @@ function destroyChart(id) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
 
-// ── PAGE 2 ── Prix par ville
 function renderPrixVille(d) {
   destroyChart('prixVille');
   const ctx = document.getElementById('chart-prix-ville').getContext('2d');
@@ -2329,7 +2548,6 @@ function renderPrixVille(d) {
   });
 }
 
-// ── PAGE 2 ── Room type doughnut
 function renderRoomType(d) {
   destroyChart('roomType');
   const ctx = document.getElementById('chart-room-type').getContext('2d');
@@ -2355,7 +2573,6 @@ function renderRoomType(d) {
   });
 }
 
-// ── PAGE 2 ── Disponibilité par ville
 function renderDispo(d) {
   destroyChart('dispo');
   const ctx = document.getElementById('chart-dispo').getContext('2d');
@@ -2380,15 +2597,13 @@ function renderDispo(d) {
         y: {
           grid: { color: '#1e2d45' },
           ticks: { color: '#5a6a82', callback: v => v + ' j' },
-          max: 365,
-          min: 0
+          max: 365, min: 0
         }
       }
     }
   });
 }
 
-// ── PAGE 3 ── Listings par ville
 function renderListingsVille(d) {
   destroyChart('listingsVille');
   const ctx = document.getElementById('chart-listings-ville').getContext('2d');
@@ -2414,7 +2629,6 @@ function renderListingsVille(d) {
   });
 }
 
-// ── PAGE 3 ── Top hosts
 function renderTopHosts(d) {
   destroyChart('topHosts');
   const ctx = document.getElementById('chart-top-hosts').getContext('2d');
@@ -2443,7 +2657,6 @@ function renderTopHosts(d) {
   });
 }
 
-// ── PAGE 3 ── Minimum nights
 function renderMinNights(d) {
   destroyChart('minNights');
   const ctx = document.getElementById('chart-min-nights').getContext('2d');
@@ -2471,7 +2684,6 @@ function renderMinNights(d) {
   });
 }
 
-// ── PAGE 3 ── Reviews par ville
 function renderReviewsVille(d) {
   destroyChart('reviewsVille');
   const ctx = document.getElementById('chart-reviews-ville').getContext('2d');
@@ -2852,9 +3064,6 @@ function updateTopHostsPodiumHosts(periodData, animate = true) {
     })
     .filter(d => d && Number.isFinite(d.x) && Number.isFinite(d.y));
 
-  console.log('rawData =', rawData);
-  console.log('rankedData =', rankedData);
-  console.log('withPositions =', withPositions);
 
   const selection = hostsLayer
     .selectAll('.host-group')
@@ -3055,11 +3264,183 @@ function toggleTopHostsAnimation() {
   }, 2000);
 }
 
-// ---- Générer le podium
 
-// ══════════════════════════════════════════
-//  STATS KPI
-// ══════════════════════════════════════════
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+    updateTopHostsPodium();
+  }, 120);
+});
+
+function renderMedianPriceByNeighbourhood(d) {
+  destroyChart('medianPriceByNeighbourhood');
+  const ctx = document.getElementById('chart-median-price-neighbourhood').getContext('2d');
+
+  charts['medianPriceByNeighbourhood'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: '#00e5b088',
+        borderColor: '#00e5b0',
+        borderWidth: 1,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderPriceNormalized(d) {
+  destroyChart('priceNormalized');
+  const ctx = document.getElementById('chart-price-normalized').getContext('2d');
+
+  charts['priceNormalized'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `Prix normalisé : ${context.raw.toFixed(1)}/100`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          min: 0,
+          max: 100,
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function renderRoomTypeInvestment(d) {
+  destroyChart('roomTypeInvestment');
+  const ctx = document.getElementById('chart-room-type-investment').getContext('2d');
+
+  charts['roomTypeInvestment'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [
+        {
+          label: 'Prix médian',
+          data: d.median_price,
+          backgroundColor: '#00e5b088',
+          borderColor: '#00e5b0',
+          borderWidth: 1
+        },
+        {
+          label: 'Revenu estimé',
+          data: d.estimated_revenue,
+          backgroundColor: '#ff5f6d66',
+          borderColor: '#ff5f6d',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#5a6a82' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82' }
+        },
+        y: {
+          grid: { color: '#1e2d45' },
+          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+        }
+      }
+    }
+  });
+}
+
+function renderInvestmentRanking(d) {
+  destroyChart('investmentRanking');
+  const ctx = document.getElementById('chart-investment-ranking').getContext('2d');
+
+  charts['investmentRanking'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.labels,
+      datasets: [{
+        data: d.values,
+        backgroundColor: makeBarColors(d.labels),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: '#1e2d45' },
+          ticks: {
+            color: '#5a6a82',
+            callback: v => Math.round(v) + ' €'
+          }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#5a6a82' }
+        }
+      }
+    }
+  });
+}
+
+function averageOfArray(arr) {
+  if (!arr || arr.length === 0) return 0;
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
 function updateStats() {
   const d = getCityData();
   const s = d.stats;
@@ -3105,12 +3486,6 @@ function updateAllCharts() {
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
   renderSpiderAttractiviteD3(d.spider_attractivite);
-}
-
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
-  renderSpiderAttractivite(d.spider_attractivite);
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
   renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
@@ -3125,12 +3500,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initMap();
 });
 
-// ══════════════════════════════════════════
-//  TULIP TRAIL
-// ══════════════════════════════════════════
 const TULIPS = ['🌷', '🌹', '🌸'];
 let lastTulip = 0;
-const THROTTLE_MS = 40; // une tulipe max toutes les 40ms
+const THROTTLE_MS = 40;
 
 document.addEventListener('mousemove', (e) => {
   const now = Date.now();
@@ -3140,9 +3512,9 @@ document.addEventListener('mousemove', (e) => {
   const el = document.createElement('span');
   el.className = 'tulip';
   el.textContent = TULIPS[Math.floor(Math.random() * TULIPS.length)];
-  el.style.left            = e.clientX + 'px';
-  el.style.top             = e.clientY + 'px';
-  el.style.fontSize        = (16 + Math.random() * 14) + 'px';
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  el.style.fontSize = (16 + Math.random() * 14) + 'px';
   el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
 
   document.body.appendChild(el);
