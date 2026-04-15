@@ -112,7 +112,7 @@ def compute_spider_raw_metrics(df):
             "Prix moyen": round(float(sub["price"].mean()), 2),
             "Disponibilité": round(float(sub["availability_365"].mean()), 2),
             "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
-            "Min nights": int(sub["minimum_nights"].median()),
+            "Nb nuits min": int(sub["minimum_nights"].median()),
             "Nb annonces": int(len(sub)),
         })
 
@@ -124,7 +124,7 @@ def normalize_spider_metrics(spider_rows):
     Normalise chaque métrique sur une échelle 0-100 pour affichage radar.
     Conserve aussi les valeurs brutes pour les tooltips.
     """
-    metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Min nights", "Nb annonces"]
+    metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Nb nuits min", "Nb annonces"]
 
     normalized_rows = []
     for row in spider_rows:
@@ -161,7 +161,7 @@ def compute_city_detail(df, city):
         "Prix moyen": round(float(sub["price"].mean()), 2),
         "Disponibilité": round(float(sub["availability_365"].mean()), 2),
         "Reviews 12m": round(float(sub["number_of_reviews_ltm"].fillna(0).mean()), 2),
-        "Min nights": int(sub["minimum_nights"].median()),
+        "Nb nuits min": int(sub["minimum_nights"].median()),
         "Nb annonces": int(len(sub)),
     }
     return {
@@ -180,6 +180,131 @@ def compute_city_detail(df, city):
     }
 
 
+def compute_top_hosts_reviews_timeline_core(df):
+    required_cols = [
+        "host_id", "host_name", "city",
+        "number_of_reviews_ltm",
+        "review_year", "review_month", "review_period"
+    ]
+    missing = [col for col in required_cols if col not in df.columns]
+    if missing:
+        return {"periods": [], "items": []}
+
+    sub = df.dropna(subset=["review_year", "review_month"]).copy()
+
+    if sub.empty:
+        return {"periods": [], "items": []}
+
+    sub["number_of_reviews_ltm"] = pd.to_numeric(
+        sub["number_of_reviews_ltm"],
+        errors="coerce"
+    ).fillna(0)
+
+    sub = sub[sub["number_of_reviews_ltm"] > 0].copy()
+    if sub.empty:
+        return {"periods": [], "items": []}
+
+    # Nettoyage noms
+    sub["host_name"] = (
+        sub["host_name"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+    )
+    sub.loc[sub["host_name"] == "", "host_name"] = None
+
+    def choose_host_name(series):
+        s = series.dropna().astype(str).str.strip()
+        s = s[s != ""]
+        if not s.empty:
+            return s.mode().iat[0] if not s.mode().empty else s.iloc[0]
+        return "Hôte inconnu"
+
+    def choose_city(series):
+        s = series.dropna().astype(str).str.strip()
+        s = s[s != ""]
+        if not s.empty:
+            return s.mode().iat[0] if not s.mode().empty else s.iloc[0]
+        return ""
+
+    grouped = (
+        sub.groupby(
+            ["review_period", "review_year", "review_month", "host_id"],
+            as_index=False
+        )
+        .agg(
+            host_name=("host_name", choose_host_name),
+            reviews=("number_of_reviews_ltm", "sum"),
+            city=("city", choose_city)
+        )
+    )
+
+    items = []
+    periods = []
+
+    for (period, year, month), g in grouped.groupby(["review_period", "review_year", "review_month"]):
+        g = g[g["reviews"] > 0].copy()
+        if g.empty:
+            continue
+
+        top3 = (
+            g.sort_values(["reviews", "host_name"], ascending=[False, True])
+             .head(3)
+        )
+
+        if top3.empty:
+            continue
+
+        top3_records = []
+        for _, row in top3.iterrows():
+            top3_records.append({
+                "host_id": int(row["host_id"]),
+                "host_name": str(row["host_name"]) if pd.notna(row["host_name"]) else "Hôte inconnu",
+                "reviews": float(row["reviews"]),
+                "city": str(row["city"]) if pd.notna(row["city"]) else "",
+                "avatar": None
+            })
+
+        periods.append({
+            "period": str(period),
+            "year": int(year),
+            "month": int(month)
+        })
+
+        items.append({
+            "period": str(period),
+            "year": int(year),
+            "month": int(month),
+            "top3": top3_records
+        })
+
+    periods = sorted(periods, key=lambda x: (x["year"], x["month"]))
+    items = sorted(items, key=lambda x: (x["year"], x["month"]))
+
+    return {
+        "periods": periods,
+        "items": items
+    }
+
+def compute_top_hosts_reviews_timeline_by_city(df):
+    """
+    Renvoie le top 3 des hôtes par période :
+    - global ("Toutes")
+    - par ville
+    """
+
+    result = {}
+
+    # Global
+    result["Toutes"] = compute_top_hosts_reviews_timeline_core(df)
+
+    # Par ville
+    for city in df["city"].dropna().unique():
+        sub = df[df["city"] == city]
+        result[city] = compute_top_hosts_reviews_timeline_core(sub)
+
+    return result
+
 def compute_all_stats(df):
     """Point d'entrée : renvoie un dict complet prêt pour generate_charts.py."""
     spider_rows = compute_spider_raw_metrics(df)
@@ -194,6 +319,7 @@ def compute_all_stats(df):
         "min_nights":         compute_min_nights(df),
         "reviews_par_ville":  compute_reviews_par_ville(df),
         "spider_chart":       spider_chart,
+        "top_hosts_reviews_timeline": compute_top_hosts_reviews_timeline_by_city(df),
         "cities": {
             city: compute_city_detail(df, city)
             for city in CITIES

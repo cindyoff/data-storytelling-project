@@ -15,6 +15,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
+  <!-- D3-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
   <style>
     :root {
       --bg:        #080c12;
@@ -376,22 +379,248 @@
       margin-top: 4px;
     }
 
+    /* Page 4 - taille des canvas*/
+    /* ── PAGE 4 : LAYOUT 2 COLONNES ── */
     #p4 .charts-grid-3 {
-      grid-template-columns: 1fr 1fr;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
     }
 
-    #p4 .chart-card:first-child {
-      grid-column: span 2;
-      height: 420px;
+    #p4 .chart-card {
+      min-height: 500px;
+      height: calc(100vh - 210px);
+      max-height: 620px;
+      overflow: hidden;
     }
 
-    #p4 .chart-card:not(:first-child) {
-      height: 300px;
+    #p4 .chart-card:hover {
+      border-color: rgba(0,229,176,0.25);
     }
 
-    #p4 canvas {
+    /* Colonne 1 : spider */
+    #p4 .chart-card.spider-card {
+      min-width: 0;
+    }
+
+    .spider-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      flex: 1;
+    }
+
+    .spider-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Colonne 3 : ranking */
+    #p4 .ranking-card {
+      min-width: 0;
+    }
+
+    #p4 .ranking-card canvas {
+      width: 100% !important;
       height: 100% !important;
+      min-height: 360px;
+      flex: 1;
     }
+
+    /* Tooltip spider */
+    .spider-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 22, 35, 0.96);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 0.15s ease;
+      z-index: 5;
+    }
+
+    .spider-axis-label {
+      font-size: 11px;
+      fill: var(--text);
+    }
+
+    .spider-grid {
+      fill: none;
+      stroke: #1e2d45;
+    }
+
+    .spider-axis-line {
+      stroke: #1e2d45;
+    }
+
+    .spider-series {
+      fill-opacity: 0.10;
+      stroke-width: 2.2;
+    }
+
+    .spider-point {
+      stroke-width: 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 1350px) {
+      #p4 .charts-grid-3 {
+        grid-template-columns: 1.2fr 0.9fr 1fr;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      #p4 .charts-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      #p4 .chart-card {
+        height: auto;
+        min-height: 420px;
+        max-height: none;
+      }
+
+      .spider-d3-container,
+      #mini-map,
+      #p4 .ranking-card canvas {
+        min-height: 320px;
+        height: 320px !important;
+      }
+    }
+
+    /* ── PAGE 4 : PODIUM TOP HOSTS ── */
+    #p4 .chart-card.podium-card {
+      min-width: 0;
+    }
+
+    .top-host-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .control-group select,
+    #top-host-play-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+    }
+
+    #top-host-play-btn {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    #top-host-play-btn:hover {
+      border-color: rgba(0,229,176,0.35);
+      color: var(--accent);
+    }
+
+    .period-label-group {
+      margin-left: auto;
+      justify-content: flex-end;
+    }
+
+    #top-host-current-period {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .podium-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      flex: 1;
+    }
+
+    .podium-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .podium-block {
+      stroke-width: 2px;
+    }
+
+    .podium-rank-1 {
+      fill: #d4af37;
+      stroke: #b8901f;
+    }
+
+    .podium-rank-2 {
+      fill: #c0c0c0;
+      stroke: #969696;
+    }
+
+    .podium-rank-3 {
+      fill: #cd7f32;
+      stroke: #9c5d1f;
+    }
+
+    .host-avatar-ring {
+      fill: #ffffff;
+      stroke: #243447;
+      stroke-width: 4px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28));
+    }
+
+    .host-name {
+      fill: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .host-score {
+      fill: var(--muted);
+      font-size: 12px;
+    }
+
+    .host-city {
+      fill: var(--muted);
+      font-size: 11px;
+    }
+
+    .host-rank-label {
+      fill: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .host-initials {
+      fill: #243447;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -488,7 +717,7 @@
     </button>
 
     <button class="nav-btn" onclick="showPage('p4', this)" id="btn-p4">
-      <span class="nav-icon">📈</span>
+      <span class="nav-icon">⚙️</span>
       Vision 360
       <span class="nav-badge">P4</span>
     </button>
@@ -548,12 +777,12 @@
 
     <div class="stat-strip">
       <div class="stat-card">
-        <div class="stat-label">Prix moyen / nuit</div>
+        <div class="stat-label">Prix moyen / nuit (1 pc)</div>
         <div class="stat-value" id="stat-avg-price">—</div>
         <div class="stat-delta">Toutes typologies</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Médiane prix</div>
+        <div class="stat-label">Médiane prix (1 pc)</div>
         <div class="stat-value v2" id="stat-med-price">—</div>
         <div class="stat-delta">Hors outliers</div>
       </div>
@@ -574,7 +803,7 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Prix moyen par ville</div>
-            <div class="chart-card-sub">€ / nuit · moyenne</div>
+            <div class="chart-card-sub">€ / nuit · moyenne (1 pc)</div>
           </div>
           <span class="chart-card-badge">Bar chart</span>
         </div>
@@ -688,39 +917,63 @@
     </div>
 
     <div class="charts-grid-3">
-      <div class="chart-card">
+      <!-- Colonne 1 : Spider -->
+      <div class="chart-card spider-card">
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Attractivité des villes</div>
-            <div class="chart-card-sub">Statistiques catégorielles</div>
+            <div class="chart-card-sub">Comparaison multi-critères</div>
           </div>
           <span class="chart-card-badge">Spider chart</span>
         </div>
-        <canvas id="spider-chart-attractivite"></canvas>
+        <div id="spider-chart-attractivite" class="spider-d3-container"></div>
       </div>
 
-      <div class="chart-card">
+      <!-- Colonne 2 : Ranking -->
+      <div class="chart-card ranking-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Annonces par localisation</div>
-            <div class="chart-card-sub">Densité des annonces</div>
+            <div class="chart-card-title">Ranking des villes</div>
+            <div class="chart-card-sub">Classement global</div>
           </div>
-          <span class="chart-card-badge">Horizontal bar</span>
+          <span class="chart-card-badge">Ranking</span>
         </div>
-        <canvas id="chart-annonces-localisation"></canvas>
+        <canvas id="chart-ranking-villes"></canvas>
       </div>
 
-      <div class="chart-card">
+      <!-- Colonne 3 : Ranking temporel des hôtes-->
+      <div class="chart-card podium-card">
         <div class="chart-card-header">
           <div>
-            <div class="chart-card-title">Top 3</div>
-            <div class="chart-card-sub">Meilleurs hôtes</div>
+            <div class="chart-card-title">Top 3 des meilleurs hôtes</div>
+            <div class="chart-card-sub">Selon le nombre de reviews · filtrage mensuel</div>
           </div>
-          <span class="chart-card-badge">Bar chart</span>
+          <span class="chart-card-badge">D3 Podium</span>
         </div>
-        <canvas id="chart-top3-hosts"></canvas>
+
+        <div class="top-host-controls">
+          <div class="control-group">
+            <label for="top-host-year">Année</label>
+            <select id="top-host-year"></select>
+          </div>
+
+          <div class="control-group">
+            <label for="top-host-month">Mois</label>
+            <select id="top-host-month"></select>
+          </div>
+
+          <div class="control-group">
+            <button id="top-host-play-btn" type="button">▶ Lancer</button>
+          </div>
+
+          <div class="control-group period-label-group">
+            <span id="top-host-current-period">Période : —</span>
+          </div>
+        </div>
+
+        <div id="top-host-podium" class="podium-d3-container"></div>
       </div>
-    </div>
+
   </section>
 
   <section class="page" id="p5">
@@ -798,14 +1051,13 @@
       </div>
     </div>
   </section>
-
-</div>
+</div><!-- /#main -->
 
 <script>
 const DATA = {
   "stats": {
-    "avg_price": 158.11,
-    "med_price": 89.0,
+    "avg_price": 50.2,
+    "med_price": 30.0,
     "avg_avail": 116.42,
     "total_listings": 58652,
     "nb_hosts": 47011,
@@ -821,10 +1073,10 @@ const DATA = {
       "Pays Basque"
     ],
     "values": [
-      128.46,
-      102.97,
-      115.64,
-      322.99
+      42.82,
+      34.32,
+      44.48,
+      82.82
     ]
   },
   "room_type": {
@@ -938,7 +1190,7 @@ const DATA = {
       "Prix moyen",
       "Disponibilité",
       "Reviews 12m",
-      "Min nights",
+      "Nb nuits min",
       "Nb annonces"
     ],
     "datasets": [
@@ -952,10 +1204,10 @@ const DATA = {
           0.0
         ],
         "rawValues": {
-          "Prix moyen": 102.97,
+          "Prix moyen": 34.32,
           "Disponibilité": 114.04,
           "Reviews 12m": 9.12,
-          "Min nights": 2,
+          "Nb nuits min": 2,
           "Nb annonces": 9647
         },
         "borderColor": "#00e5b0",
@@ -970,17 +1222,17 @@ const DATA = {
       {
         "label": "Paris",
         "data": [
-          5.8,
+          20.9,
           0.0,
           0.0,
           100.0,
           100.0
         ],
         "rawValues": {
-          "Prix moyen": 115.64,
+          "Prix moyen": 44.48,
           "Disponibilité": 81.71,
           "Reviews 12m": 4.75,
-          "Min nights": 4,
+          "Nb nuits min": 4,
           "Nb annonces": 24908
         },
         "borderColor": "#ff5f6d",
@@ -995,17 +1247,17 @@ const DATA = {
       {
         "label": "Bordeaux",
         "data": [
-          11.6,
+          17.5,
           70.8,
           78.5,
           0.0,
           17.1
         ],
         "rawValues": {
-          "Prix moyen": 128.46,
+          "Prix moyen": 42.82,
           "Disponibilité": 141.19,
           "Reviews 12m": 8.18,
-          "Min nights": 2,
+          "Nb nuits min": 2,
           "Nb annonces": 12252
         },
         "borderColor": "#ffc857",
@@ -1027,10 +1279,10 @@ const DATA = {
           14.4
         ],
         "rawValues": {
-          "Prix moyen": 322.99,
+          "Prix moyen": 82.82,
           "Disponibilité": 165.73,
           "Reviews 12m": 6.98,
-          "Min nights": 3,
+          "Nb nuits min": 3,
           "Nb annonces": 11845
         },
         "borderColor": "#7b8cde",
@@ -1044,104 +1296,2187 @@ const DATA = {
       }
     ]
   },
-  "median_price_by_neighbourhood": {
-    "labels": [
-      "Élysée",
-      "Ustaritz",
-      "Biarritz",
-      "Saint-Pierre-d'Irube",
-      "Bordeaux-Bouliac",
-      "Louvre",
-      "Bordeaux-Saint-Aubin-de-Medoc",
-      "Saint-Jean-de-Luz",
-      "Luxembourg",
-      "Bayonne-Nord"
-    ],
-    "values": [
-      140.0,
-      133.0,
-      131.0,
-      130.75,
-      124.5,
-      124.0,
-      122.5,
-      120.0,
-      115.5,
-      113.0
-    ]
-  },
-  "price_normalized_by_city": {
-    "labels": [
-      "Pays Basque",
-      "Paris",
-      "Bordeaux",
-      "Lyon"
-    ],
-    "values": [
-      100.0,
-      13.33,
-      3.33,
-      0.0
-    ]
-  },
-  "estimated_revenue_by_city": {
-    "labels": [
-      "Paris",
-      "Pays Basque",
-      "Lyon",
-      "Bordeaux"
-    ],
-    "values": [
-      24079.73,
-      22119.25,
-      20327.45,
-      18352.49
-    ]
-  },
-  "investment_ranking": {
-    "labels": [
-      "Paris",
-      "Pays Basque",
-      "Lyon",
-      "Bordeaux"
-    ],
-    "values": [
-      24079.73,
-      22119.25,
-      20327.45,
-      18352.49
-    ]
-  },
-  "room_type_investment": {
-    "labels": [
-      "Entire home/apt",
-      "Hotel room",
-      "Private room",
-      "Shared room"
-    ],
-    "median_price": [
-      95.0,
-      141.46,
-      63.47,
-      48.0
-    ],
-    "estimated_revenue": [
-      22444.92,
-      24274.34,
-      14979.32,
-      13012.7
-    ],
-    "avg_reviews": [
-      41.1,
-      37.49,
-      43.86,
-      82.44
-    ]
+  "top_hosts_reviews_timeline": {
+    "Toutes": {
+      "periods": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9
+        }
+      ],
+      "items": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 35988734,
+              "host_name": "Mélanie",
+              "reviews": 7.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 91135362,
+              "host_name": "Laura",
+              "reviews": 6.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 321162574,
+              "host_name": "Coralie",
+              "reviews": 4.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10,
+          "top3": [
+            {
+              "host_id": 2087462,
+              "host_name": "Marc",
+              "reviews": 12.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 302761994,
+              "host_name": "Julien",
+              "reviews": 9.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 505372248,
+              "host_name": "Cedric",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11,
+          "top3": [
+            {
+              "host_id": 524335254,
+              "host_name": "Crísti",
+              "reviews": 12.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 50376407,
+              "host_name": "Isabelle",
+              "reviews": 12.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 96922578,
+              "host_name": "Nicolas",
+              "reviews": 12.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12,
+          "top3": [
+            {
+              "host_id": 16317751,
+              "host_name": "Sonya",
+              "reviews": 25.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 496378886,
+              "host_name": "Joelle",
+              "reviews": 19.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 369826491,
+              "host_name": "WeHost",
+              "reviews": 19.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "top3": [
+            {
+              "host_id": 144940438,
+              "host_name": "Alexandre Amine",
+              "reviews": 35.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 496378886,
+              "host_name": "Joelle",
+              "reviews": 29.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 3913380,
+              "host_name": "Arnaud-Olivier",
+              "reviews": 20.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "top3": [
+            {
+              "host_id": 152955803,
+              "host_name": "Erick",
+              "reviews": 19.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 315811493,
+              "host_name": "Paris Conciergerie",
+              "reviews": 18.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 152795003,
+              "host_name": "Parth",
+              "reviews": 18.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "top3": [
+            {
+              "host_id": 43688867,
+              "host_name": "Christine",
+              "reviews": 28.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 36340099,
+              "host_name": "Daman",
+              "reviews": 26.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 496416035,
+              "host_name": "Dorian",
+              "reviews": 26.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "top3": [
+            {
+              "host_id": 127715408,
+              "host_name": "Jeremy",
+              "reviews": 36.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 3122170,
+              "host_name": "Christelle",
+              "reviews": 32.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 15292016,
+              "host_name": "Salomé",
+              "reviews": 32.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "top3": [
+            {
+              "host_id": 5931758,
+              "host_name": "2beapart",
+              "reviews": 46.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 716205,
+              "host_name": "Ann",
+              "reviews": 41.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 300716705,
+              "host_name": "Armel",
+              "reviews": 41.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "top3": [
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 100.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 18056052,
+              "host_name": "Anne-Sophie",
+              "reviews": 77.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 402191311,
+              "host_name": "GuestReady",
+              "reviews": 76.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "top3": [
+            {
+              "host_id": 451047676,
+              "host_name": "Aline",
+              "reviews": 149.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 334643447,
+              "host_name": "Color Design Hotel",
+              "reviews": 129.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 7642792,
+              "host_name": "Ludovic",
+              "reviews": 111.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "top3": [
+            {
+              "host_id": 532176426,
+              "host_name": "Lina",
+              "reviews": 1187.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 59915865,
+              "host_name": "Mathilde",
+              "reviews": 889.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 291015206,
+              "host_name": "Bastien",
+              "reviews": 825.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 2217.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 291015206,
+              "host_name": "Bastien",
+              "reviews": 2179.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 13870329,
+              "host_name": "Georges",
+              "reviews": 1313.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        }
+      ]
+    },
+    "Lyon": {
+      "periods": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9
+        }
+      ],
+      "items": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 583636767,
+              "host_name": "Bridget",
+              "reviews": 2.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 58812917,
+              "host_name": "Clarisse",
+              "reviews": 2.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 48457209,
+              "host_name": "Corinne",
+              "reviews": 2.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10,
+          "top3": [
+            {
+              "host_id": 20314237,
+              "host_name": "Charles",
+              "reviews": 7.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 7.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 577219910,
+              "host_name": "Bernardino José",
+              "reviews": 5.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11,
+          "top3": [
+            {
+              "host_id": 274549848,
+              "host_name": "Nathália",
+              "reviews": 9.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 594960318,
+              "host_name": "Malik",
+              "reviews": 8.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 484472696,
+              "host_name": "Laurie",
+              "reviews": 6.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12,
+          "top3": [
+            {
+              "host_id": 16317751,
+              "host_name": "Sonya",
+              "reviews": 25.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 369826491,
+              "host_name": "WeHost",
+              "reviews": 19.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 226194931,
+              "host_name": "Gauthier",
+              "reviews": 16.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "top3": [
+            {
+              "host_id": 144940438,
+              "host_name": "Alexandre Amine",
+              "reviews": 35.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 291015206,
+              "host_name": "Bastien",
+              "reviews": 16.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 158478770,
+              "host_name": "Ricardo León",
+              "reviews": 15.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "top3": [
+            {
+              "host_id": 152955803,
+              "host_name": "Erick",
+              "reviews": 19.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 152795003,
+              "host_name": "Parth",
+              "reviews": 18.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 75541521,
+              "host_name": "Violaine",
+              "reviews": 14.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "top3": [
+            {
+              "host_id": 121686211,
+              "host_name": "Julie Et Nouredine",
+              "reviews": 21.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 34826828,
+              "host_name": "Nicolas",
+              "reviews": 16.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 13764672,
+              "host_name": "Adeline",
+              "reviews": 15.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "top3": [
+            {
+              "host_id": 3122170,
+              "host_name": "Christelle",
+              "reviews": 32.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 9995624,
+              "host_name": "Marie",
+              "reviews": 19.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 6383551,
+              "host_name": "Anne",
+              "reviews": 16.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "top3": [
+            {
+              "host_id": 5931758,
+              "host_name": "2beapart",
+              "reviews": 46.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 517637453,
+              "host_name": "Loic",
+              "reviews": 31.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 458222405,
+              "host_name": "Guillaume",
+              "reviews": 27.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "top3": [
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 100.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 24554510,
+              "host_name": "Marie",
+              "reviews": 61.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 445856471,
+              "host_name": "Malick",
+              "reviews": 51.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "top3": [
+            {
+              "host_id": 451047676,
+              "host_name": "Aline",
+              "reviews": 149.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 85.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 226216922,
+              "host_name": "Mathilde",
+              "reviews": 69.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "top3": [
+            {
+              "host_id": 532176426,
+              "host_name": "Lina",
+              "reviews": 1187.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 291015206,
+              "host_name": "Bastien",
+              "reviews": 825.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 739.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 316423644,
+              "host_name": "Damien",
+              "reviews": 2217.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 291015206,
+              "host_name": "Bastien",
+              "reviews": 2179.0,
+              "city": "Lyon",
+              "avatar": null
+            },
+            {
+              "host_id": 176904029,
+              "host_name": "Jessica",
+              "reviews": 757.0,
+              "city": "Lyon",
+              "avatar": null
+            }
+          ]
+        }
+      ]
+    },
+    "Pays Basque": {
+      "periods": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9
+        }
+      ],
+      "items": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 30686089,
+              "host_name": "Beatriz",
+              "reviews": 2.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 32364074,
+              "host_name": "Isabelle",
+              "reviews": 2.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 256149514,
+              "host_name": "Marie",
+              "reviews": 2.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10,
+          "top3": [
+            {
+              "host_id": 72726817,
+              "host_name": "Jeff",
+              "reviews": 6.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 22153872,
+              "host_name": "Marine Emilia Odette",
+              "reviews": 5.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 60478842,
+              "host_name": "Alice",
+              "reviews": 4.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11,
+          "top3": [
+            {
+              "host_id": 524335254,
+              "host_name": "Crísti",
+              "reviews": 12.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 96922578,
+              "host_name": "Nicolas",
+              "reviews": 12.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 497802282,
+              "host_name": "Sarah",
+              "reviews": 11.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12,
+          "top3": [
+            {
+              "host_id": 256209240,
+              "host_name": "Loïc",
+              "reviews": 8.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 521477650,
+              "host_name": "Aline",
+              "reviews": 7.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 38680864,
+              "host_name": "Maryse",
+              "reviews": 7.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "top3": [
+            {
+              "host_id": 68044034,
+              "host_name": "Mélanie",
+              "reviews": 15.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 8626558,
+              "host_name": "Gerald",
+              "reviews": 13.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 87013333,
+              "host_name": "Grégoire",
+              "reviews": 13.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "top3": [
+            {
+              "host_id": 168490243,
+              "host_name": "Myriam Et Frédéric",
+              "reviews": 11.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 53721812,
+              "host_name": "Maud & Kévin",
+              "reviews": 9.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 399681189,
+              "host_name": "Laurent",
+              "reviews": 8.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "top3": [
+            {
+              "host_id": 19821988,
+              "host_name": "Mathieu Et Cécile",
+              "reviews": 22.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 97353192,
+              "host_name": "Philippe",
+              "reviews": 22.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 78049238,
+              "host_name": "Thomas",
+              "reviews": 20.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "top3": [
+            {
+              "host_id": 19636076,
+              "host_name": "Andréa",
+              "reviews": 30.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 309936442,
+              "host_name": "Lea",
+              "reviews": 28.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 240599544,
+              "host_name": "Jean-Eudes",
+              "reviews": 22.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "top3": [
+            {
+              "host_id": 91288985,
+              "host_name": "Catherine",
+              "reviews": 39.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 29999117,
+              "host_name": "Monique",
+              "reviews": 37.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 187820784,
+              "host_name": "Anne",
+              "reviews": 33.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "top3": [
+            {
+              "host_id": 117454172,
+              "host_name": "Angèle",
+              "reviews": 45.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 339140919,
+              "host_name": "Vanina",
+              "reviews": 42.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 156651098,
+              "host_name": "Ariane",
+              "reviews": 32.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "top3": [
+            {
+              "host_id": 13319954,
+              "host_name": "Margaux",
+              "reviews": 70.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 249169227,
+              "host_name": "Francoise",
+              "reviews": 52.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 184945495,
+              "host_name": "Welkeys",
+              "reviews": 52.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "top3": [
+            {
+              "host_id": 512354263,
+              "host_name": "Thomas",
+              "reviews": 228.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 11121489,
+              "host_name": "Thomas",
+              "reviews": 167.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 184945495,
+              "host_name": "Welkeys",
+              "reviews": 159.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 72726817,
+              "host_name": "Jeff",
+              "reviews": 579.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 14050591,
+              "host_name": "Nicole",
+              "reviews": 239.0,
+              "city": "Pays Basque",
+              "avatar": null
+            },
+            {
+              "host_id": 122190265,
+              "host_name": "Julie",
+              "reviews": 201.0,
+              "city": "Pays Basque",
+              "avatar": null
+            }
+          ]
+        }
+      ]
+    },
+    "Paris": {
+      "periods": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9
+        }
+      ],
+      "items": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 35988734,
+              "host_name": "Mélanie",
+              "reviews": 7.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 402191311,
+              "host_name": "GuestReady",
+              "reviews": 4.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 25307841,
+              "host_name": "Stephanie",
+              "reviews": 4.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10,
+          "top3": [
+            {
+              "host_id": 2087462,
+              "host_name": "Marc",
+              "reviews": 12.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 27803710,
+              "host_name": "Déborah & Thomas",
+              "reviews": 8.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 31777339,
+              "host_name": "Armand",
+              "reviews": 7.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11,
+          "top3": [
+            {
+              "host_id": 50376407,
+              "host_name": "Isabelle",
+              "reviews": 12.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 133619660,
+              "host_name": "Helena",
+              "reviews": 11.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 283101,
+              "host_name": "Cedric",
+              "reviews": 10.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12,
+          "top3": [
+            {
+              "host_id": 496378886,
+              "host_name": "Joelle",
+              "reviews": 19.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 397076625,
+              "host_name": "Machefert",
+              "reviews": 13.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 57511658,
+              "host_name": "Edith",
+              "reviews": 11.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "top3": [
+            {
+              "host_id": 496378886,
+              "host_name": "Joelle",
+              "reviews": 29.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 3913380,
+              "host_name": "Arnaud-Olivier",
+              "reviews": 20.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 46276280,
+              "host_name": "Romain",
+              "reviews": 16.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "top3": [
+            {
+              "host_id": 315811493,
+              "host_name": "Paris Conciergerie",
+              "reviews": 18.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 181046598,
+              "host_name": "Le Rocroy",
+              "reviews": 14.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 106036302,
+              "host_name": "Anne",
+              "reviews": 10.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "top3": [
+            {
+              "host_id": 43688867,
+              "host_name": "Christine",
+              "reviews": 28.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 36340099,
+              "host_name": "Daman",
+              "reviews": 26.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 24262798,
+              "host_name": "Frederic",
+              "reviews": 25.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "top3": [
+            {
+              "host_id": 15292016,
+              "host_name": "Salomé",
+              "reviews": 32.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 402191311,
+              "host_name": "GuestReady",
+              "reviews": 26.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 15503258,
+              "host_name": "Baptiste Mouret",
+              "reviews": 23.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "top3": [
+            {
+              "host_id": 716205,
+              "host_name": "Ann",
+              "reviews": 41.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 300716705,
+              "host_name": "Armel",
+              "reviews": 41.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 11752293,
+              "host_name": "Elisabeth",
+              "reviews": 34.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "top3": [
+            {
+              "host_id": 89186,
+              "host_name": "Camille",
+              "reviews": 70.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 402191311,
+              "host_name": "GuestReady",
+              "reviews": 60.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 4917004,
+              "host_name": "Damien",
+              "reviews": 45.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "top3": [
+            {
+              "host_id": 334643447,
+              "host_name": "Color Design Hotel",
+              "reviews": 129.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 7642792,
+              "host_name": "Ludovic",
+              "reviews": 111.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 107740981,
+              "host_name": "Françoise",
+              "reviews": 88.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "top3": [
+            {
+              "host_id": 59915865,
+              "host_name": "Mathilde",
+              "reviews": 889.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 68254005,
+              "host_name": "Élise & Sébastien",
+              "reviews": 551.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 2526137,
+              "host_name": "Gilian",
+              "reviews": 383.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 68254005,
+              "host_name": "Élise & Sébastien",
+              "reviews": 881.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 84901734,
+              "host_name": "Alexandra",
+              "reviews": 877.0,
+              "city": "Paris",
+              "avatar": null
+            },
+            {
+              "host_id": 228282543,
+              "host_name": "Marie",
+              "reviews": 541.0,
+              "city": "Paris",
+              "avatar": null
+            }
+          ]
+        }
+      ]
+    },
+    "Bordeaux": {
+      "periods": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9
+        }
+      ],
+      "items": [
+        {
+          "period": "2024-09",
+          "year": 2024,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 91135362,
+              "host_name": "Laura",
+              "reviews": 6.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 321162574,
+              "host_name": "Coralie",
+              "reviews": 4.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 37314741,
+              "host_name": "Céline&Thomas",
+              "reviews": 3.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-10",
+          "year": 2024,
+          "month": 10,
+          "top3": [
+            {
+              "host_id": 302761994,
+              "host_name": "Julien",
+              "reviews": 9.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 505372248,
+              "host_name": "Cedric",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 297645912,
+              "host_name": "WeHost",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-11",
+          "year": 2024,
+          "month": 11,
+          "top3": [
+            {
+              "host_id": 5716002,
+              "host_name": "Charlotte",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 137814736,
+              "host_name": "Louis",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 23494122,
+              "host_name": "Soraya",
+              "reviews": 8.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2024-12",
+          "year": 2024,
+          "month": 12,
+          "top3": [
+            {
+              "host_id": 588413194,
+              "host_name": "Amina",
+              "reviews": 17.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 498748819,
+              "host_name": "Tanguy",
+              "reviews": 11.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 15324644,
+              "host_name": "Aurelien",
+              "reviews": 10.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-01",
+          "year": 2025,
+          "month": 1,
+          "top3": [
+            {
+              "host_id": 193847333,
+              "host_name": "Sonia",
+              "reviews": 19.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 216978708,
+              "host_name": "Benjamin",
+              "reviews": 17.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 106704448,
+              "host_name": "Monique",
+              "reviews": 17.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-02",
+          "year": 2025,
+          "month": 2,
+          "top3": [
+            {
+              "host_id": 269484848,
+              "host_name": "David",
+              "reviews": 10.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 5335618,
+              "host_name": "Lucas",
+              "reviews": 10.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 154167217,
+              "host_name": "Pauline Et Alison",
+              "reviews": 10.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-03",
+          "year": 2025,
+          "month": 3,
+          "top3": [
+            {
+              "host_id": 496416035,
+              "host_name": "Dorian",
+              "reviews": 26.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 108578830,
+              "host_name": "Alexandre",
+              "reviews": 17.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 43426548,
+              "host_name": "Morgane",
+              "reviews": 14.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-04",
+          "year": 2025,
+          "month": 4,
+          "top3": [
+            {
+              "host_id": 127715408,
+              "host_name": "Jeremy",
+              "reviews": 36.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 386701203,
+              "host_name": "Naima",
+              "reviews": 28.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 80297423,
+              "host_name": "Messaoud",
+              "reviews": 21.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-05",
+          "year": 2025,
+          "month": 5,
+          "top3": [
+            {
+              "host_id": 63133881,
+              "host_name": "Danaë",
+              "reviews": 34.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 107011822,
+              "host_name": "Wael",
+              "reviews": 30.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 218791608,
+              "host_name": "Corentin",
+              "reviews": 25.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-06",
+          "year": 2025,
+          "month": 6,
+          "top3": [
+            {
+              "host_id": 18056052,
+              "host_name": "Anne-Sophie",
+              "reviews": 77.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 537584192,
+              "host_name": "Yoan",
+              "reviews": 73.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 20568730,
+              "host_name": "Frederic",
+              "reviews": 69.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-07",
+          "year": 2025,
+          "month": 7,
+          "top3": [
+            {
+              "host_id": 414256747,
+              "host_name": "Alfred",
+              "reviews": 83.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 529882544,
+              "host_name": "Najima",
+              "reviews": 75.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 16900168,
+              "host_name": "Antoine",
+              "reviews": 55.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-08",
+          "year": 2025,
+          "month": 8,
+          "top3": [
+            {
+              "host_id": 70229865,
+              "host_name": "Thomas",
+              "reviews": 367.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 18796190,
+              "host_name": "Julie",
+              "reviews": 276.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 16900168,
+              "host_name": "Antoine",
+              "reviews": 266.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        },
+        {
+          "period": "2025-09",
+          "year": 2025,
+          "month": 9,
+          "top3": [
+            {
+              "host_id": 13870329,
+              "host_name": "Georges",
+              "reviews": 1313.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 409658231,
+              "host_name": "Montempô Bordeaux",
+              "reviews": 779.0,
+              "city": "Bordeaux",
+              "avatar": null
+            },
+            {
+              "host_id": 131423031,
+              "host_name": "Emilie",
+              "reviews": 602.0,
+              "city": "Bordeaux",
+              "avatar": null
+            }
+          ]
+        }
+      ]
+    }
   },
   "cities": {
     "Lyon": {
-      "avg_price": 102.97,
-      "med_price": 81.0,
+      "avg_price": 34.32,
+      "med_price": 27.0,
       "avg_avail": 114.04,
       "count": 9647,
       "nb_hosts": 7279,
@@ -1213,19 +3548,19 @@ const DATA = {
         ]
       },
       "spider_raw": {
-        "Prix moyen": 102.97,
+        "Prix moyen": 34.32,
         "Disponibilité": 114.04,
         "Reviews 12m": 9.12,
-        "Min nights": 2,
+        "Nb nuits min": 2,
         "Nb annonces": 9647
       },
       "investment": {
-        "median_price": 81.0,
+        "median_price": 27.0,
         "avg_reviews": 44.4,
         "avg_availability": 114.04,
         "price_normalized": 0.0,
-        "estimated_revenue": 20327.45,
-        "rank": 3
+        "estimated_revenue": 6775.82,
+        "rank": 2
       },
       "median_price_by_neighbourhood": {
         "labels": [
@@ -1236,11 +3571,11 @@ const DATA = {
           "3e Arrondissement"
         ],
         "values": [
-          93.0,
-          85.67,
-          84.0,
-          81.0,
-          79.17
+          31.0,
+          28.56,
+          28.0,
+          27.0,
+          26.39
         ]
       },
       "room_type_investment": {
@@ -1251,16 +3586,16 @@ const DATA = {
           "Private room"
         ],
         "median_price": [
-          123.0,
-          83.5,
-          84.0,
-          67.88
+          41.0,
+          27.83,
+          28.0,
+          22.62
         ],
         "estimated_revenue": [
-          36240.27,
-          26623.98,
-          20460.58,
-          18916.33
+          12080.09,
+          8874.66,
+          6820.19,
+          6305.44
         ],
         "avg_reviews": [
           51.27,
@@ -1271,8 +3606,8 @@ const DATA = {
       }
     },
     "Paris": {
-      "avg_price": 115.64,
-      "med_price": 85.0,
+      "avg_price": 44.48,
+      "med_price": 32.69,
       "avg_avail": 81.71,
       "count": 24908,
       "nb_hosts": 21252,
@@ -1344,18 +3679,18 @@ const DATA = {
         ]
       },
       "spider_raw": {
-        "Prix moyen": 115.64,
+        "Prix moyen": 44.48,
         "Disponibilité": 81.71,
         "Reviews 12m": 4.75,
-        "Min nights": 4,
+        "Nb nuits min": 4,
         "Nb annonces": 24908
       },
       "investment": {
-        "median_price": 85.0,
+        "median_price": 32.69,
         "avg_reviews": 47.63,
         "avg_availability": 81.71,
-        "price_normalized": 13.33,
-        "estimated_revenue": 24079.73,
+        "price_normalized": 100.0,
+        "estimated_revenue": 9261.43,
         "rank": 1
       },
       "median_price_by_neighbourhood": {
@@ -1367,11 +3702,11 @@ const DATA = {
           "Palais-Bourbon"
         ],
         "values": [
-          140.0,
-          124.0,
-          115.5,
-          110.0,
-          110.0
+          53.85,
+          47.69,
+          44.42,
+          42.31,
+          42.31
         ]
       },
       "room_type_investment": {
@@ -1382,16 +3717,16 @@ const DATA = {
           "Shared room"
         ],
         "median_price": [
-          165.0,
-          89.0,
-          55.0,
-          40.0
+          63.46,
+          34.23,
+          21.15,
+          15.38
         ],
         "estimated_revenue": [
-          35799.17,
-          25270.66,
-          16036.54,
-          9764.57
+          13768.91,
+          9719.48,
+          6167.9,
+          3755.6
         ],
         "avg_reviews": [
           52.04,
@@ -1402,8 +3737,8 @@ const DATA = {
       }
     },
     "Bordeaux": {
-      "avg_price": 128.46,
-      "med_price": 82.0,
+      "avg_price": 42.82,
+      "med_price": 27.33,
       "avg_avail": 141.19,
       "count": 12252,
       "nb_hosts": 9517,
@@ -1475,19 +3810,19 @@ const DATA = {
         ]
       },
       "spider_raw": {
-        "Prix moyen": 128.46,
+        "Prix moyen": 42.82,
         "Disponibilité": 141.19,
         "Reviews 12m": 8.18,
-        "Min nights": 2,
+        "Nb nuits min": 2,
         "Nb annonces": 12252
       },
       "investment": {
-        "median_price": 82.0,
+        "median_price": 27.33,
         "avg_reviews": 38.3,
         "avg_availability": 141.19,
-        "price_normalized": 3.33,
-        "estimated_revenue": 18352.49,
-        "rank": 4
+        "price_normalized": 5.86,
+        "estimated_revenue": 6117.5,
+        "rank": 3
       },
       "median_price_by_neighbourhood": {
         "labels": [
@@ -1498,11 +3833,11 @@ const DATA = {
           "Bordeaux-Martignas-sur-Jalle"
         ],
         "values": [
-          124.5,
-          122.5,
-          96.0,
-          92.0,
-          91.0
+          41.5,
+          40.83,
+          32.0,
+          30.67,
+          30.33
         ]
       },
       "room_type_investment": {
@@ -1513,16 +3848,16 @@ const DATA = {
           "Shared room"
         ],
         "median_price": [
-          90.0,
-          144.86,
-          55.0,
-          26.5
+          30.0,
+          48.29,
+          18.33,
+          8.83
         ],
         "estimated_revenue": [
-          20325.55,
-          17056.93,
-          12004.05,
-          4463.52
+          6775.18,
+          5685.64,
+          4001.35,
+          1487.84
         ],
         "avg_reviews": [
           38.66,
@@ -1533,8 +3868,8 @@ const DATA = {
       }
     },
     "Pays Basque": {
-      "avg_price": 322.99,
-      "med_price": 111.0,
+      "avg_price": 82.82,
+      "med_price": 28.46,
       "avg_avail": 165.73,
       "count": 11845,
       "nb_hosts": 9071,
@@ -1606,19 +3941,19 @@ const DATA = {
         ]
       },
       "spider_raw": {
-        "Prix moyen": 322.99,
+        "Prix moyen": 82.82,
         "Disponibilité": 165.73,
         "Reviews 12m": 6.98,
-        "Min nights": 3,
+        "Nb nuits min": 3,
         "Nb annonces": 11845
       },
       "investment": {
-        "median_price": 111.0,
+        "median_price": 28.46,
         "avg_reviews": 34.83,
         "avg_availability": 165.73,
-        "price_normalized": 100.0,
-        "estimated_revenue": 22119.25,
-        "rank": 2
+        "price_normalized": 25.68,
+        "estimated_revenue": 5671.6,
+        "rank": 4
       },
       "median_price_by_neighbourhood": {
         "labels": [
@@ -1629,11 +3964,11 @@ const DATA = {
           "Bayonne-Nord"
         ],
         "values": [
-          133.0,
-          131.0,
-          130.75,
-          120.0,
-          113.0
+          34.1,
+          33.59,
+          33.53,
+          30.77,
+          28.97
         ]
       },
       "room_type_investment": {
@@ -1644,16 +3979,16 @@ const DATA = {
           "Hotel room"
         ],
         "median_price": [
-          117.0,
-          76.0,
-          42.0,
-          133.0
+          30.0,
+          19.49,
+          10.77,
+          34.1
         ],
         "estimated_revenue": [
-          23722.89,
-          12960.38,
-          11198.73,
-          8001.0
+          6082.79,
+          3323.17,
+          2871.47,
+          2051.54
         ],
         "avg_reviews": [
           33.77,
@@ -1663,6 +3998,100 @@ const DATA = {
         ]
       }
     }
+  },
+  "median_price_by_neighbourhood": {
+    "labels": [
+      "Élysée",
+      "Louvre",
+      "Luxembourg",
+      "Hôtel-de-Ville",
+      "Palais-Bourbon",
+      "Passy",
+      "Bordeaux-Bouliac",
+      "Bordeaux-Saint-Aubin-de-Medoc",
+      "Temple",
+      "Bourse"
+    ],
+    "values": [
+      53.85,
+      47.69,
+      44.42,
+      42.31,
+      42.31,
+      42.31,
+      41.5,
+      40.83,
+      40.38,
+      38.85
+    ]
+  },
+  "price_normalized_by_city": {
+    "labels": [
+      "Paris",
+      "Pays Basque",
+      "Bordeaux",
+      "Lyon"
+    ],
+    "values": [
+      100.0,
+      25.68,
+      5.86,
+      0.0
+    ]
+  },
+  "estimated_revenue_by_city": {
+    "labels": [
+      "Paris",
+      "Lyon",
+      "Bordeaux",
+      "Pays Basque"
+    ],
+    "values": [
+      9261.43,
+      6775.82,
+      6117.5,
+      5671.6
+    ]
+  },
+  "investment_ranking": {
+    "labels": [
+      "Paris",
+      "Lyon",
+      "Bordeaux",
+      "Pays Basque"
+    ],
+    "values": [
+      9261.43,
+      6775.82,
+      6117.5,
+      5671.6
+    ]
+  },
+  "room_type_investment": {
+    "labels": [
+      "Entire home/apt",
+      "Hotel room",
+      "Private room",
+      "Shared room"
+    ],
+    "median_price": [
+      30.56,
+      46.71,
+      20.4,
+      15.71
+    ],
+    "estimated_revenue": [
+      7349.41,
+      8396.54,
+      4949.46,
+      4247.39
+    ],
+    "avg_reviews": [
+      41.1,
+      37.49,
+      43.86,
+      82.44
+    ]
   }
 };
 
@@ -1693,6 +4122,7 @@ function filterCity(city, btn) {
   btn.classList.add('active');
   updateAllCharts();
   updateStats();
+  refreshTopHostsPodiumForActiveCity();
 }
 
 function getCityData() {
@@ -1805,6 +4235,7 @@ function navFromMap(page, city) {
   showPage(page, null);
   updateAllCharts();
   updateStats();
+  refreshTopHostsPodiumForActiveCity();
 }
 
 Chart.defaults.color           = '#5a6a82';
@@ -2025,80 +4456,603 @@ function renderReviewsVille(d) {
   });
 }
 
-function renderSpiderAttractivite(d) {
-  destroyChart('spiderAttractivite');
+// ── PAGE 4 ── Spider
+function renderSpiderAttractiviteD3(d) {
+  const container = d3.select('#spider-chart-attractivite');
+  if (container.empty() || !d || !d.labels || !d.datasets || !d.labels.length) return;
 
-  const canvas = document.getElementById('spider-chart-attractivite');
-  if (!canvas || !d || !d.labels || !d.datasets) return;
+  // Nettoyage complet avant redraw
+  container.selectAll('*').remove();
 
-  const ctx = canvas.getContext('2d');
+  const node = container.node();
+  const width = node.clientWidth || 520;
+  const height = node.clientHeight || 420;
 
-  charts['spiderAttractivite'] = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: d.labels,
-      datasets: d.datasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: '#5a6a82',
-            padding: 12,
-            font: { size: 11 }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const dataset = context.dataset;
-              const metric = context.label;
-              const score = context.raw;
-              const raw = dataset.rawValues ? dataset.rawValues[metric] : null;
+  const margin = 70;
+  const radius = Math.max(40, Math.min(width, height) / 2 - margin);
+  const levels = 5;
+  const angleSlice = (Math.PI * 2) / d.labels.length;
 
-              let suffix = '';
-              if (metric === 'Prix moyen') suffix = ' €';
-              if (metric === 'Disponibilité') suffix = ' j';
-              if (metric === 'Min nights') suffix = ' n';
+  // SVG racine
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
 
-              if (raw !== null && raw !== undefined) {
-                return `${dataset.label} · score ${score}/100 · brut : ${raw}${suffix}`;
-              }
-              return `${dataset.label} : ${score}/100`;
-            }
-          }
-        }
-      },
-      scales: {
-        r: {
-          min: 0,
-          max: 100,
-          ticks: {
-            stepSize: 20,
-            color: '#5a6a82',
-            backdropColor: 'transparent'
-          },
-          grid: {
-            color: '#1e2d45'
-          },
-          angleLines: {
-            color: '#1e2d45'
-          },
-          pointLabels: {
-            color: '#e8edf5',
-            font: {
-              family: "'Outfit', sans-serif",
-              size: 11
-            }
-          }
-        }
-      }
-    }
+  // Groupe centré
+  const g = svg.append('g')
+    .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+  // Tooltip HTML
+  const tooltip = container
+    .append('div')
+    .attr('class', 'spider-tooltip');
+
+  // Echelle radiale
+  const rScale = d3.scaleLinear()
+    .domain([0, 100])
+    .range([0, radius]);
+
+  // Helpers
+  function angleForIndex(i) {
+    return angleSlice * i - Math.PI / 2;
+  }
+
+  function pointForValue(value, i) {
+    const angle = angleForIndex(i);
+    const r = rScale(value);
+    return {
+      x: r * Math.cos(angle),
+      y: r * Math.sin(angle),
+      angle
+    };
+  }
+
+  // ─────────────────────────────
+  // Grille polygonale
+  // ─────────────────────────────
+  for (let level = 1; level <= levels; level++) {
+    const levelValue = (100 / levels) * level;
+
+    const points = d.labels.map((_, i) => {
+      const p = pointForValue(levelValue, i);
+      return [p.x, p.y];
+    });
+
+    g.append('polygon')
+      .attr('class', 'spider-grid')
+      .attr('points', points.map(p => p.join(',')).join(' '))
+      .attr('stroke-width', 1);
+
+    g.append('text')
+      .attr('x', 6)
+      .attr('y', -rScale(levelValue) + 12)
+      .attr('fill', '#5a6a82')
+      .attr('font-size', 10)
+      .text(`${Math.round(levelValue)}`);
+  }
+
+  // Cercle central optionnel
+  g.append('circle')
+    .attr('r', 2)
+    .attr('fill', '#5a6a82')
+    .attr('opacity', 0.5);
+
+  // ─────────────────────────────
+  // Axes + labels
+  // ─────────────────────────────
+  d.labels.forEach((label, i) => {
+    const axisPoint = pointForValue(100, i);
+
+    g.append('line')
+      .attr('class', 'spider-axis-line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', axisPoint.x)
+      .attr('y2', axisPoint.y);
+
+    const labelOffset = 24;
+    const labelPoint = {
+      x: (rScale(100) + labelOffset) * Math.cos(axisPoint.angle),
+      y: (rScale(100) + labelOffset) * Math.sin(axisPoint.angle)
+    };
+
+    g.append('text')
+      .attr('class', 'spider-axis-label')
+      .attr('x', labelPoint.x)
+      .attr('y', labelPoint.y)
+      .attr(
+        'text-anchor',
+        Math.abs(Math.cos(axisPoint.angle)) < 0.2
+          ? 'middle'
+          : Math.cos(axisPoint.angle) > 0
+            ? 'start'
+            : 'end'
+      )
+      .attr(
+        'dominant-baseline',
+        Math.abs(Math.sin(axisPoint.angle)) < 0.2
+          ? 'middle'
+          : Math.sin(axisPoint.angle) > 0
+            ? 'hanging'
+            : 'auto'
+      )
+      .text(label);
+  });
+
+  // ─────────────────────────────
+  // Générateur du polygone radar
+  // IMPORTANT :
+  // même repère cartésien que les points
+  // ─────────────────────────────
+  const radarLine = d3.line()
+    .x((d, i) => pointForValue(d, i).x)
+    .y((d, i) => pointForValue(d, i).y)
+    .curve(d3.curveLinearClosed);
+
+  const seriesGroup = g.append('g');
+
+  // ─────────────────────────────
+  // Séries
+  // ─────────────────────────────
+  d.datasets.forEach((dataset, datasetIndex) => {
+    const color = dataset.borderColor || '#00e5b0';
+    const fillColor = dataset.backgroundColor || '#00e5b022';
+    const values = dataset.data.map(v => Number(v) || 0);
+
+    const series = seriesGroup.append('g')
+      .attr('class', 'spider-series-group');
+
+    // Polygone
+    series.append('path')
+      .datum(values)
+      .attr('class', 'spider-series')
+      .attr('d', radarLine)
+      .attr('fill', fillColor)
+      .attr('stroke', color)
+      .attr('opacity', 0)
+      .transition()
+      .duration(700)
+      .delay(datasetIndex * 120)
+      .attr('opacity', 1);
+
+    // Points
+    values.forEach((value, i) => {
+      const metric = d.labels[i];
+      const raw = dataset.rawValues ? dataset.rawValues[metric] : value;
+      const p = pointForValue(value, i);
+
+      series.append('circle')
+        .attr('class', 'spider-point')
+        .attr('cx', p.x)
+        .attr('cy', p.y)
+        .attr('r', 0)
+        .attr('fill', '#080c12')
+        .attr('stroke', color)
+        .on('mousemove', function(event) {
+          const [mx, my] = d3.pointer(event, node);
+
+          tooltip
+            .style('opacity', 1)
+            .style('left', `${mx}px`)
+            .style('top', `${my}px`)
+            .html(`
+              <strong style="color:${color}">${dataset.label}</strong><br>
+              ${metric}<br>
+              Score normalisé : <strong>${value}</strong><br>
+              Valeur brute : <strong>${raw}</strong>
+            `);
+        })
+        .on('mouseleave', function() {
+          tooltip.style('opacity', 0);
+        })
+        .transition()
+        .duration(500)
+        .delay(350 + datasetIndex * 120 + i * 40)
+        .attr('r', 4);
+    });
+  });
+
+  // ─────────────────────────────
+  // Légende
+  // ─────────────────────────────
+  const legend = svg.append('g')
+    .attr('transform', 'translate(18, 18)');
+
+  d.datasets.forEach((dataset, i) => {
+    const item = legend.append('g')
+      .attr('transform', `translate(0, ${i * 20})`);
+
+    item.append('line')
+      .attr('x1', 0)
+      .attr('x2', 18)
+      .attr('y1', 0)
+      .attr('y2', 0)
+      .attr('stroke', dataset.borderColor || '#00e5b0')
+      .attr('stroke-width', 3);
+
+    item.append('text')
+      .attr('x', 24)
+      .attr('y', 4)
+      .attr('fill', '#e8edf5')
+      .attr('font-size', 11)
+      .text(dataset.label);
   });
 }
+
+// Gérer le resize en cas de changelment de la taille du container du spider
+let spiderResizeTimer = null;
+
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+    if (document.getElementById('top-host-podium')) {
+      initTopHostsPodiumD3();
+      updateTopHostsPodium(false);
+    }
+  }, 120);
+});
+
+
+// Générer le podium
+let topHostsTimeline = [];
+let topHostsPeriods = [];
+let topHostsAnimation = null;
+let topHostsAnimationIndex = 0;
+let topHostsPodiumSvg = null;
+let topHostsPodiumRoot = null;
+
+function getMonthLabel(month) {
+  const labels = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+  return labels[month - 1] || String(month);
+}
+
+function getInitials(name) {
+  return (name || '')
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(x => x[0].toUpperCase())
+    .join('');
+}
+
+function truncateText(text, maxLength = 18) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength - 1) + '…' : text;
+}
+
+function initTopHostsPodiumD3() {
+  const container = d3.select('#top-host-podium');
+  if (container.empty()) return;
+
+  container.selectAll('*').remove();
+
+  const node = container.node();
+  const width = node.clientWidth || 520;
+  const height = node.clientHeight || 420;
+
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  const root = svg.append('g').attr('class', 'top-hosts-podium-root');
+
+  const podiumSlots = [
+    { rank: 2, x: width * 0.25, h: 150 },
+    { rank: 1, x: width * 0.50, h: 220 },
+    { rank: 3, x: width * 0.75, h: 120 },
+  ];
+
+  const rectWidth = 135;
+  const baseY = height - 50;
+
+  root.append('g')
+    .attr('class', 'podium-blocks')
+    .selectAll('.podium-block')
+    .data(podiumSlots)
+    .enter()
+    .append('rect')
+    .attr('class', d => `podium-block podium-rank-${d.rank}`)
+    .attr('x', d => d.x - rectWidth / 2)
+    .attr('y', d => baseY - d.h)
+    .attr('width', rectWidth)
+    .attr('height', d => d.h)
+    .attr('rx', 8);
+
+  root.append('g').attr('class', 'hosts-layer');
+
+  topHostsPodiumSvg = svg;
+  topHostsPodiumRoot = {
+    width,
+    height,
+    baseY,
+    rectWidth,
+    podiumSlots,
+    hostsLayer: root.select('.hosts-layer')
+  };
+}
+
+function updateTopHostsPodiumHosts(periodData, animate = true) {
+  if (!topHostsPodiumRoot) return;
+
+  const { baseY, podiumSlots, hostsLayer } = topHostsPodiumRoot;
+
+  const rawData = Array.isArray(periodData?.top3) ? periodData.top3 : [];
+
+  const rankedData = [
+    rawData[1] ? { ...rawData[1], rank: 2 } : null,
+    rawData[0] ? { ...rawData[0], rank: 1 } : null,
+    rawData[2] ? { ...rawData[2], rank: 3 } : null,
+  ].filter(Boolean);
+
+  const withPositions = rankedData
+    .map(item => {
+      const slot = podiumSlots.find(p => p.rank === item.rank);
+      if (!slot) return null;
+
+      return {
+        ...item,
+        host_name: item.host_name || item.host || item.name || 'Hôte inconnu',
+        reviews: Number(item.reviews ?? item.review_count ?? item.count ?? 0),
+        city: item.city || item.city_name || '',
+        rank: item.rank,
+        x: Number(slot.x),
+        y: Number(baseY - slot.h - 68)
+      };
+    })
+    .filter(d => d && Number.isFinite(d.x) && Number.isFinite(d.y));
+
+
+  const selection = hostsLayer
+    .selectAll('.host-group')
+    .data(withPositions, d => d.rank);
+
+  const enter = selection.enter()
+    .append('g')
+    .attr('class', d => `host-group rank-${d.rank}`)
+    .attr('transform', d => `translate(${d.x}, ${d.y + 60})`)
+    .style('opacity', 0);
+
+  enter.append('text')
+    .attr('class', 'host-rank-label')
+    .attr('text-anchor', 'middle')
+    .attr('y', -58);
+
+  enter.append('circle')
+    .attr('class', 'host-avatar-ring')
+    .attr('r', 42);
+
+  enter.append('circle')
+    .attr('class', 'host-avatar-fill')
+    .attr('r', 36)
+    .attr('fill', '#d9dde5');
+
+  enter.append('text')
+    .attr('class', 'host-initials')
+    .attr('text-anchor', 'middle')
+    .attr('dy', 6);
+
+  enter.append('text')
+    .attr('class', 'host-name')
+    .attr('text-anchor', 'middle')
+    .attr('y', 62);
+
+  enter.append('text')
+    .attr('class', 'host-score')
+    .attr('text-anchor', 'middle')
+    .attr('y', 96);
+
+  enter.append('text')
+    .attr('class', 'host-city')
+    .attr('text-anchor', 'middle')
+    .attr('y', 116);
+
+  const merged = enter.merge(selection);
+
+  if (animate) {
+    merged
+      .transition()
+      .duration(450)
+      .attr('transform', d => `translate(${d.x}, ${d.y + 70})`)
+      .style('opacity', 0);
+  }
+
+  merged
+    .transition()
+    .delay(animate ? 660 : 0)
+    .duration(10)
+    .on('start', function(datum) {
+      const g = d3.select(this);
+
+      g.attr('transform', `translate(${datum.x}, ${datum.y + 70})`);
+      g.select('.host-rank-label').text(`#${datum.rank}`);
+      g.select('.host-initials').text(getInitials(datum.host_name));
+      g.select('.host-name').text(truncateText(datum.host_name, 16));
+      g.select('.host-score').text(`${Math.round(datum.reviews)} reviews`);
+      g.select('.host-city').text(datum.city || '');
+    })
+    .transition()
+    .duration(750)
+    .attr('transform', d => `translate(${d.x}, ${d.y})`)
+    .style('opacity', 1);
+
+  selection.exit()
+    .transition()
+    .duration(300)
+    .style('opacity', 0)
+    .remove();
+}
+
+function getSelectedTopHostsPeriodData() {
+  const year = +document.getElementById('top-host-year').value;
+  const month = +document.getElementById('top-host-month').value;
+  return topHostsTimeline.find(d => d.year === year && d.month === month) || null;
+}
+
+function updateTopHostsPodium(animate = false) {
+  const periodData = getSelectedTopHostsPeriodData();
+  updateTopHostsPodiumHosts(periodData, animate);
+
+  const label = document.getElementById('top-host-current-period');
+  if (label && periodData) {
+    label.textContent = `Période : ${getMonthLabel(periodData.month)} ${periodData.year}`;
+  }
+}
+
+//------------ Init des contrôles
+  //-- Récupérer la timeline de l'animation en fonction de la sélection
+function getTopHostsTimelineForActiveCity() {
+  const timelines = DATA.top_hosts_reviews_timeline || {};
+
+  if (activeCity === 'Toutes') {
+    return timelines['Toutes'] || { periods: [], items: [] };
+  }
+
+  return timelines[activeCity] || timelines['Toutes'] || { periods: [], items: [] };
+}
+
+
+  //-- Ajout de la fonction de refresh du podium. Idée : Au moment de l'initialisation, cette fonction charge les données en fonction de la sélection active
+function refreshTopHostsPodiumForActiveCity() {
+  stopTopHostsAnimation();
+  initTopHostsPodiumD3();
+
+  const timeline = getTopHostsTimelineForActiveCity();
+
+  topHostsTimeline = timeline.items || [];
+  topHostsPeriods = timeline.periods || [];
+  topHostsAnimationIndex = 0;
+
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const label = document.getElementById('top-host-current-period');
+
+  if (!yearSelect || !monthSelect || !label) return;
+
+  if (!topHostsPeriods.length) {
+    yearSelect.innerHTML = '';
+    monthSelect.innerHTML = '';
+    label.textContent = 'Période : —';
+    renderTopHostsPodiumD3(null);
+    return;
+  }
+
+  const years = [...new Set(topHostsPeriods.map(p => p.year))].sort((a, b) => a - b);
+
+  yearSelect.innerHTML = years
+    .map(y => `<option value="${y}">${y}</option>`)
+    .join('');
+
+  yearSelect.value = years[0];
+  updateTopHostsMonthOptions(+yearSelect.value);
+  updateTopHostsPodium();
+}
+
+function initTopHostsPodiumControls() {
+  const yearSelect = document.getElementById('top-host-year');
+  const monthSelect = document.getElementById('top-host-month');
+  const playBtn = document.getElementById('top-host-play-btn');
+
+  if (!yearSelect || !monthSelect || !playBtn) return;
+
+  yearSelect.addEventListener('change', () => {
+    stopTopHostsAnimation();
+    updateTopHostsMonthOptions(+yearSelect.value);
+    updateTopHostsPodium();
+  });
+
+  monthSelect.addEventListener('change', () => {
+    stopTopHostsAnimation();
+    updateTopHostsPodium();
+  });
+
+  playBtn.addEventListener('click', toggleTopHostsAnimation);
+
+  refreshTopHostsPodiumForActiveCity();
+}
+
+// ------------Mise à jour des mois disponibles pour une année donnée
+function updateTopHostsMonthOptions(selectedYear) {
+  const monthSelect = document.getElementById('top-host-month');
+  if (!monthSelect) return;
+
+  const months = topHostsPeriods
+    .filter(p => p.year === +selectedYear)
+    .map(p => p.month)
+    .sort((a, b) => a - b);
+
+  monthSelect.innerHTML = months
+    .map(m => `<option value="${m}">${getMonthLabel(m)}</option>`)
+    .join('');
+
+  if (months.length) {
+    monthSelect.value = months[0];
+  }
+}
+
+function stopTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
+  if (topHostsAnimation) {
+    clearInterval(topHostsAnimation);
+    topHostsAnimation = null;
+  }
+  if (btn) btn.textContent = '▶ Lancer';
+}
+
+
+function toggleTopHostsAnimation() {
+  const btn = document.getElementById('top-host-play-btn');
+  if (!btn || !topHostsPeriods.length) return;
+
+  if (topHostsAnimation) {
+    stopTopHostsAnimation();
+    return;
+  }
+
+  const currentYear = +document.getElementById('top-host-year').value;
+  const currentMonth = +document.getElementById('top-host-month').value;
+
+  const startIndex = topHostsPeriods.findIndex(
+    p => p.year === currentYear && p.month === currentMonth
+  );
+
+  topHostsAnimationIndex = startIndex >= 0 ? startIndex : 0;
+  btn.textContent = '⏸ Stop';
+
+  topHostsAnimation = setInterval(() => {
+    if (topHostsAnimationIndex >= topHostsPeriods.length) {
+      stopTopHostsAnimation();
+      return;
+    }
+
+    const period = topHostsPeriods[topHostsAnimationIndex];
+    const yearSelect = document.getElementById('top-host-year');
+    const monthSelect = document.getElementById('top-host-month');
+
+    yearSelect.value = period.year;
+    updateTopHostsMonthOptions(period.year);
+    monthSelect.value = period.month;
+
+    updateTopHostsPodium(true);
+    topHostsAnimationIndex += 1;
+  }, 2000);
+}
+
+
+window.addEventListener('resize', () => {
+  clearTimeout(spiderResizeTimer);
+  spiderResizeTimer = setTimeout(() => {
+    const d = getCityData();
+    renderSpiderAttractiviteD3(d.spider_attractivite);
+    updateTopHostsPodium();
+  }, 120);
+});
 
 function renderMedianPriceByNeighbourhood(d) {
   destroyChart('medianPriceByNeighbourhood');
@@ -2311,7 +5265,7 @@ function updateAllCharts() {
   renderTopHosts(d.top_hosts);
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
-  renderSpiderAttractivite(d.spider_attractivite);
+  renderSpiderAttractiviteD3(d.spider_attractivite);
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
   renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
@@ -2322,6 +5276,7 @@ function updateAllCharts() {
 document.addEventListener('DOMContentLoaded', () => {
   updateStats();
   updateAllCharts();
+  initTopHostsPodiumControls();
   initMap();
 });
 
