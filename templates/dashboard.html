@@ -423,11 +423,55 @@
       min-width: 0;
     }
 
-    #p4 .ranking-card canvas {
-      width: 100% !important;
-      height: 100% !important;
+    .ranking-d3-container {
+      width: 100%;
+      height: 100%;
       min-height: 360px;
       flex: 1;
+    }
+
+    .ranking-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ── PAGE 4 : Bubble chart pleine largeur ── */
+    #p4 .bubble-card {
+      min-height: 420px !important;
+      height: 500px !important;
+      max-height: 560px !important;
+    }
+
+    .bubble-d3-container {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      flex: 1;
+      position: relative;
+    }
+
+    .bubble-d3-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .bubble-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 22, 35, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      white-space: nowrap;
+      z-index: 10;
     }
 
     /* Tooltip spider */
@@ -491,9 +535,14 @@
 
       .spider-d3-container,
       #mini-map,
-      #p4 .ranking-card canvas {
+      .ranking-d3-container {
         min-height: 320px;
         height: 320px !important;
+      }
+
+      #p4 .bubble-card {
+        height: auto !important;
+        min-height: 260px !important;
       }
     }
 
@@ -556,7 +605,7 @@
     .podium-d3-container {
       width: 100%;
       height: 100%;
-      min-height: 360px;
+      min-height: 260px;
       position: relative;
       flex: 1;
     }
@@ -595,23 +644,23 @@
 
     .host-name {
       fill: var(--text);
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
     }
 
     .host-score {
       fill: var(--muted);
-      font-size: 12px;
+      font-size: 10px;
     }
 
     .host-city {
       fill: var(--muted);
-      font-size: 11px;
+      font-size: 9px;
     }
 
     .host-rank-label {
       fill: var(--text);
-      font-size: 20px;
+      font-size: 15px;
       font-weight: 800;
     }
 
@@ -938,7 +987,7 @@
           </div>
           <span class="chart-card-badge">Ranking</span>
         </div>
-        <canvas id="chart-ranking-villes"></canvas>
+        <div id="ranking-villes-d3" class="ranking-d3-container"></div>
       </div>
 
       <!-- Colonne 3 : Ranking temporel des hôtes-->
@@ -973,6 +1022,19 @@
 
         <div id="top-host-podium" class="podium-d3-container"></div>
       </div>
+    </div><!-- fin charts-grid-3 -->
+
+    <!-- Ligne 2 : Bubble chart pleine largeur -->
+    <div class="chart-card bubble-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Prix · Disponibilité · Volume de listings</div>
+          <div class="chart-card-sub">Synthèse offre / prix / accessibilité — toutes villes</div>
+        </div>
+        <span class="chart-card-badge">Bubble chart</span>
+      </div>
+      <div id="bubble-chart-d3" class="bubble-d3-container"></div>
+    </div>
 
   </section>
 
@@ -1641,6 +1703,313 @@ function renderSpiderAttractiviteD3(d) {
   });
 }
 
+// ── PAGE 4 ── Ranking D3 (score composite = moyenne des 5 indicateurs normalisés)
+function renderRankingVillesD3() {
+  const container = d3.select('#ranking-villes-d3');
+  if (container.empty()) return;
+
+  container.selectAll('*').remove();
+
+  const spiderData = DATA.spider_attractivite;
+  if (!spiderData || !spiderData.datasets || !spiderData.datasets.length) return;
+
+  const node = container.node();
+  const W = node.clientWidth || 420;
+  const H = node.clientHeight || 420;
+
+  // Score composite : moyenne des 5 valeurs normalisées du radar
+  const cities = spiderData.datasets.map(ds => ({
+    label: ds.label,
+    color: ds.borderColor || '#00e5b0',
+    score: ds.data.reduce((s, v) => s + (Number(v) || 0), 0) / ds.data.length
+  }));
+  cities.sort((a, b) => b.score - a.score);
+
+  const margin = { top: 24, right: 56, bottom: 34, left: 132 };
+  const innerW = W - margin.left - margin.right;
+  const innerH = H - margin.top - margin.bottom;
+  const rowH   = innerH / cities.length;
+  const barH   = Math.min(44, rowH * 0.52);
+
+  const xScale = d3.scaleLinear().domain([0, 100]).range([0, innerW]);
+
+  const svg = container
+    .append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // ── Grille verticale ──
+  [0, 25, 50, 75, 100].forEach(v => {
+    g.append('line')
+      .attr('x1', xScale(v)).attr('x2', xScale(v))
+      .attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', v === 0 ? '#2a3a58' : '#1a2540')
+      .attr('stroke-width', 1)
+      .attr('stroke-dasharray', v === 0 ? 'none' : '3,4');
+
+    g.append('text')
+      .attr('x', xScale(v))
+      .attr('y', innerH + 14)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#3d5170')
+      .attr('font-size', 9)
+      .text(v);
+  });
+
+  // ── Label axe X ──
+  g.append('text')
+    .attr('x', innerW / 2)
+    .attr('y', innerH + 28)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#3d5170')
+    .attr('font-size', 9)
+    .attr('letter-spacing', '0.04em')
+    .text('score composite (0 – 100)');
+
+  // ── Barres par ville ──
+  cities.forEach((city, i) => {
+    const midY = rowH * i + rowH / 2;
+    const barY = midY - barH / 2;
+
+    // Badge rang
+    g.append('circle')
+      .attr('cx', -108).attr('cy', midY).attr('r', 13)
+      .attr('fill', city.color)
+      .attr('opacity', 0.18);
+
+    g.append('text')
+      .attr('x', -108).attr('y', midY + 5)
+      .attr('text-anchor', 'middle')
+      .attr('fill', city.color)
+      .attr('font-size', 13)
+      .attr('font-weight', '700')
+      .text(i + 1);
+
+    // Nom de la ville
+    g.append('text')
+      .attr('x', -88).attr('y', midY + 5)
+      .attr('text-anchor', 'start')
+      .attr('fill', i === 0 ? '#e8edf5' : '#b0bcd0')
+      .attr('font-size', 12)
+      .attr('font-weight', i === 0 ? '700' : '400')
+      .text(city.label);
+
+    // Track (fond de barre)
+    g.append('rect')
+      .attr('x', 0).attr('y', barY)
+      .attr('width', innerW).attr('height', barH)
+      .attr('fill', '#131e30')
+      .attr('rx', 5);
+
+    // Barre colorée (animée)
+    g.append('rect')
+      .attr('x', 0).attr('y', barY)
+      .attr('width', 0).attr('height', barH)
+      .attr('fill', city.color)
+      .attr('opacity', 0.82)
+      .attr('rx', 5)
+      .transition()
+      .duration(700)
+      .delay(i * 130)
+      .ease(d3.easeCubicOut)
+      .attr('width', xScale(city.score));
+
+    // Score (apparaît après la barre)
+    g.append('text')
+      .attr('x', xScale(city.score) + 7)
+      .attr('y', midY + 5)
+      .attr('fill', city.color)
+      .attr('font-size', 11)
+      .attr('font-weight', '600')
+      .attr('opacity', 0)
+      .transition()
+      .duration(300)
+      .delay(i * 130 + 680)
+      .attr('opacity', 1)
+      .text(city.score.toFixed(1));
+  });
+}
+
+// ── PAGE 4 ── Bubble chart D3 (prix / dispo / volume)
+function renderBubbleChartD3() {
+  const container = d3.select('#bubble-chart-d3');
+  if (container.empty()) return;
+
+  container.selectAll('*').remove();
+
+  const spiderData = DATA.spider_attractivite;
+  if (!spiderData || !spiderData.datasets || !spiderData.datasets.length) return;
+
+  const node = container.node();
+  const W = node.clientWidth  || 860;
+  const H = node.clientHeight || 310;
+
+  const cities = spiderData.datasets.map(ds => ({
+    label:  ds.label,
+    color:  ds.borderColor || '#00e5b0',
+    price:  ds.rawValues['Prix moyen'],
+    dispo:  ds.rawValues['Disponibilité'],
+    volume: ds.rawValues['Nb annonces']
+  }));
+
+  const margin = { top: 38, right: 52, bottom: 54, left: 64 };
+  const innerW = W - margin.left - margin.right;
+  const innerH = H - margin.top  - margin.bottom;
+
+  const xPad = 14, yPad = 28;
+  const xScale = d3.scaleLinear()
+    .domain([d3.min(cities, d => d.price) - xPad, d3.max(cities, d => d.price) + xPad])
+    .range([0, innerW]);
+  const yScale = d3.scaleLinear()
+    .domain([d3.min(cities, d => d.dispo) - yPad, d3.max(cities, d => d.dispo) + yPad])
+    .range([innerH, 0]);
+  const rScale = d3.scaleSqrt()
+    .domain([0, d3.max(cities, d => d.volume)])
+    .range([0, 40]);
+
+  const svg = container.append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet');
+
+  // Dégradés radiaux par ville (reflet de lumière)
+  const defs = svg.append('defs');
+  cities.forEach(city => {
+    const gid = `bgrad-${city.label.replace(/\s+/g, '-')}`;
+    const grad = defs.append('radialGradient')
+      .attr('id', gid)
+      .attr('cx', '33%').attr('cy', '33%').attr('r', '67%');
+    grad.append('stop').attr('offset', '0%')
+      .attr('stop-color', '#ffffff').attr('stop-opacity', 0.40);
+    grad.append('stop').attr('offset', '100%')
+      .attr('stop-color', city.color).attr('stop-opacity', 0.82);
+  });
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // Tooltip
+  const tooltip = container.append('div').attr('class', 'bubble-tooltip');
+
+  // ── Grille horizontale (Y) ──
+  yScale.ticks(5).forEach(v => {
+    g.append('line')
+      .attr('x1', 0).attr('x2', innerW)
+      .attr('y1', yScale(v)).attr('y2', yScale(v))
+      .attr('stroke', '#1a2540').attr('stroke-width', 1)
+      .attr('stroke-dasharray', '3,4');
+    g.append('text')
+      .attr('x', -10).attr('y', yScale(v) + 4)
+      .attr('text-anchor', 'end')
+      .attr('fill', '#3d5170').attr('font-size', 9)
+      .text(Math.round(v));
+  });
+
+  // ── Grille verticale (X) ──
+  xScale.ticks(6).forEach(v => {
+    g.append('line')
+      .attr('x1', xScale(v)).attr('x2', xScale(v))
+      .attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', '#1a2540').attr('stroke-width', 1)
+      .attr('stroke-dasharray', '3,4');
+    g.append('text')
+      .attr('x', xScale(v)).attr('y', innerH + 14)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#3d5170').attr('font-size', 9)
+      .text(Math.round(v) + ' €');
+  });
+
+  // ── Axes bordures ──
+  g.append('line')
+    .attr('x1', 0).attr('x2', innerW)
+    .attr('y1', innerH).attr('y2', innerH)
+    .attr('stroke', '#2a3a58').attr('stroke-width', 1);
+  g.append('line')
+    .attr('x1', 0).attr('x2', 0)
+    .attr('y1', 0).attr('y2', innerH)
+    .attr('stroke', '#2a3a58').attr('stroke-width', 1);
+
+  // ── Labels axes ──
+  g.append('text')
+    .attr('x', innerW / 2).attr('y', innerH + 38)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#5a6a82').attr('font-size', 10)
+    .text('Prix moyen (€ / nuit)');
+
+  g.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('x', -innerH / 2).attr('y', -48)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#5a6a82').attr('font-size', 10)
+    .text('Disponibilité (jours / an)');
+
+  // ── Note taille des bulles ──
+  g.append('text')
+    .attr('x', innerW).attr('y', innerH + 38)
+    .attr('text-anchor', 'end')
+    .attr('fill', '#3d5170').attr('font-size', 9)
+    .attr('font-style', 'italic');
+
+  // ── Bulles ──
+  cities.forEach((city, i) => {
+    const cx  = xScale(city.price);
+    const cy  = yScale(city.dispo);
+    const r   = rScale(city.volume);
+    const gid = `bgrad-${city.label.replace(/\s+/g, '-')}`;
+
+    const grp = g.append('g').style('cursor', 'pointer');
+
+    // Halo externe
+    grp.append('circle')
+      .attr('cx', cx).attr('cy', cy).attr('r', 0)
+      .attr('fill', city.color).attr('opacity', 0.10)
+      .transition().duration(650).delay(i * 110).ease(d3.easeCubicOut)
+      .attr('r', r + 14);
+
+    // Bulle principale avec dégradé
+    grp.append('circle')
+      .attr('cx', cx).attr('cy', cy).attr('r', 0)
+      .attr('fill', `url(#${gid})`)
+      .attr('stroke', city.color).attr('stroke-width', 1.8)
+      .transition().duration(650).delay(i * 110).ease(d3.easeCubicOut)
+      .attr('r', r);
+
+    // Label dans la bulle
+    const fontSize = Math.max(8, Math.min(11, r * 0.50));
+    g.append('text')
+      .attr('x', cx).attr('y', cy + fontSize * 0.38)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#e8edf5')
+      .attr('font-size', fontSize)
+      .attr('font-weight', '700')
+      .attr('stroke', '#080c12').attr('stroke-width', 2.5)
+      .attr('paint-order', 'stroke fill')
+      .attr('pointer-events', 'none')
+      .attr('opacity', 0)
+      .transition().duration(300).delay(i * 110 + 600)
+      .attr('opacity', 1)
+      .text(city.label);
+
+    // Tooltip
+    grp
+      .on('mousemove', function(event) {
+        const [mx, my] = d3.pointer(event, node);
+        tooltip
+          .style('opacity', 1)
+          .style('left', `${mx + 14}px`)
+          .style('top',  `${my - 14}px`)
+          .html(`
+            <strong style="color:${city.color}">${city.label}</strong><br>
+            Prix moyen : <strong>${city.price.toFixed(2)} €/nuit</strong><br>
+            Disponibilité : <strong>${city.dispo.toFixed(0)} jours/an</strong><br>
+            Listings : <strong>${city.volume.toLocaleString('fr-FR')}</strong>
+          `);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+  });
+}
+
 // Gérer le resize en cas de changelment de la taille du container du spider
 let spiderResizeTimer = null;
 
@@ -1649,6 +2018,8 @@ window.addEventListener('resize', () => {
   spiderResizeTimer = setTimeout(() => {
     const d = getCityData();
     renderSpiderAttractiviteD3(d.spider_attractivite);
+    renderRankingVillesD3();
+    renderBubbleChartD3();
     if (document.getElementById('top-host-podium')) {
       initTopHostsPodiumD3();
       updateTopHostsPodium(false);
@@ -1695,7 +2066,7 @@ function initTopHostsPodiumD3() {
 
   const node = container.node();
   const width = node.clientWidth || 520;
-  const height = node.clientHeight || 420;
+  const height = node.clientHeight || 340;
 
   const svg = container
     .append('svg')
@@ -1705,13 +2076,13 @@ function initTopHostsPodiumD3() {
   const root = svg.append('g').attr('class', 'top-hosts-podium-root');
 
   const podiumSlots = [
-    { rank: 2, x: width * 0.25, h: 150 },
-    { rank: 1, x: width * 0.50, h: 220 },
-    { rank: 3, x: width * 0.75, h: 120 },
+    { rank: 2, x: width * 0.25, h: 110 },
+    { rank: 1, x: width * 0.50, h: 165 },
+    { rank: 3, x: width * 0.75, h: 85 },
   ];
 
-  const rectWidth = 135;
-  const baseY = height - 50;
+  const rectWidth = 105;
+  const baseY = height - 40;
 
   root.append('g')
     .attr('class', 'podium-blocks')
@@ -1764,7 +2135,7 @@ function updateTopHostsPodiumHosts(periodData, animate = true) {
         city: item.city || item.city_name || '',
         rank: item.rank,
         x: Number(slot.x),
-        y: Number(baseY - slot.h - 68)
+        y: Number(baseY - slot.h - 52)
       };
     })
     .filter(d => d && Number.isFinite(d.x) && Number.isFinite(d.y));
@@ -1783,15 +2154,15 @@ function updateTopHostsPodiumHosts(periodData, animate = true) {
   enter.append('text')
     .attr('class', 'host-rank-label')
     .attr('text-anchor', 'middle')
-    .attr('y', -58);
+    .attr('y', -44);
 
   enter.append('circle')
     .attr('class', 'host-avatar-ring')
-    .attr('r', 42);
+    .attr('r', 32);
 
   enter.append('circle')
     .attr('class', 'host-avatar-fill')
-    .attr('r', 36)
+    .attr('r', 26)
     .attr('fill', '#d9dde5');
 
   enter.append('text')
@@ -1802,17 +2173,17 @@ function updateTopHostsPodiumHosts(periodData, animate = true) {
   enter.append('text')
     .attr('class', 'host-name')
     .attr('text-anchor', 'middle')
-    .attr('y', 62);
+    .attr('y', 46);
 
   enter.append('text')
     .attr('class', 'host-score')
     .attr('text-anchor', 'middle')
-    .attr('y', 96);
+    .attr('y', 62);
 
   enter.append('text')
     .attr('class', 'host-city')
     .attr('text-anchor', 'middle')
-    .attr('y', 116);
+    .attr('y', 76);
 
   const merged = enter.merge(selection);
 
@@ -2200,7 +2571,7 @@ function updateStats() {
     : (d.investment?.median_price || 0);
 
   const investDemand = activeCity === 'Toutes'
-    ? 0
+    ? averageOfArray(Object.values(DATA.cities).map(c => c.investment?.avg_reviews || 0))
     : (d.investment?.avg_reviews || 0);
 
   const investScore = activeCity === 'Toutes'
@@ -2212,7 +2583,7 @@ function updateStats() {
     : ('#' + (d.investment?.rank || '-'));
 
   document.getElementById('stat-invest-revenue').textContent = Math.round(investMedianPrice) + ' €';
-  document.getElementById('stat-invest-demand').textContent  = activeCity === 'Toutes' ? '—' : investDemand.toFixed(1);
+  document.getElementById('stat-invest-demand').textContent  = investDemand.toFixed(1);
   document.getElementById('stat-invest-score').textContent   = investScore.toFixed(1);
   document.getElementById('stat-invest-city').textContent    = investRank;
 }
@@ -2227,6 +2598,8 @@ function updateAllCharts() {
   renderMinNights(d.min_nights);
   renderReviewsVille(d.reviews_par_ville);
   renderSpiderAttractiviteD3(d.spider_attractivite);
+  renderRankingVillesD3();
+  renderBubbleChartD3();
 
   renderMedianPriceByNeighbourhood(d.median_price_by_neighbourhood || { labels: [], values: [] });
   renderPriceNormalized(d.price_normalized_by_city || { labels: [], values: [] });
