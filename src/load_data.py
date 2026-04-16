@@ -11,7 +11,6 @@ CONFIG = {
     }
 }
 
-# 
 # fonctions de load (chargement) -----------
 def load_lyon(path="data/listings-lyon.csv"):
     df = pd.read_csv(path, sep=",")
