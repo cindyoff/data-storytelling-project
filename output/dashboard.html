@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -1105,7 +1103,7 @@
         <div class="chart-card-header">
           <div>
             <div class="chart-card-title">Revenu estimé par ville</div>
-            <div class="chart-card-sub">Classement automatique</div>
+            <div class="chart-card-sub">Revenu annuel</div>
           </div>
           <span class="chart-card-badge">Horizontal bar</span>
         </div>
@@ -5513,18 +5511,20 @@ function renderRoomTypeInvestment(d) {
       labels: d.labels,
       datasets: [
         {
-          label: 'Prix médian',
+          label: 'Prix médian (€/nuit)',
           data: d.median_price,
           backgroundColor: '#00e5b088',
           borderColor: '#00e5b0',
-          borderWidth: 1
+          borderWidth: 1,
+          yAxisID: 'yLeft'
         },
         {
-          label: 'Revenu estimé',
+          label: 'Revenu estimé (€/an)',
           data: d.estimated_revenue,
           backgroundColor: '#ff5f6d66',
           borderColor: '#ff5f6d',
-          borderWidth: 1
+          borderWidth: 1,
+          yAxisID: 'yRight'
         }
       ]
     },
@@ -5533,7 +5533,7 @@ function renderRoomTypeInvestment(d) {
       plugins: {
         legend: {
           display: true,
-          labels: { color: '#5a6a82' }
+          labels: { color: '#5a6a82', font: { size: 12 } }
         }
       },
       scales: {
@@ -5541,9 +5541,29 @@ function renderRoomTypeInvestment(d) {
           grid: { color: '#1e2d45' },
           ticks: { color: '#5a6a82' }
         },
-        y: {
+        yLeft: {
+          type: 'linear',
+          position: 'left',
           grid: { color: '#1e2d45' },
-          ticks: { color: '#5a6a82', callback: v => v + ' €' }
+          ticks: { color: '#00e5b0', callback: v => v + ' €' },
+          title: {
+            display: true,
+            text: 'Prix médian (€/nuit)',
+            color: '#00e5b0',
+            font: { size: 12, weight: 'bold' }
+          }
+        },
+        yRight: {
+          type: 'linear',
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { color: '#ff5f6d', callback: v => v + ' €' },
+          title: {
+            display: true,
+            text: 'Revenu estimé (€/an)',
+            color: '#ff5f6d',
+            font: { size: 12, weight: 'bold' }
+          }
         }
       }
     }
