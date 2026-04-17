@@ -19,11 +19,7 @@ from src.load_data import (
     clean_prix_paris,
 )
 
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
+# helpers
 def _make_lyon_raw():
     """DataFrame brut au format listings-lyon.csv."""
     return pd.DataFrame({
@@ -33,7 +29,7 @@ def _make_lyon_raw():
         "neighbourhood_group": ["Centre", "Sud", "Nord"],
         "neighbourhood":       ["n1", "n2", "n3"],
         "room_type":           ["Entire home/apt", "Private room", "Shared room"],
-        "price":               [60.0, None, 80.0],  # NaN au milieu → interpolable
+        "price":               [60.0, None, 80.0],
         "minimum_nights":      [2, 3, 1],
         "number_of_reviews":   [5, 10, 3],
         "reviews_per_month":   [0.5, 1.0, 0.3],
@@ -60,14 +56,12 @@ def _make_paysbasque_raw():
 
 
 def _make_bordeaux_raw():
-    # clean_bordeaux supprime "neighbourhood" et renomme "neighbourhood_group" en "neighbourhood".
-    # Les valeurs significatives (ville, typos) doivent donc être dans neighbourhood_group.
     return pd.DataFrame({
         "id":                  [1, 2, 3],
         "name":                ["Loft", '""Studio""', "Chambre"],
         "host_id":             [10, 20, 30],
-        "neighbourhood":       ["X", "Y", "Z"],           # sera supprimé
-        "neighbourhood_group": ["Bordeaux", "Bgles", "Saint-Mdard-en-Jalles"],  # sera renommé
+        "neighbourhood":       ["X", "Y", "Z"],
+        "neighbourhood_group": ["Bordeaux", "Bgles", "Saint-Mdard-en-Jalles"], 
         "room_type":           ["Entire home/apt", "Private room", "Shared room"],
         "price":               [120.0, None, 60.0],
         "minimum_nights":      [2, 7, 1],
@@ -86,7 +80,7 @@ def _make_paris_raw():
         "neighbourhood_group": ["Ile-de-France", "Ile-de-France"],
         "neighbourhood":       ["Marais", "Montmartre"],
         "room_type":           ["Entire home/apt", "Private room"],
-        "price":               [150.0, 90.0],   # colonne qui sera supprimée
+        "price":               [150.0, 90.0], 
         "minimum_nights":      [3, 1],
         "number_of_reviews":   [20, 8],
         "reviews_per_month":   [2.0, 0.8],
@@ -102,11 +96,7 @@ def _make_prix_paris_raw():
         "extra_col":  ["x", "y", "z"],
     })
 
-
-# ---------------------------------------------------------------------------
-# centre_peripherie
-# ---------------------------------------------------------------------------
-
+# centre peripherie
 class TestCentrePeripherie:
     def test_centre_detected(self):
         df = pd.DataFrame({"neighbourhood": ["Lyon", "Vaise", "Croix-Rousse"]})
@@ -126,11 +116,7 @@ class TestCentrePeripherie:
         mapping = centre_peripherie(df, "Bordeaux", "neighbourhood")
         assert mapping == {"Bordeaux": "Bordeaux-Centre"}
 
-
-# ---------------------------------------------------------------------------
-# clean_lyon
-# ---------------------------------------------------------------------------
-
+# clean lyon
 class TestCleanLyon:
     def test_drops_id_license_neighbourhood_group(self):
         df = clean_lyon(_make_lyon_raw())
@@ -139,7 +125,7 @@ class TestCleanLyon:
         assert "neighbourhood_group" not in df.columns
 
     def test_price_interpolation(self):
-        """La valeur None doit être interpolée (ici en première position → forward-fill)."""
+        """La valeur None doit être interpolée (ici en première position : forward-fill)"""
         df = clean_lyon(_make_lyon_raw())
         assert df["price"].isna().sum() == 0
 
@@ -152,11 +138,7 @@ class TestCleanLyon:
         for col in ["name", "host_id", "neighbourhood", "room_type", "price"]:
             assert col in df.columns
 
-
-# ---------------------------------------------------------------------------
-# clean_paysbasque
-# ---------------------------------------------------------------------------
-
+# clean pays basque
 class TestCleanPaysBasque:
     def test_drops_id_license_neighbourhood_group(self):
         """id, license et neighbourhood (original) sont supprimés ;
@@ -168,7 +150,7 @@ class TestCleanPaysBasque:
 
     def test_neighbourhood_group_renamed(self):
         df = clean_paysbasque(_make_paysbasque_raw())
-        assert "neighbourhood" in df.columns       # renommée depuis neighbourhood_group
+        assert "neighbourhood" in df.columns
 
     def test_price_interpolation(self):
         df = clean_paysbasque(_make_paysbasque_raw())
@@ -178,11 +160,7 @@ class TestCleanPaysBasque:
         df = clean_paysbasque(_make_paysbasque_raw())
         assert '""' not in df["name"].iloc[0]
 
-
-# ---------------------------------------------------------------------------
 # clean_bordeaux
-# ---------------------------------------------------------------------------
-
 class TestCleanBordeaux:
     def test_drops_id_license_neighbourhood(self):
         df = clean_bordeaux(_make_bordeaux_raw())
@@ -203,7 +181,7 @@ class TestCleanBordeaux:
 
     def test_neighbourhood_typos_corrected(self):
         df = clean_bordeaux(_make_bordeaux_raw())
-        # "Bgles" → "Bordeaux-Begles", "Saint-Mdard-en-Jalles" → "Bordeaux-Saint-Medard-en-Jalles"
+        # "Bgles" : "Bordeaux-Begles", "Saint-Mdard-en-Jalles" : "Bordeaux-Saint-Medard-en-Jalles"
         values = df["neighbourhood"].tolist()
         assert any("Begles" in v for v in values), f"Begles attendu dans {values}"
         assert any("Saint-Medard" in v for v in values), f"Saint-Medard attendu dans {values}"
@@ -213,11 +191,7 @@ class TestCleanBordeaux:
         values = df["neighbourhood"].tolist()
         assert any("Bordeaux-Centre" in str(v) for v in values)
 
-
-# ---------------------------------------------------------------------------
 # clean_paris
-# ---------------------------------------------------------------------------
-
 class TestCleanParis:
     def test_drops_id_license_neighbourhood_group(self):
         df = clean_paris(_make_paris_raw())
@@ -233,11 +207,7 @@ class TestCleanParis:
         df = clean_paris(_make_paris_raw())
         assert "neighbourhood" in df.columns
 
-
-# ---------------------------------------------------------------------------
-# clean_prix_paris
-# ---------------------------------------------------------------------------
-
+# clean prix paris csv
 class TestCleanPrixParis:
     def test_keeps_only_id_and_price(self):
         df = clean_prix_paris(_make_prix_paris_raw())

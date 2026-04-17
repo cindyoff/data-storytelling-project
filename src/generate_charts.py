@@ -1,14 +1,9 @@
 
-
-
-
-
 import json
 import numpy as np
 
-
 class NumpyEncoder(json.JSONEncoder):
-    """Convertit les types numpy en types Python natifs pour json.dumps."""
+    """Conversion des types numpy en types python natifs pour json.dumps."""
     def default(self, obj):
         if isinstance(obj, (np.integer,)):
             return int(obj)
@@ -59,7 +54,7 @@ def build_spider_chart_payload(spider_chart: dict) -> dict:
 
 def generate_chart_configs(stats: dict) -> str:
     """
-    Construit le payload complet injecté dans le dashboard HTML.
+    Construction du payload complet injecté dans le dashboard HTML.
     Les données d'investissement doivent déjà être présentes dans `stats`.
     """
     payload = {

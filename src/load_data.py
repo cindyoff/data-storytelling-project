@@ -11,7 +11,7 @@ CONFIG = {
     }
 }
 
-# fonctions de load (chargement) -----------
+# fonctions chargement data pour chaque région + prix paris csv
 def load_lyon(path="data/listings-lyon.csv"):
     df = pd.read_csv(path, sep=",")
     df = clean_lyon(df)
@@ -59,9 +59,7 @@ def load_paris(path="data/listings-paris.csv", prix_path = "data/prix-paris.csv"
 
     return df
 
-# nettoyage --------
-
-# Rajout de l'attribut "ville principale" devant chaque neighbour
+# rajout attribut région pour chaque quartier
 def centre_peripherie(dataframe: pd.DataFrame, ville: str, variable_voisinage: str):
     dict_map = {}
     unique_voisinage = dataframe[variable_voisinage].unique()
@@ -150,14 +148,14 @@ def clean_bordeaux(df):
 
     return df 
 
-# concat all datasets ---------
+# concaténation tous les datasets
 def load_all(data_dir="data/"):
     dfs = [
         load_lyon(f"{data_dir}listings-lyon.csv"),
         load_paysbasque(f"{data_dir}listings-paysbasque.csv"),
         load_paris(
             f"{data_dir}listings-paris.csv",
-            prix_path=f"{data_dir}prix-paris.csv"   # 🔥 FIX ICI
+            prix_path=f"{data_dir}prix-paris.csv"
         ),
         load_bordeaux(f"{data_dir}listings-bordeaux.csv"),
     ]

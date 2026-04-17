@@ -26,11 +26,7 @@ from src.compute_stats import (
     compute_all_stats,
 )
 
-
-# ---------------------------------------------------------------------------
-# compute_global_stats
-# ---------------------------------------------------------------------------
-
+# compute global stats
 class TestComputeGlobalStats:
     def test_returns_required_keys(self, minimal_df):
         result = compute_global_stats(minimal_df)
@@ -53,11 +49,7 @@ class TestComputeGlobalStats:
         result = compute_global_stats(minimal_df)
         assert result["ratio"] > 0
 
-
-# ---------------------------------------------------------------------------
-# compute_prix_par_ville
-# ---------------------------------------------------------------------------
-
+# compute prix par ville
 class TestComputePrixParVille:
     def test_labels_and_values_same_length(self, minimal_df):
         result = compute_prix_par_ville(minimal_df)
@@ -72,11 +64,7 @@ class TestComputePrixParVille:
         result = compute_prix_par_ville(minimal_df)
         assert all(isinstance(v, float) for v in result["values"])
 
-
-# ---------------------------------------------------------------------------
-# compute_dispo_par_ville
-# ---------------------------------------------------------------------------
-
+# compute dispo par ville
 class TestComputeDispoParVille:
     def test_structure(self, minimal_df):
         result = compute_dispo_par_ville(minimal_df)
@@ -86,11 +74,7 @@ class TestComputeDispoParVille:
         result = compute_dispo_par_ville(minimal_df)
         assert all(0 <= v <= 365 for v in result["values"])
 
-
-# ---------------------------------------------------------------------------
-# compute_room_type
-# ---------------------------------------------------------------------------
-
+# compute room type
 class TestComputeRoomType:
     def test_structure(self, minimal_df):
         result = compute_room_type(minimal_df)
@@ -104,11 +88,7 @@ class TestComputeRoomType:
         result = compute_room_type(minimal_df)
         assert all(isinstance(v, (int, np.integer)) for v in result["values"])
 
-
-# ---------------------------------------------------------------------------
-# compute_listings_par_ville
-# ---------------------------------------------------------------------------
-
+# compute listings par ville
 class TestComputeListingsParVille:
     def test_sum_equals_total(self, minimal_df):
         result = compute_listings_par_ville(minimal_df)
@@ -119,11 +99,7 @@ class TestComputeListingsParVille:
         for city in minimal_df["city"].unique():
             assert city in result["labels"]
 
-
-# ---------------------------------------------------------------------------
-# compute_top_hosts
-# ---------------------------------------------------------------------------
-
+# compute top_hosts
 class TestComputeTopHosts:
     def test_returns_at_most_n(self, minimal_df):
         result = compute_top_hosts(minimal_df, n=2)
@@ -140,11 +116,7 @@ class TestComputeTopHosts:
             # format : "Name (#id)"
             assert "#" in label
 
-
-# ---------------------------------------------------------------------------
-# compute_min_nights
-# ---------------------------------------------------------------------------
-
+# compute min nights
 class TestComputeMinNights:
     def test_labels_count(self, minimal_df):
         result = compute_min_nights(minimal_df)
@@ -155,11 +127,7 @@ class TestComputeMinNights:
         result = compute_min_nights(minimal_df)
         assert sum(result["values"]) == len(minimal_df)
 
-
-# ---------------------------------------------------------------------------
-# compute_reviews_par_ville
-# ---------------------------------------------------------------------------
-
+# compute reviews par ville
 class TestComputeReviewsParVille:
     def test_structure(self, minimal_df):
         result = compute_reviews_par_ville(minimal_df)
@@ -169,11 +137,7 @@ class TestComputeReviewsParVille:
         result = compute_reviews_par_ville(minimal_df)
         assert all(v >= 0 for v in result["values"])
 
-
-# ---------------------------------------------------------------------------
-# compute_spider_raw_metrics
-# ---------------------------------------------------------------------------
-
+# compute spider raw metrics
 class TestComputeSpiderRawMetrics:
     def test_returns_list_of_dicts(self, minimal_df):
         result = compute_spider_raw_metrics(minimal_df)
@@ -193,11 +157,7 @@ class TestComputeSpiderRawMetrics:
         for row in result:
             assert row["city"] in cities_in_df
 
-
-# ---------------------------------------------------------------------------
 # normalize_spider_metrics
-# ---------------------------------------------------------------------------
-
 class TestNormalizeSpiderMetrics:
     def _make_spider_rows(self):
         return [
@@ -241,11 +201,7 @@ class TestNormalizeSpiderMetrics:
         for city_obj in result["cities"]:
             assert "raw" in city_obj
 
-
-# ---------------------------------------------------------------------------
 # compute_city_detail
-# ---------------------------------------------------------------------------
-
 class TestComputeCityDetail:
     def test_returns_empty_for_unknown_city(self, minimal_df):
         result = compute_city_detail(minimal_df, "Tokyo")
@@ -263,11 +219,7 @@ class TestComputeCityDetail:
         expected = int((minimal_df["city"] == "Lyon").sum())
         assert result["count"] == expected
 
-
-# ---------------------------------------------------------------------------
-# compute_all_stats (test d'intégration léger)
-# ---------------------------------------------------------------------------
-
+# compute all stats - test d'intégration
 class TestComputeAllStats:
     def test_top_level_keys(self, minimal_df):
         result = compute_all_stats(minimal_df)
