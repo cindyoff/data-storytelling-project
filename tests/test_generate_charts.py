@@ -11,11 +11,7 @@ import numpy as np
 from src.generate_charts import NumpyEncoder, build_spider_chart_payload, generate_chart_configs
 from src.compute_stats import compute_all_stats
 
-
-# ---------------------------------------------------------------------------
-# NumpyEncoder
-# ---------------------------------------------------------------------------
-
+# numpy encoder
 class TestNumpyEncoder:
     def test_encodes_numpy_int(self):
         data = {"val": np.int64(42)}
@@ -41,11 +37,7 @@ class TestNumpyEncoder:
         with pytest.raises(TypeError):
             json.dumps({"x": Foo()}, cls=NumpyEncoder)
 
-
-# ---------------------------------------------------------------------------
 # build_spider_chart_payload
-# ---------------------------------------------------------------------------
-
 def _make_spider_chart():
     """Spider chart minimal avec deux villes."""
     return {
@@ -111,11 +103,7 @@ class TestBuildSpiderChartPayload:
             # backgroundColor = borderColor + "22"
             assert ds["backgroundColor"] == ds["borderColor"] + "22"
 
-
-# ---------------------------------------------------------------------------
-# generate_chart_configs
-# ---------------------------------------------------------------------------
-
+# generate chart configs
 class TestGenerateChartConfigs:
     @pytest.fixture
     def stats(self, minimal_df):

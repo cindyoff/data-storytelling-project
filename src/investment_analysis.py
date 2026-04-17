@@ -1,27 +1,22 @@
-
-
-
-
 import pandas as pd
-
 
 def preparer_donnees_investissement(df):
     df = df.copy()
 
     if "price" in df.columns:
-        df["price"] = pd.to_numeric(df["price"], errors="coerce")
+        df["price"] = pd.to_numeric(df["price"], errors = "coerce")
 
     if "availability_365" in df.columns:
-        df["availability_365"] = pd.to_numeric(df["availability_365"], errors="coerce")
+        df["availability_365"] = pd.to_numeric(df["availability_365"], errors = "coerce")
 
     if "number_of_reviews" in df.columns:
         df["number_of_reviews"] = pd.to_numeric(
-            df["number_of_reviews"], errors="coerce"
+            df["number_of_reviews"], errors = "coerce"
         ).fillna(0)
 
     if "calculated_host_listings_count" in df.columns:
         df["calculated_host_listings_count"] = pd.to_numeric(
-            df["calculated_host_listings_count"], errors="coerce"
+            df["calculated_host_listings_count"], errors = "coerce"
         ).fillna(1)
     else:
         df["calculated_host_listings_count"] = 1
@@ -247,5 +242,3 @@ def compute_investment_dashboard_data(df):
         }
 
     return investment_data
-
-

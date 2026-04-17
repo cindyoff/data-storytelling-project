@@ -5,7 +5,7 @@ CITIES = ["Lyon", "Paris", "Bordeaux", "Pays Basque"]
 
 
 def compute_global_stats(df):
-    """KPIs globaux toutes villes confondues."""
+    """KPIs globaux toutes régions confondues."""
     return {
         "avg_price":         round(float(df["price"].mean()), 2),
         "med_price":         round(float(df["price"].median()), 2),
@@ -93,7 +93,6 @@ def compute_reviews_par_ville(df):
 def compute_spider_raw_metrics(df):
     """
     Métriques brutes du spider chart par ville.
-    On utilise :
     - prix moyen
     - disponibilité moyenne
     - nb de reviews sur les 12 derniers mois
@@ -121,8 +120,8 @@ def compute_spider_raw_metrics(df):
 
 def normalize_spider_metrics(spider_rows):
     """
-    Normalise chaque métrique sur une échelle 0-100 pour affichage radar.
-    Conserve aussi les valeurs brutes pour les tooltips.
+    Normalisation de chaque métrique sur une échelle 0-100 pour affichage radar.
+    Conservation des valeurs brutes pour les tooltips.
     """
     metric_labels = ["Prix moyen", "Disponibilité", "Reviews 12m", "Nb nuits min", "Nb annonces"]
 
@@ -295,10 +294,10 @@ def compute_top_hosts_reviews_timeline_by_city(df):
 
     result = {}
 
-    # Global
+    # toutes
     result["Toutes"] = compute_top_hosts_reviews_timeline_core(df)
 
-    # Par ville
+    # par région
     for city in df["city"].dropna().unique():
         sub = df[df["city"] == city]
         result[city] = compute_top_hosts_reviews_timeline_core(sub)

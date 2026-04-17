@@ -24,11 +24,7 @@ def _make_template(directory, content=None):
     path.write_text(content, encoding="utf-8")
     return str(path)
 
-
-# ---------------------------------------------------------------------------
-# Cas nominal
-# ---------------------------------------------------------------------------
-
+# cas nominal 
 class TestBuildNominal:
     def test_output_file_created(self, tmp_path):
         template = _make_template(tmp_path / "templates")
@@ -65,11 +61,7 @@ class TestBuildNominal:
 
         assert os.path.exists(output)
 
-
-# ---------------------------------------------------------------------------
-# Cas d'erreur : placeholder manquant
-# ---------------------------------------------------------------------------
-
+# placeholder manquant
 class TestBuildMissingPlaceholder:
     def test_raises_value_error(self, tmp_path):
         template = _make_template(
@@ -93,11 +85,7 @@ class TestBuildMissingPlaceholder:
 
         assert not os.path.exists(output)
 
-
-# ---------------------------------------------------------------------------
-# Cas d'erreur : template introuvable
-# ---------------------------------------------------------------------------
-
+# template introuvable
 class TestBuildMissingTemplate:
     def test_raises_file_not_found(self, tmp_path):
         with pytest.raises(FileNotFoundError):
@@ -105,11 +93,7 @@ class TestBuildMissingTemplate:
                   template=str(tmp_path / "nonexistent.html"),
                   output=str(tmp_path / "out.html"))
 
-
-# ---------------------------------------------------------------------------
-# Contenu du fichier de sortie
-# ---------------------------------------------------------------------------
-
+# contenu fichier de sortie 
 class TestBuildOutputContent:
     def test_rest_of_html_preserved(self, tmp_path):
         html_body = f"<h1>Mon titre</h1>{PLACEHOLDER}<footer>pied</footer>"
